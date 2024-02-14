@@ -3,8 +3,15 @@
   "version": "1.0.0",
   "repository": "https://github.com/OffchainLabs/blockchain-eng-template.git",
   "scripts": {
-    "format": "prettier --ignore-path .gitignore \"**/*.{js,ts,json,md}\" --write && forge fmt",
-    "lint": "tsc --noEmit && eslint . && forge fmt --check"
+    "upload-all-selectors": "forge build && find ./out -name \"*.json\" -exec cast upload-signature {} +",
+    "format": "cat .prettierignore .gitignore > .pignore && prettier --ignore-path .pignore \"**/*.{js,ts,json}\" --write && rm .pignore && forge fmt",
+    "lint": "tsc --noEmit && eslint . && forge fmt --check",
+    "test:unit": "hardhat test test/unit/*.ts && forge test --match-path \"test/unit/*.t.sol\"",
+    "test:sizes": "forge build --sizes",
+    "test:gas-check": "forge snapshot --check --tolerance 1",
+    "test:sigs": "./test/signatures/test-sigs.bash",
+    "test:storage": "./test/storage/test-storage.bash",
+    "gas-snapshot": "forge snapshot"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
