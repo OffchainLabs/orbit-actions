@@ -10,6 +10,11 @@ const config: HardhatUserConfig = {
   solidity: getSolidityConfigFromFoundryToml(
     process.env.FOUNDRY_PROFILE || 'default'
   ),
+  networks: {
+    fork: {
+      url: process.env.FORK_URL || 'http://localhost:8545',
+    },
+  },
 }
 
 function getSolidityConfigFromFoundryToml(profile: string): SolidityUserConfig {

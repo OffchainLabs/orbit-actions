@@ -6,12 +6,13 @@
     "upload-all-selectors": "forge build && find ./out -name \"*.json\" -exec cast upload-signature {} +",
     "format": "cat .prettierignore .gitignore > .pignore && prettier --ignore-path .pignore \"**/*.{js,ts,json}\" --write && rm .pignore && forge fmt",
     "lint": "tsc --noEmit && eslint . && forge fmt --check",
-    "test:unit": "hardhat test test/unit/*.ts && forge test --match-path \"test/unit/*.t.sol\"",
+    "test:unit": "./test/unit/test-unit.bash",
+    "test:fork": "./test/fork/test-fork.bash",
     "test:sizes": "forge build --sizes",
-    "test:gas-check": "forge snapshot --check --tolerance 1",
+    "test:gas-check": "forge snapshot --check --tolerance 1 --match-path \"test/unit/**/*.t.sol\"",
     "test:sigs": "./test/signatures/test-sigs.bash",
     "test:storage": "./test/storage/test-storage.bash",
-    "gas-snapshot": "forge snapshot"
+    "gas-snapshot": "forge snapshot --match-path \"test/unit/**/*.t.sol\""
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",

@@ -8,16 +8,21 @@ current setup:
 - use the sdk's formatting options for ts, js, json, md files. use the forge formatter for sol files.
 - CI
     - lint
-    - unit tests (non fork, non integration)
+    - unit tests
+    - fork tests
     - contract size
     - foundry gas snapshot
     - check signatures
     - check storage
 
 todo:
+- yarn audit
 - nice libraries that leverage foundry’s fork cheatcodes to mock general cross chain interactions (probably done best as a separate project)
 - e2e testing setup with hardhat + test node
 - default hardhat + foundry setup
 - mutation testing
 - avoid having thousands of dependencies on publish to npm
+- slither / other static analysis
+- https://github.com/OffchainLabs/nitro-contracts/pull/128/files
+- general proxy upgrade safety
 - ...
