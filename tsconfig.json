@@ -13,5 +13,6 @@
     "strictNullChecks": true,
     "noImplicitThis": true,
     "experimentalDecorators": true
-  }
+  },
+  "exclude": ["./lib/"]
 }
