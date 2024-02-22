@@ -6,6 +6,7 @@ current setup:
 - hardhat + ethers v6 + foundry
 - solidity compiler config is synced between hardhat and foundry, with foundry.toml being the source
 - use the sdk's formatting options for ts, js, json, md files. use the forge formatter for sol files.
+- `yarn minimal-publish` script to generate a minimal `package.json` and `hardhat.config.js` before publishing to npm
 - CI
     - audit-ci
     - lint
@@ -29,7 +30,6 @@ todo / wishlist:
 - nice libraries that leverage foundry’s fork cheatcodes to mock general cross chain interactions (probably done best as a separate project)
 - default hardhat + foundry setup
 - mutation testing
-- avoid having thousands of dependencies on publish to npm
 - slither / other static analysis
 - https://github.com/OffchainLabs/nitro-contracts/pull/128/files
 - general proxy upgrade safety
