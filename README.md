@@ -1,6 +1,6 @@
 # blockchain-eng-template
 
-A nice template repo that we can build to use for new projects. Maybe eventually for existing projects too
+A template repo that we can use for new projects. Maybe eventually for existing projects too
 
 current setup:
 - hardhat + ethers v6 + foundry
