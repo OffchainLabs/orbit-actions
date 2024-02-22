@@ -28,7 +28,7 @@ for dir in $chains; do
     if [ -z "$hardhatFiles" ]; then
         echo "No .test.ts files found in $dir"
     else
-        echo "Running hardhat tests for $dir..."
+        echo "Running hardhat tests against \$$forkUrlName ..."
         FORK_URL=$forkUrl yarn run hardhat test $hardhatFiles --network fork
         CODE=$?
     fi
@@ -38,7 +38,7 @@ for dir in $chains; do
     if [ -z "$foundryFiles" ]; then
         echo "No .t.sol files found in $dir"
     else
-        echo "Running foundry tests for $dir..."
+        echo "Running foundry tests against \$$forkUrlName ..."
         forge test --fork-url $forkUrl --match-path "$dir**/*.t.sol"
         code=$?
     fi

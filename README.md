@@ -7,13 +7,13 @@ current setup:
 - solidity compiler config is synced between hardhat and foundry, with foundry.toml being the source
 - use the sdk's formatting options for ts, js, json, md files. use the forge formatter for sol files.
 - CI
+    - audit-ci
     - lint
     - unit tests
     - fork tests
     - contract size
     - foundry gas snapshot
-    - check signatures (skips abstract contracts and interfaces)
-    - check storage (skips abstract contracts)
+    - check signatures and storage (skips abstract contracts and interfaces, but this is easily changed in `scripts/print-contracts.bash`)
     - e2e testing with hardhat + test node. always spins up an L3, one job uses ETH fees, one uses custom fees
 
 disabling features:
@@ -26,7 +26,6 @@ disabling features:
 
 todo / wishlist:
 - license?
-- yarn audit
 - nice libraries that leverage foundry’s fork cheatcodes to mock general cross chain interactions (probably done best as a separate project)
 - default hardhat + foundry setup
 - mutation testing

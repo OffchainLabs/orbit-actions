@@ -4,6 +4,7 @@
   "repository": "https://github.com/OffchainLabs/blockchain-eng-template.git",
   "scripts": {
     "prepare": "forge install && yarn prepare-sdk",
+    "audit:ci": "audit-ci --config ./audit-ci.jsonc",
     "upload-all-selectors": "forge build && find ./out -name \"*.json\" -exec cast upload-signature {} +",
     "format": "cat .prettierignore .gitignore > .pignore && prettier --ignore-path .pignore \"**/*.{js,ts,json}\" --write && rm .pignore && forge fmt",
     "lint": "tsc --noEmit && eslint . && forge fmt --check",
@@ -33,11 +34,13 @@
     "@types/node": ">=16.0.0",
     "@typescript-eslint/eslint-plugin": "^7.0.1",
     "@typescript-eslint/parser": "^7.0.1",
+    "audit-ci": "^6.6.1",
     "chai": "^4.2.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
     "ethers": "^6.4.0",
+    "ethers-v5": "npm:ethers@^5.7.2",
     "hardhat": "^2.19.5",
     "hardhat-gas-reporter": "^1.0.8",
     "prettier": "^3.2.5",
@@ -45,7 +48,6 @@
     "toml": "3.0.0",
     "ts-node": ">=8.0.0",
     "typechain": "^8.3.0",
-    "ethers-v5": "npm:ethers@^5.7.2",
     "typescript": ">=4.5.0"
   }
 }
