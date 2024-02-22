@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "repository": "https://github.com/OffchainLabs/blockchain-eng-template.git",
   "scripts": {
-    "minimal-publish": "hardhat run scripts/prepublish.ts && (yarn publish ; ts-node scripts/postpublish.ts)",
+    "minimal-publish": "./scripts/publish.bash",
     "prepare": "forge install && yarn prepare-sdk",
     "audit:ci": "audit-ci --config ./audit-ci.jsonc",
     "upload-all-selectors": "forge build && find ./out -name \"*.json\" -exec cast upload-signature {} +",
