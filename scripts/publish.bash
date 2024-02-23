@@ -7,6 +7,7 @@
 # 4. if published, commits and tags the release
 
 # prepublish
+# must run with hardhat to generate hardhat.config.js
 yarn hardhat run scripts/prepublish.ts
 
 if [ $? -ne 0 ]; then
