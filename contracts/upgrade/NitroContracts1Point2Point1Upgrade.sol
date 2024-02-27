@@ -39,16 +39,10 @@ contract NitroContracts1Point2Point1Upgrade {
         require(_newWasmModuleRoot != bytes32(0), "ArbOS20Action: _newWasmModuleRoot is empty");
         newWasmModuleRoot = _newWasmModuleRoot;
 
-        require(
-            Address.isContract(_newSequencerInboxImpl),
-            "ArbOS20Action: _newSequencerInboxImpl is not a contract"
-        );
+        require(Address.isContract(_newSequencerInboxImpl), "ArbOS20Action: _newSequencerInboxImpl is not a contract");
         newSequencerInboxImpl = _newSequencerInboxImpl;
 
-        require(
-            Address.isContract(_newChallengeMangerImpl),
-            "ArbOS20Action: _newChallengeMangerImpl is not a contract"
-        );
+        require(Address.isContract(_newChallengeMangerImpl), "ArbOS20Action: _newChallengeMangerImpl is not a contract");
         newChallengeManagerImpl = _newChallengeMangerImpl;
 
         require(Address.isContract(address(_newOsp)), "ArbOS20Action: _newOsp is not a contract");
@@ -59,18 +53,13 @@ contract NitroContracts1Point2Point1Upgrade {
         IRollupAdmin(address(rollup)).setWasmModuleRoot(newWasmModuleRoot);
 
         // verify:
-        require(
-            rollup.wasmModuleRoot() == newWasmModuleRoot, "ArbOS20Action: wasm module root not set"
-        );
+        require(rollup.wasmModuleRoot() == newWasmModuleRoot, "ArbOS20Action: wasm module root not set");
 
         TransparentUpgradeableProxy sequencerInbox =
             TransparentUpgradeableProxy(payable(address(rollup.sequencerInbox())));
-        (, uint256 futureBlocksBefore,,) =
-            ISequencerInbox(address(sequencerInbox)).maxTimeVariation();
+        (, uint256 futureBlocksBefore,,) = ISequencerInbox(address(sequencerInbox)).maxTimeVariation();
         proxyAdmin.upgradeAndCall(
-            sequencerInbox,
-            newSequencerInboxImpl,
-            abi.encodeCall(ISeqInboxPostUpgradeInit.postUpgradeInit, ())
+            sequencerInbox, newSequencerInboxImpl, abi.encodeCall(ISeqInboxPostUpgradeInit.postUpgradeInit, ())
         );
 
         // verify
@@ -78,17 +67,15 @@ contract NitroContracts1Point2Point1Upgrade {
             proxyAdmin.getProxyImplementation(sequencerInbox) == newSequencerInboxImpl,
             "ArbOS20Action: new seq inbox implementation set"
         );
-        (, uint256 futureBlocksAfter,,) =
-            ISequencerInbox(address(sequencerInbox)).maxTimeVariation();
+        (, uint256 futureBlocksAfter,,) = ISequencerInbox(address(sequencerInbox)).maxTimeVariation();
         require(
             futureBlocksBefore != 0 && futureBlocksBefore == futureBlocksAfter,
             "ArbOS20Action: maxTimeVariation not set"
         );
 
         // set the new challenge manager impl
-        TransparentUpgradeableProxy challengeManager = TransparentUpgradeableProxy(
-            payable(address(rollup.challengeManager()))
-        );
+        TransparentUpgradeableProxy challengeManager =
+            TransparentUpgradeableProxy(payable(address(rollup.challengeManager())));
         proxyAdmin.upgradeAndCall(
             challengeManager,
             newChallengeManagerImpl,
@@ -100,8 +87,7 @@ contract NitroContracts1Point2Point1Upgrade {
             "ArbOS20Action: new challenge manager implementation set"
         );
         require(
-            IChallengeManagerUpgradeInit(address(challengeManager)).osp() == newOsp,
-            "ArbOS20Action: new OSP not set"
+            IChallengeManagerUpgradeInit(address(challengeManager)).osp() == newOsp, "ArbOS20Action: new OSP not set"
         );
     }
 }
