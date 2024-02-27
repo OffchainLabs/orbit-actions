@@ -37,6 +37,7 @@ jobs:
         with:
           version: nightly
 
+      - run: yarn    
       - run: forge install
       - run: yarn test:sizes
 
@@ -52,6 +53,7 @@ jobs:
         with:
           version: nightly
 
+      - run: yarn
       - run: forge install
       - run: yarn test:gas-check
 
@@ -67,6 +69,7 @@ jobs:
         with:
           version: nightly
 
+      - run: yarn    
       - run: forge install && forge build
       - run: yarn test:sigs
 
@@ -81,6 +84,7 @@ jobs:
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: nightly
-
+        
+      - run: yarn
       - run: forge install && forge build
       - run: yarn test:storage
