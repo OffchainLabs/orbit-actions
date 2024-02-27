@@ -1,7 +1,8 @@
 {
-  "name": "blockchain-eng-template",
+  "name": "orbit-actions",
   "version": "1.0.0",
   "repository": "https://github.com/OffchainLabs/blockchain-eng-template.git",
+  "license": "Apache 2.0",
   "scripts": {
     "minimal-publish": "./scripts/publish.bash",
     "prepare": "forge install && yarn prepare-sdk",
@@ -22,6 +23,8 @@
     "gas-snapshot": "forge snapshot --match-path \"test/unit/**/*.t.sol\""
   },
   "devDependencies": {
+    "@arbitrum/nitro-contracts": "1.2.1",
+    "@offchainlabs/upgrade-executor": "1.1.0-beta.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
     "@nomicfoundation/hardhat-ethers": "^3.0.0",
     "@nomicfoundation/hardhat-foundry": "^1.1.1",
