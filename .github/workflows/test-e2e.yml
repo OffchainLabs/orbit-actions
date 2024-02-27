@@ -28,7 +28,7 @@ jobs:
         with:
           version: nightly
 
-      - run: yarn && yarn gen:network
+      - run: yarn
       - run: cp .env.example .env && yarn test:e2e
 
   test-e2e-custom-fee:
@@ -55,5 +55,5 @@ jobs:
         with:
           version: nightly
 
-      - run: yarn && yarn gen:network
+      - run: yarn
       - run: cp .env.example .env && yarn test:e2e

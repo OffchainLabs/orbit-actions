@@ -35,29 +35,24 @@ To disable fork tests:
 - Remove the `test:fork` script from `package.json`
 - Remove `test/fork`
 
-### E2E Tests
+### E2E Tests and the Arbitrum SDK
 End to end tests are located in `test/e2e/`, and ran by `yarn test:e2e`.
-
-After starting a testnode instance, run `yarn gen:network` before `yarn test:e2e`.
 
 The GitHub workflow defined in `.github/workflows/test-e2e.yml` will run test files against an L1+L2+L3 nitro testnode setup, once with an ETH fee L3 and once with a custom fee L3. 
 
-It is recommended to use `testSetup` defined in `test/e2e/testSetup.ts` to get signers, providers, and network information. Note that there is also a `testSetup` function defined in the sdk, don't use that one.
+It is recommended to use `testSetup` defined in `test/e2e/testSetup.ts` to get signers, providers, and network information. Note that there is also a `testSetup` function defined in the SDK, don't use that one.
 
 This repository uses ethers v6, but the Arbitrum SDK uses ethers v5. 
-A separate ethers v5 dev dependency is included and can be imported for use with the sdk.
+A separate ethers v5 dev dependency is included and can be imported for use with the SDK.
 ```typescript
 import { ethers as ethersv5 } from 'ethers-v5'
 ```
 
-To disable E2E tests:
-- Remove `.github/workflows/test-e2e.yml` to disable in CI
-- Remove `test:e2e` and `gen:network` scripts from `package.json`
-- Remove `test/e2e`
+To disable the end to end testing CI jobs, remove `on: pull_request:` from `.github/workflows/test-e2e.yml`
 
-If E2E tests are disabled, the Arbitrum SDK dependency is likely no longer required. To remove it:
-- `forge remove lib/arbitrum-sdk`
-- Remove `prepare-sdk` script and modify the `prepare` script in `package.json`
+To completely remove end to end test setup:
+- `forge remove lib/arbitrum-sdk && rm .github/workflows/test-e2e.yml && rm -rf test/e2e`
+- remove `test:e2e` package script and modify `prepare` package script
 
 ### Signatures and Storage Tests
 These will fail if signatures or storage of any contract defined in `contracts/` changes.
