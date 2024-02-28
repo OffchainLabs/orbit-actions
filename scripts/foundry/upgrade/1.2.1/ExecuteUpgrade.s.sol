@@ -7,8 +7,7 @@ import {
     ProxyAdmin
 } from "../../../../contracts/upgrade/NitroContracts1Point2Point1Upgrade.sol";
 import {IRollupCore} from "@arbitrum/nitro-contracts/src/rollup/IRollupCore.sol";
-import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
-import {IUpgradeExecutor, UpgradeExecutor} from "@offchainlabs/upgrade-executor/src/UpgradeExecutor.sol";
+import {UpgradeExecutor} from "@offchainlabs/upgrade-executor/src/UpgradeExecutor.sol";
 
 /**
  * @title ExecuteUpgradeScript
