@@ -11,10 +11,10 @@ import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.s
 import {IUpgradeExecutor, UpgradeExecutor} from "@offchainlabs/upgrade-executor/src/UpgradeExecutor.sol";
 
 /**
- * @title DeployScript
+ * @title ExecuteUpgradeScript
  * @notice This script executes nitro contracts 1.2.1 upgrade through UpgradeExecutor
  */
-contract DeployScript is Script {
+contract ExecuteUpgradeScript is Script {
     function run() public {
         vm.startBroadcast();
 
@@ -27,9 +27,6 @@ contract DeployScript is Script {
 
         // execute the upgrade
         UpgradeExecutor executor = UpgradeExecutor(vm.envAddress("UPGRADE_EXECUTOR_ADDRESS"));
-
-        console.log(address(executor));
-
         executor.execute(address(upgradeAction), upgradeCalldata);
 
         // sanity check, full checks are done on-chain by the upgrade action
