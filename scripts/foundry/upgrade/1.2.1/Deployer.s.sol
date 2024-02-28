@@ -13,7 +13,8 @@ import {IReader4844} from "@arbitrum/nitro-contracts/src/libraries/IReader4844.s
 
 /**
  * @title DeployScript
- * @notice This script deploys OSPs and ChallengeManager templates,
+ * @notice This script deploys OSPs and ChallengeManager templates, blob reader and SequencerInbox template.
+ *          Not applicable for Arbitrum based chains due to precompile call in SequencerInbox (Foundry simulation breaks).
  */
 contract DeployScript is Script {
     function run() public {
