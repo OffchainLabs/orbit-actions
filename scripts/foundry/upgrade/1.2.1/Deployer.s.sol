@@ -10,6 +10,7 @@ import {OneStepProofEntry} from "@arbitrum/nitro-contracts/src/osp/OneStepProofE
 import {ChallengeManager} from "@arbitrum/nitro-contracts/src/challenge/ChallengeManager.sol";
 import {SequencerInbox} from "@arbitrum/nitro-contracts/src/bridge/SequencerInbox.sol";
 import {IReader4844} from "@arbitrum/nitro-contracts/src/libraries/IReader4844.sol";
+import {NitroContracts1Point2Point1Upgrade} from "../../../../contracts/upgrade/NitroContracts1Point2Point1Upgrade.sol";
 
 /**
  * @title DeployScript
@@ -30,10 +31,10 @@ contract DeployScript is Script {
         OneStepProverMemory ospMemory = new OneStepProverMemory();
         OneStepProverMath ospMath = new OneStepProverMath();
         OneStepProverHostIo ospHostIo = new OneStepProverHostIo();
-        new OneStepProofEntry(osp0, ospMemory, ospMath, ospHostIo);
+        address osp = address(new OneStepProofEntry(osp0, ospMemory, ospMath, ospHostIo));
 
         // deploy new challenge manager templates
-        new ChallengeManager();
+        address challengeManager = address(new ChallengeManager());
 
         // deploy blob reader
         bytes memory reader4844Bytecode = _getReader4844Bytecode();
@@ -44,7 +45,21 @@ contract DeployScript is Script {
         require(reader4844Address != address(0), "Reader4844 could not be deployed");
 
         // deploy sequencer inbox template
-        new SequencerInbox({_maxDataSize: 117964, reader4844_: IReader4844(reader4844Address), _isUsingFeeToken: false});
+        address seqInbox = address(
+            new SequencerInbox({
+                _maxDataSize: 117964,
+                reader4844_: IReader4844(reader4844Address),
+                _isUsingFeeToken: false
+            })
+        );
+
+        // finally deploy upgrade action
+        new NitroContracts1Point2Point1Upgrade({
+            _newWasmModuleRoot: bytes32(0x8b104a2e80ac6165dc58b9048de12f301d70b02a0ab51396c22b4b4b802a16a4),
+            _newSequencerInboxImpl: seqInbox,
+            _newChallengeMangerImpl: challengeManager,
+            _newOsp: osp
+        });
 
         vm.stopBroadcast();
     }
