@@ -6,7 +6,7 @@ Setup .env according to the example files, make sure you have the correct ArbOS 
 
 `Deployer.s.sol` script deploys `UpgradeArbOSVersionAtTimestampAction` contract. It can be executed in this directory like this:
 ```
-forge script --account $DEPLOYER --rpc-url $RPC --broadcast --slow ./Deployer.s.sol -vvv
+forge script --account DEPLOYER --rpc-url $CHILD_CHAIN_RPC --broadcast --slow ./Deployer.s.sol -vvv
 ```
 
 This would deploy the upgrade action.
@@ -18,5 +18,5 @@ cast send --account L3_OWNER --rpc-url $CHILD_CHAIN_RPC $CHILD_CHAIN_EXECUTOR "e
 
 That's it, the ArbOS upgrade has been scheduled. You can make sure it has successfully executed by checking:
 ```
-cast call --rpc-url $RPC 0x000000000000000000000000000000000000006b "getScheduledUpgrade()(uint64, uint64)"
+cast call --rpc-url $CHILD_CHAIN_RPC 0x000000000000000000000000000000000000006b "getScheduledUpgrade()(uint64, uint64)"
 ```
