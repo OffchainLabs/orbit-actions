@@ -117,7 +117,7 @@ contract DeployScript is Script {
         string memory json = vm.readFile(readerBytecodeFilePath);
         try vm.parseJsonBytes(json, ".bytecode.object") returns (bytes memory bytecode) {
             return bytecode;
-        } catch  {
+        } catch {
             return vm.parseJsonBytes(json, ".bytecode");
         }
     }
