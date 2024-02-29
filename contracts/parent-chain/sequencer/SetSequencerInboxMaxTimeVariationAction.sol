@@ -1,12 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.16;
 
-import "@arbitrum/nitro-contracts-1.2.1/src/bridge/IBridge.sol";
 import "@arbitrum/nitro-contracts-1.2.1/src/bridge/IInbox.sol";
-import "@arbitrum/nitro-contracts-1.2.1/src/bridge/IOutbox.sol";
 import "@arbitrum/nitro-contracts-1.2.1/src/bridge/ISequencerInbox.sol";
-import "@arbitrum/nitro-contracts-1.2.1/src/rollup/IRollupAdmin.sol";
-import "@arbitrum/nitro-contracts-1.2.1/src/rollup/IRollupLogic.sol";
 
 /// @dev Modified from
 ///      https://github.com/ArbitrumFoundation/governance/blob/ce6e0d8a9925b3815d38ba17621c4b775e8129c7/src/gov-action-contracts/sequencer/SetSequencerInboxMaxTimeVariationAction.sol
