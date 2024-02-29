@@ -27,7 +27,7 @@ contract DeployScript is Script {
         // finally deploy upgrade action
         new UpgradeArbOSVersionAtTimestampAction({
             _newArbOSVersion: uint64(arbosVersion),
-            _upgradeTimestamp: uint64(scheduleTimestamp),
+            _upgradeTimestamp: uint64(scheduleTimestamp)
         });
 
         vm.stopBroadcast();
