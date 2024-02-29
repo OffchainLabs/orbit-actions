@@ -68,10 +68,7 @@ contract NitroContracts1Point2Point1Upgrade {
             "new seq inbox implementation set"
         );
         (, uint256 futureBlocksAfter,,) = ISequencerInbox(address(sequencerInbox)).maxTimeVariation();
-        require(
-            futureBlocksBefore != 0 && futureBlocksBefore == futureBlocksAfter,
-            "maxTimeVariation not set"
-        );
+        require(futureBlocksBefore != 0 && futureBlocksBefore == futureBlocksAfter, "maxTimeVariation not set");
 
         // set the new challenge manager impl
         TransparentUpgradeableProxy challengeManager =
@@ -86,8 +83,6 @@ contract NitroContracts1Point2Point1Upgrade {
             proxyAdmin.getProxyImplementation(challengeManager) == newChallengeManagerImpl,
             "new challenge manager implementation set"
         );
-        require(
-            IChallengeManagerUpgradeInit(address(challengeManager)).osp() == newOsp, "new OSP not set"
-        );
+        require(IChallengeManagerUpgradeInit(address(challengeManager)).osp() == newOsp, "new OSP not set");
     }
 }
