@@ -3,10 +3,10 @@ These scripts empower `NitroContracts1Point2Point1UpgradeAction` action contract
 
 ## Deployed instances
 
-- L1 Sepolia (eth fee token): 0xA1e33965C46cD063CbfCBdC070400de22f5E61F8
-- L1 Sepolia (custom fee token): 0xED92b6A5483fe3825039B6420CB5B9C5471b9404
-- L2 ArbSepolia (eth fee token): 0xBBB59089Dac167C158eBC82326D70792E7855fEE
-- L2 ArbSepolia (custom fee token): 0xD37cBD59DF38010B9fB75deC9c9178829147b248
+- L1 Sepolia (eth fee token): 0xBC1e0ca800781F58F3a2f73dA4D895FdD61B0Cb5
+- L1 Sepolia (custom fee token): 0xEFf65644557573e3E781B0B586fD7488a26c8E46
+- L2 ArbSepolia (eth fee token): 0x588dA2aCa8Aa279134a694B1e0F57821463Eff21
+- L2 ArbSepolia (custom fee token): 0x8061CaD32c19e258B217D12d63A92C0870152b29
 
 ## How to use it
 
