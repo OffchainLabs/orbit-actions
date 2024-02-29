@@ -20,7 +20,7 @@ If you have a multisig as executor, you will can use the following command to cr
 (export $(cat .env | xargs) && cast calldata "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform()"))
 ```
 
-3. That's it, the ArbOS upgrade has been scheduled. You can make sure it has successfully executed by checking:
+3. That's it, the ArbOS upgrade has been scheduled. You can make sure it has successfully executed by checking (only avaliable after ArbOS20):
 ```
 cast call --rpc-url $CHILD_CHAIN_RPC 0x000000000000000000000000000000000000006b "getScheduledUpgrade()(uint64, uint64)"
 ```
