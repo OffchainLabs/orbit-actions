@@ -5,8 +5,8 @@ These scripts empower `NitroContracts1Point2Point1UpgradeAction` action contract
 
 - L1 Sepolia (eth fee token): 0xBC1e0ca800781F58F3a2f73dA4D895FdD61B0Cb5
 - L1 Sepolia (custom fee token): 0xEFf65644557573e3E781B0B586fD7488a26c8E46
-- L2 ArbSepolia (eth fee token): 0x588dA2aCa8Aa279134a694B1e0F57821463Eff21
-- L2 ArbSepolia (custom fee token): 0x8061CaD32c19e258B217D12d63A92C0870152b29
+- L2 ArbSepolia (eth fee token): 0xe9F95d0975e87e8E633fceCDF17fFc0f646cCfb8
+- L2 ArbSepolia (custom fee token): 0x86AdeeAcF16fdbCAEe615b12E56e064a665fCF47
 
 ## How to use it
 
