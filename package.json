@@ -24,7 +24,6 @@
     "gas-snapshot": "forge snapshot --match-path \"test/unit/**/*.t.sol\""
   },
   "devDependencies": {
-    "@arbitrum/nitro-contracts": "1.2.1",
     "@arbitrum/nitro-contracts-1.2.1": "npm:@arbitrum/nitro-contracts@1.2.1",
     "@offchainlabs/upgrade-executor": "1.1.0-beta.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
