@@ -11,12 +11,12 @@ forge script --account $DEPLOYER --rpc-url $RPC --broadcast --slow ./Deployer.s.
 
 This would deploy the upgrade action.
 
-`ExecuteUpgrade.s.sol` script uses previously deployed upgrade action to execute the upgrade. It makes following assumptions - L2UpgradeExecutor is an arbowner, and there is an EOA which has executor rights on the L2UpgradeExecutor. Proceed with upgrade using the owner account (the one with executor rights on L2UpgradeExecutor):
+Next step is to execute the ArbOs upgrade action. Assumption is that child chain UpgradeExecutor is the arbowner, and there is an EOA which has executor rights on the child chain UpgradeExecutor. Upgrade can be executed using `cast` CLI command (part of Foundry installation), using the owner account (the one with executor rights on child chain UpgradeExecutor) to send the transaction:
 ```
-forge script --account $EOA_OWNER --rpc-url $RPC --broadcast ./ExecuteUpgrade.s.sol -vvv
+cast send --account L3_OWNER --rpc-url $CHILD_CHAIN_RPC $CHILD_CHAIN_EXECUTOR "execute(address,bytes)" $ACTION  $(cast sig "perform()")
 ```
 
-That's it, the ArbOS upgrade has been scheduled. You can make sure it has successfully executed by checking wasm module root:
+That's it, the ArbOS upgrade has been scheduled. You can make sure it has successfully executed by checking:
 ```
 cast call --rpc-url $RPC 0x000000000000000000000000000000000000006b "getScheduledUpgrade()(uint64, uint64)"
 ```
