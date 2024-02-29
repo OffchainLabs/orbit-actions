@@ -6,3 +6,5 @@ test = 'test'
 cache_path  = 'cache_forge'
 solc_version = '0.8.16'
 optimizer_runs = 2000
+fs_permissions = [{ access = "read", path = "node_modules/@arbitrum/nitro-contracts/out/yul/Reader4844.yul/Reader4844.json"}]
+script = 'scripts'
