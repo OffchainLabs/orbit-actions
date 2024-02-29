@@ -1,88 +1,44 @@
-# Blockchain Eng Template Repo
-## Current Setup
-### Overview
-- Hardhat + Ethers v6 + Foundry
-- Solidity compiler config is synced between hardhat and foundry, with `foundry.toml` being the source
-- Arbitrum SDK formatting config for `ts`, `js`, `json` files
-- Forge formatter for `sol` files.
-- `yarn minimal-publish` script to generate a minimal `package.json` and `hardhat.config.js` before publishing to npm
-- CI
-    - Audit
-    - Lint
-    - Unit tests
-    - Fork tests
-    - Contract size
-    - Foundry gas snapshot
-    - Check signatures and storage
-    - E2E testing with Hardhat + Arbitrum SDK + testnode
+# Orbit Action Contracts
 
-### Compiler Settings
-Compiler settings are defined in `foundry.toml` and are copied by `hardhat.config.ts`.
+A set of contracts that are similar to Arbitrum [gov-action-contracts](https://github.com/ArbitrumFoundation/governance/tree/main/src/gov-action-contracts), but are designed to be used with the Orbit chains.
 
-Settings other than optimizer runs or solc version ARE NOT copied by `hardhat.config.ts`. For example, Hardhat will not know if via-ir is set in `foundry.toml`.
+## Requirments
 
-### Fork Tests
-Fork tests are located in `test/fork/<chain_name>/` and will run against the latest block of `$<CHAIN_NAME>_FORK_URL`.
-Use `yarn test:fork`.
+[yarn](https://classic.yarnpkg.com/lang/en/docs/install/) and [foundry](https://book.getfoundry.sh/getting-started/installation) are required to run the scripts
 
-Test files should only be placed in `test/fork/<chain_name>/` (subdrectories are allowed).
-Test files placed directly in `test/fork/` will not run.
+Most of the action contracts only support the following ownership setup:
+- Rollup Contract on Parent Chain owned by a `ParentUpgradeExecutor`
+- Rollup ProxyAdmin on Parent Chain owned by a `ParentUpgradeExecutor`
+- Arb Owner on the Child Orbit Chain is granted to alias of `ParentUpgradeExecutor`
+- Arb Owner on the Child Orbit Chain is granted to `ChildUpgradeExecutor`
 
-`yarn test:fork` will pass if there are no test files.
+For token bridge related operations, these are the additional requirements:
+- Token Bridge ProxyAdmin on Parent Chain owned by `ParentUpgradeExecutor`
+- Token Bridge ProxyAdmin on Child Orbit Chain owned by `ChildUpgradeExecutor`
+- Parent Chain Gateway Router and Custom Gateway owned by `ParentUpgradeExecutor`
 
-To disable fork tests:
-- Remove `.github/workflows/test-fork.yml` to disable in CI
-- Remove the `test:fork` script from `package.json`
-- Remove `test/fork`
+## Setup
 
-### E2E Tests
-End to end tests are located in `test/e2e/`, and ran by `yarn test:e2e`.
-
-After starting a testnode instance, run `yarn gen:network` before `yarn test:e2e`.
-
-The GitHub workflow defined in `.github/workflows/test-e2e.yml` will run test files against an L1+L2+L3 nitro testnode setup, once with an ETH fee L3 and once with a custom fee L3. 
-
-It is recommended to use `testSetup` defined in `test/e2e/testSetup.ts` to get signers, providers, and network information. Note that there is also a `testSetup` function defined in the sdk, don't use that one.
-
-This repository uses ethers v6, but the Arbitrum SDK uses ethers v5. 
-A separate ethers v5 dev dependency is included and can be imported for use with the sdk.
-```typescript
-import { ethers as ethersv5 } from 'ethers-v5'
+```
+yarn install
 ```
 
-To disable E2E tests:
-- Remove `.github/workflows/test-e2e.yml` to disable in CI
-- Remove `test:e2e` and `gen:network` scripts from `package.json`
-- Remove `test/e2e`
+## Actions
 
-If E2E tests are disabled, the Arbitrum SDK dependency is likely no longer required. To remove it:
-- `forge remove lib/arbitrum-sdk`
-- Remove `prepare-sdk` script and modify the `prepare` script in `package.json`
+### Nitro-Contract Upgrades
+- [nitro-contract 1.2.1 upgrade action](scripts/foundry/contract-upgrades/1.2.1)
+   
+   This action upgrade the nitro-contract to version 1.2.1 from 1.1.0 or 1.1.1. This is a pre-requisite to ArbOS20.
 
-### Signatures and Storage Tests
-These will fail if signatures or storage of any contract defined in `contracts/` changes.
+### ArbOS Upgrades
+- [ArbOS upgrade at timestamp action](scripts/foundry/arbos-upgrades/at-timestamp)
 
-Abstract contracts and interfaces are not checked. `scripts/print-contracts.bash` produces the list of contracts that are checked in these tests.
+   This action schedule an upgrade of the ArbOS to a specific version at a specific timestamp.
 
-Use `yarn test:signatures` and `yarn test:storage`.
+## Common upgrade path
+Here is a list of common upgrade paths that can be used to upgrade the Orbit chains.
 
-### Publishing to NPM
-A helper script, `minimal-publish` is included to generate a minimal `package.json` and `hardhat.config.js` before publishing to NPM.
-
-`yarn minimal-publish` will:
-- Generate a minimal `package.json` and `hardhat.config.js` from the existing `package.json` and solidity compiler settings
-- Prompt the user to confirm these files
-- Publish to NPM if the user confirms
-- Restore original files
-- Commit and tag if published successfully
-
-Note that `yarn publish --non-interactive` is used, so there will be no prompt for package version. See `scripts/publish.bash`
-
-## TODO / Wishlist
-- license?
-- nice libraries that leverage foundry’s fork cheatcodes to mock general cross chain interactions (probably done best as a separate project)
-- mutation testing
-- slither / other static analysis
-- https://github.com/OffchainLabs/nitro-contracts/pull/128/files
-- general proxy upgrade safety
-- ...
+### Nitro-Contract 1.2.1 with ArbOS 20
+1. Upgrade nitro-contract to 1.2.1 using [nitro-contract 1.2.1 upgrade action](scripts/foundry/contract-upgrades/1.2.1)
+2. Schedule ArbOS 20 upgrade using [ArbOS upgrade at timestamp action](scripts/foundry/arbos-upgrades/at-timestamp)
+3. Make sure your all your node operators are ready to upgrade nitro-node ^2.3.0 before the scheudled upgrade time
