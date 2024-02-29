@@ -2,7 +2,7 @@
 pragma solidity 0.8.16;
 
 import "forge-std/Script.sol";
-import {IReader4844} from "@arbitrum/nitro-contracts/src/libraries/IReader4844.sol";
+import {IReader4844} from "@arbitrum/nitro-contracts-1.2.1/src/libraries/IReader4844.sol";
 import {NitroContracts1Point2Point1UpgradeAction} from
     "../../../../contracts/parent-chain/contract-upgrades/NitroContracts1Point2Point1UpgradeAction.sol";
 
@@ -54,6 +54,24 @@ contract DeployScript is Script {
             reader4844Address = _deployBytecodeFromJSON(
                 "/node_modules/@arbitrum/nitro-contracts-1.2.1/out/yul/Reader4844.yul/Reader4844.json"
             );
+        }
+
+        if (vm.envBool("DEPLOY_BOTH")) {
+            // if true, also deploy the !IS_FEE_TOKEN_CHAIN action
+
+            // deploy sequencer inbox template
+            address seqInbox = _deployBytecodeWithConstructorFromJSON(
+                "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json",
+                abi.encode(117964, reader4844Address, !vm.envBool("IS_FEE_TOKEN_CHAIN"))
+            );
+
+            // finally deploy upgrade action
+            new NitroContracts1Point2Point1UpgradeAction({
+                _newWasmModuleRoot: vm.envBytes32("WASM_MODULE_ROOT"),
+                _newSequencerInboxImpl: seqInbox,
+                _newChallengeMangerImpl: challengeManager,
+                _newOsp: osp
+            });
         }
 
         // deploy sequencer inbox template

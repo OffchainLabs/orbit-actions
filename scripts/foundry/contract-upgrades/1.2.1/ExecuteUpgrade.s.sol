@@ -6,9 +6,9 @@ import {
     NitroContracts1Point2Point1UpgradeAction,
     ProxyAdmin
 } from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts1Point2Point1UpgradeAction.sol";
-import {IERC20Bridge} from "@arbitrum/nitro-contracts/src/bridge/IERC20Bridge.sol";
-import {IERC20Inbox} from "@arbitrum/nitro-contracts/src/bridge/IERC20Inbox.sol";
-import {IRollupCore} from "@arbitrum/nitro-contracts/src/rollup/IRollupCore.sol";
+import {IERC20Bridge} from "@arbitrum/nitro-contracts-1.2.1/src/bridge/IERC20Bridge.sol";
+import {IERC20Inbox} from "@arbitrum/nitro-contracts-1.2.1/src/bridge/IERC20Inbox.sol";
+import {IRollupCore} from "@arbitrum/nitro-contracts-1.2.1/src/rollup/IRollupCore.sol";
 import {IUpgradeExecutor} from "@offchainlabs/upgrade-executor/src/IUpgradeExecutor.sol";
 
 /**
