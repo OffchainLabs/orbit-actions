@@ -63,7 +63,7 @@ contract DeployScript is Script {
             // deploy sequencer inbox template
             address seqInbox2 = _deployBytecodeWithConstructorFromJSON(
                 "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json",
-                abi.encode(117964, reader4844Address, !vm.envBool("IS_FEE_TOKEN_CHAIN"))
+                abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, !vm.envBool("IS_FEE_TOKEN_CHAIN"))
             );
 
             // finally deploy upgrade action
@@ -78,7 +78,7 @@ contract DeployScript is Script {
         // deploy sequencer inbox template
         address seqInbox = _deployBytecodeWithConstructorFromJSON(
             "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json",
-            abi.encode(117964, reader4844Address, vm.envBool("IS_FEE_TOKEN_CHAIN"))
+            abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, vm.envBool("IS_FEE_TOKEN_CHAIN"))
         );
 
         // finally deploy upgrade action
