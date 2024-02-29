@@ -6,29 +6,47 @@ import {
     NitroContracts1Point2Point1UpgradeAction,
     ProxyAdmin
 } from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts1Point2Point1UpgradeAction.sol";
-import {IERC20Bridge} from "@arbitrum/nitro-contracts/src/bridge/IERC20Bridge.sol";
-import {IERC20Inbox} from "@arbitrum/nitro-contracts/src/bridge/IERC20Inbox.sol";
-import {IRollupCore} from "@arbitrum/nitro-contracts/src/rollup/IRollupCore.sol";
+import {IERC20Bridge} from "@arbitrum/nitro-contracts-1.2.1/src/bridge/IERC20Bridge.sol";
+import {IERC20Inbox} from "@arbitrum/nitro-contracts-1.2.1/src/bridge/IERC20Inbox.sol";
+import {ISequencerInbox} from "@arbitrum/nitro-contracts-1.2.1/src/bridge/ISequencerInbox.sol";
+import {IRollupCore} from "@arbitrum/nitro-contracts-1.2.1/src/rollup/IRollupCore.sol";
 import {IUpgradeExecutor} from "@offchainlabs/upgrade-executor/src/IUpgradeExecutor.sol";
 
+import {IIsUsingFeeToken} from "../../helper/IIsUsingFeeToken.sol";
+
 /**
- * @title ExecuteUpgradeScript
+ * @title ExecuteNitroContracts1Point2Point1UpgradeScript
  * @notice This script executes nitro contracts 1.2.1 upgrade through UpgradeExecutor
  */
-contract ExecuteUpgradeScript is Script {
+contract ExecuteNitroContracts1Point2Point1UpgradeScript is Script {
     function run() public {
         bytes32 wasmModuleRoot = vm.envBytes32("WASM_MODULE_ROOT");
+        uint256 maxDataSize = vm.envUint("MAX_DATA_SIZE");
+        bool isFeeTokenChain = vm.envBool("IS_FEE_TOKEN_CHAIN");
         NitroContracts1Point2Point1UpgradeAction upgradeAction =
             NitroContracts1Point2Point1UpgradeAction(vm.envAddress("UPGRADE_ACTION_ADDRESS"));
         require(upgradeAction.newWasmModuleRoot() == wasmModuleRoot, "WASM_MODULE_ROOT mismatch");
+        require(
+            ISequencerInbox(upgradeAction.newSequencerInboxImpl()).maxDataSize() == maxDataSize,
+            "MAX_DATA_SIZE mismatch with action"
+        );
+        require(
+            isFeeTokenChain == IIsUsingFeeToken(upgradeAction.newSequencerInboxImpl()).isUsingFeeToken(),
+            "IS_FEE_TOKEN_CHAIN mismatch with action"
+        );
 
-        bool isFeeTokenChain = vm.envBool("IS_FEE_TOKEN_CHAIN");
         IERC20Inbox inbox = IERC20Inbox(vm.envAddress("INBOX_ADDRESS"));
         address bridge = address(inbox.bridge());
         try IERC20Bridge(bridge).nativeToken() returns (address feeToken) {
-            require(isFeeTokenChain || feeToken == address(0), "fee token mismatch");
+            require(isFeeTokenChain || feeToken == address(0), "IS_FEE_TOKEN_CHAIN mismatch");
         } catch {
-            require(!isFeeTokenChain, "fee token mismatch");
+            require(!isFeeTokenChain, "IS_FEE_TOKEN_CHAIN mismatch");
+        }
+
+        try inbox.maxDataSize() returns (uint256 _maxDataSize) {
+            require(_maxDataSize == maxDataSize, "MAX_DATA_SIZE mismatch with current deployment");
+        } catch {
+            require(maxDataSize == 117964);
         }
 
         vm.startBroadcast();

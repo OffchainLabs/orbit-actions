@@ -4,12 +4,12 @@ pragma solidity 0.8.16;
 import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
-import "@arbitrum/nitro-contracts/src/bridge/IBridge.sol";
-import "@arbitrum/nitro-contracts/src/bridge/IInbox.sol";
-import "@arbitrum/nitro-contracts/src/bridge/IOutbox.sol";
-import "@arbitrum/nitro-contracts/src/bridge/ISequencerInbox.sol";
-import "@arbitrum/nitro-contracts/src/rollup/IRollupAdmin.sol";
-import "@arbitrum/nitro-contracts/src/rollup/IRollupLogic.sol";
+import "@arbitrum/nitro-contracts-1.2.1/src/bridge/IBridge.sol";
+import "@arbitrum/nitro-contracts-1.2.1/src/bridge/IInbox.sol";
+import "@arbitrum/nitro-contracts-1.2.1/src/bridge/IOutbox.sol";
+import "@arbitrum/nitro-contracts-1.2.1/src/bridge/ISequencerInbox.sol";
+import "@arbitrum/nitro-contracts-1.2.1/src/rollup/IRollupAdmin.sol";
+import "@arbitrum/nitro-contracts-1.2.1/src/rollup/IRollupLogic.sol";
 
 interface ISeqInboxPostUpgradeInit {
     function postUpgradeInit() external;
