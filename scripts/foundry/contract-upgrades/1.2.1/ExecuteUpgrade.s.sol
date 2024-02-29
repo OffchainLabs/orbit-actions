@@ -25,7 +25,7 @@ contract ExecuteUpgradeScript is Script {
         bytes memory upgradeCalldata = abi.encodeCall(NitroContracts1Point2Point1UpgradeAction.perform, (rollup, proxyAdmin));
 
         // execute the upgrade
-        UpgradeExecutor executor = UpgradeExecutor(vm.envAddress("L1_UPGRADE_EXECUTOR_ADDRESS"));
+        UpgradeExecutor executor = UpgradeExecutor(vm.envAddress("PARENT_UPGRADE_EXECUTOR_ADDRESS"));
         executor.execute(address(upgradeAction), upgradeCalldata);
 
         // sanity check, full checks are done on-chain by the upgrade action
