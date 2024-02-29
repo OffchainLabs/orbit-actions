@@ -10,11 +10,11 @@ import {ArbitrumChecker} from "@arbitrum/nitro-contracts-1.2.1/src/libraries/Arb
 import {MockArbSys} from "../../helper/MockArbSys.sol";
 
 /**
- * @title DeployScript
+ * @title DeployNitroContracts1Point2Point1UpgradeActionScript
  * @notice This script deploys OSPs and ChallengeManager templates, blob reader and SequencerInbox template.
  *          Not applicable for Arbitrum based chains due to precompile call in SequencerInbox (Foundry simulation breaks).
  */
-contract DeployScript is Script {
+contract DeployNitroContracts1Point2Point1UpgradeActionScript is Script {
     function run() public {
         bool isArbitrum = vm.envBool("PARENT_CHAIN_IS_ARBITRUM");
         if (isArbitrum) {

@@ -15,10 +15,10 @@ import {IUpgradeExecutor} from "@offchainlabs/upgrade-executor/src/IUpgradeExecu
 import {IIsUsingFeeToken} from "../../helper/IIsUsingFeeToken.sol";
 
 /**
- * @title ExecuteUpgradeScript
+ * @title ExecuteNitroContracts1Point2Point1UpgradeScript
  * @notice This script executes nitro contracts 1.2.1 upgrade through UpgradeExecutor
  */
-contract ExecuteUpgradeScript is Script {
+contract ExecuteNitroContracts1Point2Point1UpgradeScript is Script {
     function run() public {
         bytes32 wasmModuleRoot = vm.envBytes32("WASM_MODULE_ROOT");
         uint256 maxDataSize = vm.envUint("MAX_DATA_SIZE");

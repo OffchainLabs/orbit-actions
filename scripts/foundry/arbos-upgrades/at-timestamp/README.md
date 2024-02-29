@@ -4,9 +4,9 @@ These scripts empower `UpgradeArbOSVersionAtTimestampAction` contract which sche
 ## How to use it
 1. Setup .env according to the example files, make sure you have the correct ArbOS version and timestamp defined in the env file.
 
-`Deployer.s.sol` script deploys `UpgradeArbOSVersionAtTimestampAction` contract. It can be executed in this directory like this:
+`DeployUpgradeArbOSVersionAtTimestampAction.s.sol` script deploys `UpgradeArbOSVersionAtTimestampAction` contract. It can be executed in this directory like this:
 ```bash
-forge script --sender $DEPLOYER --rpc-url $CHILD_CHAIN_RPC --broadcast --slow ./Deployer.s.sol -vvv --verify
+forge script --sender $DEPLOYER --rpc-url $CHILD_CHAIN_RPC --broadcast --slow ./DeployUpgradeArbOSVersionAtTimestampActionScript.s.sol -vvv --verify
 ```
 This would deploy the upgrade action. Update your .env file with the address of the upgrade action.
 
