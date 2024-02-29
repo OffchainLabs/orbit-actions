@@ -1,4 +1,4 @@
-## Nitro contracts 1.2.1 upgrade
+# Nitro contracts 1.2.1 upgrade
 These scripts empower `NitroContracts1Point2Point1UpgradeAction` action contract which performs upgrade to [1.2.1 release](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v1.2.1) of Nitro contracts for existing Orbit chains.
 
 ## How to use it

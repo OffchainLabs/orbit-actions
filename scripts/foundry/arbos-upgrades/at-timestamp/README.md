@@ -1,4 +1,4 @@
-## ArbOS Upgrade at Timestamp
+# ArbOS Upgrade at Timestamp
 These scripts empower `UpgradeArbOSVersionAtTimestampAction` contract which schedule an ArbOS at specific timestamp for existing Orbit chains. Please note that ArbOS upgrade usually have a prerequisite of upgrading nitro-contracts and wasm module root to a specific version. Please make sure to check if your orbit chain met those prerequisite before performing ArbOS upgrade.
 
 ## How to use it
