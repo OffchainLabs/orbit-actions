@@ -28,7 +28,7 @@ yarn install
 ### Nitro-Contract Upgrades
 - [nitro-contract 1.2.1 upgrade action](scripts/foundry/contract-upgrades/1.2.1)
    
-   This action upgrade the nitro-contract to version 1.2.1 from 1.1.0 or 1.1.1. This is a pre-requisite to ArbOS20.
+   This action upgrade the nitro-contract to version [1.2.1](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v1.2.1) from 1.1.0 or 1.1.1. This is a pre-requisite to ArbOS20.
 
 ### ArbOS Upgrades
 - [ArbOS upgrade at timestamp action](scripts/foundry/arbos-upgrades/at-timestamp)
