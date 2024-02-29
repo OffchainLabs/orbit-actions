@@ -6,3 +6,4 @@ test = 'test'
 cache_path  = 'cache_forge'
 solc_version = '0.8.20'
 optimizer_runs = 2000
+script = 'scripts'
