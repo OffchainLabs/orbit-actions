@@ -6,7 +6,7 @@ import {IReader4844} from "@arbitrum/nitro-contracts-1.2.1/src/libraries/IReader
 import {NitroContracts1Point2Point1UpgradeAction} from
     "../../../../contracts/parent-chain/contract-upgrades/NitroContracts1Point2Point1UpgradeAction.sol";
 
-import {ArbitrumChecker} from "@arbitrum/nitro-contracts/src/libraries/ArbitrumChecker.sol";
+import {ArbitrumChecker} from "@arbitrum/nitro-contracts-1.2.1/src/libraries/ArbitrumChecker.sol";
 import {MockArbSys} from "../../helper/MockArbSys.sol";
 
 /**
@@ -60,7 +60,7 @@ contract DeployScript is Script {
             // if true, also deploy the !IS_FEE_TOKEN_CHAIN action
 
             // deploy sequencer inbox template
-            address seqInbox = _deployBytecodeWithConstructorFromJSON(
+            address seqInbox2 = _deployBytecodeWithConstructorFromJSON(
                 "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json",
                 abi.encode(117964, reader4844Address, !vm.envBool("IS_FEE_TOKEN_CHAIN"))
             );
@@ -68,7 +68,7 @@ contract DeployScript is Script {
             // finally deploy upgrade action
             new NitroContracts1Point2Point1UpgradeAction({
                 _newWasmModuleRoot: vm.envBytes32("WASM_MODULE_ROOT"),
-                _newSequencerInboxImpl: seqInbox,
+                _newSequencerInboxImpl: seqInbox2,
                 _newChallengeMangerImpl: challengeManager,
                 _newOsp: osp
             });
