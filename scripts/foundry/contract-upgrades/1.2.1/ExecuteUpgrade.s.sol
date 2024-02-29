@@ -7,7 +7,7 @@ import {
     ProxyAdmin
 } from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts1Point2Point1UpgradeAction.sol";
 import {IRollupCore} from "@arbitrum/nitro-contracts/src/rollup/IRollupCore.sol";
-import {UpgradeExecutor} from "@offchainlabs/upgrade-executor/src/UpgradeExecutor.sol";
+import {IUpgradeExecutor} from "@offchainlabs/upgrade-executor/src/IUpgradeExecutor.sol";
 
 /**
  * @title ExecuteUpgradeScript
@@ -25,7 +25,7 @@ contract ExecuteUpgradeScript is Script {
         bytes memory upgradeCalldata = abi.encodeCall(NitroContracts1Point2Point1UpgradeAction.perform, (rollup, proxyAdmin));
 
         // execute the upgrade
-        UpgradeExecutor executor = UpgradeExecutor(vm.envAddress("PARENT_UPGRADE_EXECUTOR_ADDRESS"));
+        IUpgradeExecutor executor = IUpgradeExecutor(vm.envAddress("PARENT_UPGRADE_EXECUTOR_ADDRESS"));
         executor.execute(address(upgradeAction), upgradeCalldata);
 
         // sanity check, full checks are done on-chain by the upgrade action

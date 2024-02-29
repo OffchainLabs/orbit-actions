@@ -10,7 +10,7 @@ import {OneStepProofEntry} from "@arbitrum/nitro-contracts/src/osp/OneStepProofE
 import {ChallengeManager} from "@arbitrum/nitro-contracts/src/challenge/ChallengeManager.sol";
 import {SequencerInbox} from "@arbitrum/nitro-contracts/src/bridge/SequencerInbox.sol";
 import {IReader4844} from "@arbitrum/nitro-contracts/src/libraries/IReader4844.sol";
-import {NitroContracts1Point2Point1Upgrade} from "../../../../contracts/upgrade/NitroContracts1Point2Point1Upgrade.sol";
+import {NitroContracts1Point2Point1UpgradeAction} from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts1Point2Point1UpgradeAction.sol";
 
 /**
  * @title DeployScript
@@ -54,7 +54,7 @@ contract DeployScript is Script {
         );
 
         // finally deploy upgrade action
-        new NitroContracts1Point2Point1Upgrade({
+        new NitroContracts1Point2Point1UpgradeAction({
             _newWasmModuleRoot: vm.envBytes32("WASM_MODULE_ROOT"),
             _newSequencerInboxImpl: seqInbox,
             _newChallengeMangerImpl: challengeManager,
@@ -67,7 +67,7 @@ contract DeployScript is Script {
     /**
      * @notice Read Reader4844 bytecode from JSON file at ${root}/out/yul/Reader4844.yul/Reader4844.json
      */
-    function _getReader4844Bytecode() internal returns (bytes memory) {
+    function _getReader4844Bytecode() internal view returns (bytes memory) {
         string memory readerBytecodeFilePath = string(
             abi.encodePacked(
                 vm.projectRoot(), "/node_modules/@arbitrum/nitro-contracts/out/yul/Reader4844.yul/Reader4844.json"
