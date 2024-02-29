@@ -56,8 +56,9 @@ contract DeployScript is Script {
             );
         }
 
-        if (vm.envBool("DEPLOY_BOTH")) {
+        if (vm.envOr("DEPLOY_BOTH", false)) {
             // if true, also deploy the !IS_FEE_TOKEN_CHAIN action
+            // only used to save gas cost when deploying both native and custom fee version
 
             // deploy sequencer inbox template
             address seqInbox2 = _deployBytecodeWithConstructorFromJSON(
