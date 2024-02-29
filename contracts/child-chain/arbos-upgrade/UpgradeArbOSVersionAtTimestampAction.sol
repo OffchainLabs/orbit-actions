@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.16;
 
-import "@arbitrum/nitro-contracts/src/precompiles/ArbOwner.sol";
+import "@arbitrum/nitro-contracts-1.2.1/src/precompiles/ArbOwner.sol";
 
 /// @dev    Modified from
 ///         https://github.com/ArbitrumFoundation/governance/blob/a5375eea133e1b88df2116ed510ab2e3c07293d3/src/gov-action-contracts/arbos-upgrade/UpgradeArbOSVersionAction.sol
