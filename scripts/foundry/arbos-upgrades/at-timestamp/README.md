@@ -6,14 +6,14 @@ Setup .env according to the example files, make sure you have the correct ArbOS 
 
 `Deployer.s.sol` script deploys `UpgradeArbOSVersionAtTimestampAction` contract. It can be executed in this directory like this:
 ```bash
-forge script --sender $DEPLOYER --rpc-url $CHILD_CHAIN_RPC --broadcast --slow ./Deployer.s.sol -vvv
+forge script --sender $DEPLOYER --rpc-url $CHILD_CHAIN_RPC --broadcast --slow ./Deployer.s.sol -vvv --verify
 ```
 
 This would deploy the upgrade action. Update your .env file with the address of the upgrade action.
 
 Next step is to execute the ArbOs upgrade action. Assumption is that child chain UpgradeExecutor is the arbowner, and there is an EOA which has executor rights on the child chain UpgradeExecutor. Upgrade can be executed using `cast` CLI command (part of Foundry installation), using the owner account (the one with executor rights on child chain UpgradeExecutor) to send the transaction:
 ```bash
-(export $(cat .env | xargs) && cast send $CHILD_UPGRADE_EXECUTOR_ADDRESS "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform()") --rpc-url $CHILD_CHAIN_RPC --account OWNER)
+(export $(cat .env | xargs) && cast send $CHILD_UPGRADE_EXECUTOR_ADDRESS "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform()") --rpc-url $CHILD_CHAIN_RPC --account EXECUTOR)
 ```
 
 If you have a multisig as executor, you will can use the following command to create the payload for calling into the CHILD_UPGRADE_EXECUTOR:
