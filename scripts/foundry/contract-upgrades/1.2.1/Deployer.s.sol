@@ -13,6 +13,9 @@ import {IReader4844} from "@arbitrum/nitro-contracts/src/libraries/IReader4844.s
 import {NitroContracts1Point2Point1UpgradeAction} from
     "../../../../contracts/parent-chain/contract-upgrades/NitroContracts1Point2Point1UpgradeAction.sol";
 
+import {ArbitrumChecker} from "@arbitrum/nitro-contracts/src/libraries/ArbitrumChecker.sol";
+import {MockArbSys} from "../../helper/MockArbSys.sol";
+
 /**
  * @title DeployScript
  * @notice This script deploys OSPs and ChallengeManager templates, blob reader and SequencerInbox template.
@@ -20,9 +23,11 @@ import {NitroContracts1Point2Point1UpgradeAction} from
  */
 contract DeployScript is Script {
     function run() public {
-        uint256 _chainId = block.chainid;
-        if (_chainId == 42161 || _chainId == 42170 || _chainId == 421614) {
-            revert("Chain ID not supported");
+        bool isArbitrum = vm.envBool("PARENT_CHAIN_IS_ARBITRUM");
+        if (isArbitrum) {
+            // etch a mock ArbSys contract so that foundry simulate it nicely
+            bytes memory mockArbSysCode = address(new MockArbSys()).code;
+            vm.etch(address(100), mockArbSysCode);
         }
 
         vm.startBroadcast();
@@ -37,20 +42,22 @@ contract DeployScript is Script {
         // deploy new challenge manager templates
         address challengeManager = address(new ChallengeManager());
 
-        // deploy blob reader
-        bytes memory reader4844Bytecode = _getReader4844Bytecode();
         address reader4844Address;
-        assembly {
-            reader4844Address := create(0, add(reader4844Bytecode, 0x20), mload(reader4844Bytecode))
+        if (!isArbitrum) {
+            // deploy blob reader
+            bytes memory reader4844Bytecode = _getReader4844Bytecode();
+            assembly {
+                reader4844Address := create(0, add(reader4844Bytecode, 0x20), mload(reader4844Bytecode))
+            }
+            require(reader4844Address != address(0), "Reader4844 could not be deployed");
         }
-        require(reader4844Address != address(0), "Reader4844 could not be deployed");
 
         // deploy sequencer inbox template
         address seqInbox = address(
             new SequencerInbox({
                 _maxDataSize: 117964,
                 reader4844_: IReader4844(reader4844Address),
-                _isUsingFeeToken: false
+                _isUsingFeeToken: vm.envBool("IS_FEE_TOKEN_CHAIN")
             })
         );
 

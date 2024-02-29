@@ -6,6 +6,8 @@ import {
     NitroContracts1Point2Point1UpgradeAction,
     ProxyAdmin
 } from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts1Point2Point1UpgradeAction.sol";
+import {IERC20Bridge} from "@arbitrum/nitro-contracts/src/bridge/IERC20Bridge.sol";
+import {IERC20Inbox} from "@arbitrum/nitro-contracts/src/bridge/IERC20Inbox.sol";
 import {IRollupCore} from "@arbitrum/nitro-contracts/src/rollup/IRollupCore.sol";
 import {IUpgradeExecutor} from "@offchainlabs/upgrade-executor/src/IUpgradeExecutor.sol";
 
@@ -20,11 +22,20 @@ contract ExecuteUpgradeScript is Script {
             NitroContracts1Point2Point1UpgradeAction(vm.envAddress("UPGRADE_ACTION_ADDRESS"));
         require(upgradeAction.newWasmModuleRoot() == wasmModuleRoot, "WASM_MODULE_ROOT mismatch");
 
+        bool isFeeTokenChain = vm.envBool("IS_FEE_TOKEN_CHAIN");
+        IERC20Inbox inbox = IERC20Inbox(vm.envAddress("INBOX_ADDRESS"));
+        address bridge = address(inbox.bridge());
+        try IERC20Bridge(bridge).nativeToken() returns (address feeToken) {
+            require(isFeeTokenChain || feeToken == address(0), "fee token mismatch");
+        } catch {
+            require(!isFeeTokenChain, "fee token mismatch");
+        }
+
         vm.startBroadcast();
 
         // prepare upgrade calldata
 
-        IRollupCore rollup = IRollupCore(vm.envAddress("ROLLUP_ADDRESS"));
+        IRollupCore rollup = IRollupCore(address(IERC20Bridge(bridge).rollup()));
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
         bytes memory upgradeCalldata =
             abi.encodeCall(NitroContracts1Point2Point1UpgradeAction.perform, (rollup, proxyAdmin));
