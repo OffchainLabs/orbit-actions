@@ -55,7 +55,7 @@ contract DeployScript is Script {
 
         // finally deploy upgrade action
         new NitroContracts1Point2Point1Upgrade({
-            _newWasmModuleRoot: bytes32(0x8b104a2e80ac6165dc58b9048de12f301d70b02a0ab51396c22b4b4b802a16a4),
+            _newWasmModuleRoot: vm.envBytes32("WASM_MODULE_ROOT"),
             _newSequencerInboxImpl: seqInbox,
             _newChallengeMangerImpl: challengeManager,
             _newOsp: osp
