@@ -15,11 +15,15 @@ import {IUpgradeExecutor} from "@offchainlabs/upgrade-executor/src/IUpgradeExecu
  */
 contract ExecuteUpgradeScript is Script {
     function run() public {
+        bytes32 wasmModuleRoot = vm.envBytes32("WASM_MODULE_ROOT");
+        NitroContracts1Point2Point1UpgradeAction upgradeAction =
+            NitroContracts1Point2Point1UpgradeAction(vm.envAddress("UPGRADE_ACTION_ADDRESS"));
+        require(upgradeAction.newWasmModuleRoot() == wasmModuleRoot, "WASM_MODULE_ROOT mismatch");
+
         vm.startBroadcast();
 
         // prepare upgrade calldata
-        NitroContracts1Point2Point1UpgradeAction upgradeAction =
-            NitroContracts1Point2Point1UpgradeAction(vm.envAddress("UPGRADE_ACTION_ADDRESS"));
+
         IRollupCore rollup = IRollupCore(vm.envAddress("ROLLUP_ADDRESS"));
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
         bytes memory upgradeCalldata = abi.encodeCall(NitroContracts1Point2Point1UpgradeAction.perform, (rollup, proxyAdmin));
