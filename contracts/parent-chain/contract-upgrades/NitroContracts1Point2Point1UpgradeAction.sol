@@ -24,7 +24,7 @@ interface IChallengeManagerUpgradeInit {
 /// @dev    Does NOT support versions besides 1.1.0 or 1.1.1, inclduing their beta versions
 ///         Modified from
 ///         https://github.com/ArbitrumFoundation/governance/blob/a5375eea133e1b88df2116ed510ab2e3c07293d3/src/gov-action-contracts/AIPs/ArbOS20/ArbOS20Action.sol
-contract NitroContracts1Point2Point1Upgrade {
+contract NitroContracts1Point2Point1UpgradeAction {
     address public immutable newSequencerInboxImpl;
     address public immutable newChallengeManagerImpl;
     address public immutable newOsp;
