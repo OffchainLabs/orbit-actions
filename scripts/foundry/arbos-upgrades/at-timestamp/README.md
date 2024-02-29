@@ -13,12 +13,12 @@ This would deploy the upgrade action. Update your .env file with the address of 
 
 Next step is to execute the ArbOs upgrade action. Assumption is that child chain UpgradeExecutor is the arbowner, and there is an EOA which has executor rights on the child chain UpgradeExecutor. Upgrade can be executed using `cast` CLI command (part of Foundry installation), using the owner account (the one with executor rights on child chain UpgradeExecutor) to send the transaction:
 ```bash
-(export $(cat .env | xargs) && cast send $L2_UPGRADE_EXECUTOR_ADDRESS "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform()") --rpc-url $CHILD_CHAIN_RPC --account OWNER)
+(export $(cat .env | xargs) && cast send $CHILD_UPGRADE_EXECUTOR_ADDRESS "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform()") --rpc-url $CHILD_CHAIN_RPC --account OWNER)
 ```
 
-If you have a multisig as executor, you will can use the following command to create the payload:
+If you have a multisig as executor, you will can use the following command to create the payload for calling into the CHILD_UPGRADE_EXECUTOR:
 ```bash
-cast calldata "perform()"
+(export $(cat .env | xargs) && cast calldata "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform()"))
 ```
 
 That's it, the ArbOS upgrade has been scheduled. You can make sure it has successfully executed by checking:
