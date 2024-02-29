@@ -2,7 +2,8 @@
 pragma solidity 0.8.16;
 
 import "forge-std/Script.sol";
-import {UpgradeArbOSVersionAtTimestampAction} from "../../../../contracts/child-chain/arbos-upgrade/UpgradeArbOSVersionAtTimestampAction.sol";
+import {UpgradeArbOSVersionAtTimestampAction} from
+    "../../../../contracts/child-chain/arbos-upgrade/UpgradeArbOSVersionAtTimestampAction.sol";
 
 /**
  * @title DeployScript
@@ -10,7 +11,6 @@ import {UpgradeArbOSVersionAtTimestampAction} from "../../../../contracts/child-
  */
 contract DeployScript is Script {
     function run() public {
-
         uint256 arbosVersion = vm.envUint("ARBOS_VERSION");
         uint256 scheduleTimestamp = vm.envUint("SCHEDULE_TIMESTAMP");
 

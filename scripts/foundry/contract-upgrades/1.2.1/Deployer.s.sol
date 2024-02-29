@@ -10,7 +10,8 @@ import {OneStepProofEntry} from "@arbitrum/nitro-contracts/src/osp/OneStepProofE
 import {ChallengeManager} from "@arbitrum/nitro-contracts/src/challenge/ChallengeManager.sol";
 import {SequencerInbox} from "@arbitrum/nitro-contracts/src/bridge/SequencerInbox.sol";
 import {IReader4844} from "@arbitrum/nitro-contracts/src/libraries/IReader4844.sol";
-import {NitroContracts1Point2Point1UpgradeAction} from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts1Point2Point1UpgradeAction.sol";
+import {NitroContracts1Point2Point1UpgradeAction} from
+    "../../../../contracts/parent-chain/contract-upgrades/NitroContracts1Point2Point1UpgradeAction.sol";
 
 /**
  * @title DeployScript

@@ -26,7 +26,8 @@ contract ExecuteUpgradeScript is Script {
 
         IRollupCore rollup = IRollupCore(vm.envAddress("ROLLUP_ADDRESS"));
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
-        bytes memory upgradeCalldata = abi.encodeCall(NitroContracts1Point2Point1UpgradeAction.perform, (rollup, proxyAdmin));
+        bytes memory upgradeCalldata =
+            abi.encodeCall(NitroContracts1Point2Point1UpgradeAction.perform, (rollup, proxyAdmin));
 
         // execute the upgrade
         IUpgradeExecutor executor = IUpgradeExecutor(vm.envAddress("PARENT_UPGRADE_EXECUTOR_ADDRESS"));
