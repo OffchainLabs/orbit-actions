@@ -12,7 +12,7 @@
   resolved "https://registry.yarnpkg.com/@adraffy/ens-normalize/-/ens-normalize-1.10.1.tgz#63430d04bd8c5e74f8d7d049338f1cd9d4f02069"
   integrity sha512-96Z2IP3mYmF1Xg2cDm8f1gWGf/HUVedQ3FMifV4kG/PQ4yEP51xDtRAEfhVNt5f/uzpNkZHwWQuUcu6D6K+Ekw==
 
-"@arbitrum/nitro-contracts@1.2.1":
+"@arbitrum/nitro-contracts-1.2.1@npm:@arbitrum/nitro-contracts@1.2.1", "@arbitrum/nitro-contracts@1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@arbitrum/nitro-contracts/-/nitro-contracts-1.2.1.tgz#2ebff205886e7dd1017a3e1df68fb1a8ab36185b"
   integrity sha512-1k8t5ozeyCUpZ4RFlPXF876JE57z3w/YW1qUow1l9TF2+VDnbqGAiK3axhVZFhYUZxo+PajqsdpWr3FK+yW6uA==
