@@ -5,7 +5,7 @@ import "forge-std/Script.sol";
 import {
     NitroContracts1Point2Point1Upgrade,
     ProxyAdmin
-} from "../../../../contracts/upgrade/NitroContracts1Point2Point1Upgrade.sol";
+} from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts1Point2Point1Upgrade.sol";
 import {IRollupCore} from "@arbitrum/nitro-contracts/src/rollup/IRollupCore.sol";
 import {UpgradeExecutor} from "@offchainlabs/upgrade-executor/src/UpgradeExecutor.sol";
 
