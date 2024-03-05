@@ -22,7 +22,7 @@ jobs:
         with:
           version: nightly
 
-      - run: yarn
+      - run: yarn minimal-install
       - run: yarn test:unit
 
   test-contract-size:
@@ -37,8 +37,7 @@ jobs:
         with:
           version: nightly
 
-      - run: yarn    
-      - run: forge install
+      - run: yarn minimal-install
       - run: yarn test:sizes
 
   test-gas-check:
@@ -53,8 +52,7 @@ jobs:
         with:
           version: nightly
 
-      - run: yarn
-      - run: forge install
+      - run: yarn minimal-install
       - run: yarn test:gas-check
 
   test-sigs:
@@ -69,8 +67,7 @@ jobs:
         with:
           version: nightly
 
-      - run: yarn    
-      - run: forge install && forge build
+      - run: yarn minimal-install
       - run: yarn test:sigs
 
   test-storage:
@@ -85,6 +82,5 @@ jobs:
         with:
           version: nightly
         
-      - run: yarn
-      - run: forge install && forge build
+      - run: yarn minimal-install
       - run: yarn test:storage

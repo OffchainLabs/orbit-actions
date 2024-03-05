@@ -22,5 +22,5 @@ jobs:
         with:
           version: nightly
 
-      - run: yarn
+      - run: yarn minimal-install
       - run: yarn audit:ci
