@@ -38,7 +38,7 @@ To disable fork tests:
 ### E2E Tests and the Arbitrum SDK
 End to end tests are located in `test/e2e/`, and ran by `yarn test:e2e`.
 
-The GitHub workflow defined in `.github/workflows/test-e2e.yml` will run test files against an L1+L2+L3 nitro testnode setup, once with an ETH fee L3 and once with a custom fee L3. 
+The GitHub workflow defined in `.github/workflows/test-e2e.yml` will run test files against an L1+L2 nitro testnode setup by default. There are commented out jobs that add an L3 with ETH or custom fees.
 
 It is recommended to use `testSetup` defined in `test/e2e/testSetup.ts` to get signers, providers, and network information. Note that there is also a `testSetup` function defined in the SDK, don't use that one.
 
@@ -48,11 +48,19 @@ A separate ethers v5 dev dependency is included and can be imported for use with
 import { ethers as ethersv5 } from 'ethers-v5'
 ```
 
+#### Disabling / Removing
 To disable the end to end testing CI jobs, remove `on: pull_request:` from `.github/workflows/test-e2e.yml`
 
 To completely remove end to end test setup:
 - `forge remove lib/arbitrum-sdk && rm .github/workflows/test-e2e.yml && rm -rf test/e2e`
 - remove `test:e2e` package script and modify `prepare` package script
+
+#### Adding to Existing Projects
+To add the end to end setup to an existing hardhat+foundry project:
+- `forge install https://github.com/OffchainLabs/arbitrum-sdk@<version>`
+- Copy `.github/workflows/test-e2e.yml`
+- Copy `test/e2e/` directory
+- Copy `test:e2e` and `prepare` package scripts 
 
 ### Signatures and Storage Tests
 These will fail if signatures or storage of any contract defined in `contracts/` changes.
