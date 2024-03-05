@@ -4,6 +4,7 @@
   "repository": "https://github.com/OffchainLabs/blockchain-eng-template.git",
   "scripts": {
     "prepare": "forge install && cd lib/arbitrum-sdk && yarn",
+    "minimal-install": "yarn --ignore-scripts && forge install",
     "minimal-publish": "./scripts/publish.bash",
     "audit:ci": "audit-ci --config ./audit-ci.jsonc",
     "upload-all-selectors": "forge build && find ./out -name \"*.json\" -exec cast upload-signature {} +",

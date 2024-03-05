@@ -1,5 +1,7 @@
 #!/bin/bash
 
+forge build
+
 outputDir="./test/signatures"
 for contractName in $(./scripts/print-contracts.bash)
 do
