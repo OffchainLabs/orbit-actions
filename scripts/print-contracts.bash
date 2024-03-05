@@ -2,6 +2,15 @@
 
 # search for all contracts defined in the contracts directory and print them
 
+# need to build with this flag to get AST output
+# could keep an eye on this issue to optimize this: https://github.com/foundry-rs/foundry/issues/7212
+forge build --build-info > /dev/null
+
+if [ $? -ne 0 ]; then
+    echo "Build failed"
+    exit 1
+fi
+
 OUTPUT_PATH="out/"
 SOURCE_PATH="contracts/"
 

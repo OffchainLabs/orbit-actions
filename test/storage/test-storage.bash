@@ -1,7 +1,5 @@
 #!/bin/bash
 
-forge build
-
 outputDir="./test/storage"
 for contractName in $(./scripts/print-contracts.bash)
 do
