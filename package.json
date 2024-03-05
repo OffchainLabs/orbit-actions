@@ -18,8 +18,8 @@
     "test:gas-check": "forge snapshot --check --tolerance 1 --match-path \"test/unit/**/*.t.sol\"",
     "test:sigs": "./test/signatures/test-sigs.bash",
     "test:storage": "./test/storage/test-storage.bash",
-    "fix": "yarn format; yarn test:sigs; yarn test:storage",
-    "gas-snapshot": "forge snapshot --match-path \"test/unit/**/*.t.sol\""
+    "gas-snapshot": "forge snapshot --match-path \"test/unit/**/*.t.sol\"",
+    "fix": "yarn format; yarn test:sigs; yarn test:storage; yarn gas-snapshot"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
