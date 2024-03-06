@@ -36,9 +36,18 @@
         "12202ba4687d78116ae8629782b0ccc8e70f30db90127cc1ee45a07dadbab544"
       ]
     },
-    "RollupProxy": ["hash1", "hash2"],
-    "RollupAdminLogic": ["hash1", "hash2"],
-    "RollupUserLogic": ["hash1", "hash2"]
+    "RollupProxy": [
+      "12201f644f13efd6c7b8c4ef216106f36b132e19c811eeb8cee47de7e96b69d5",
+      "1220816ff388cf65c1883520212b62b05dfb1f0de9f097e7190e12ea2ca0fc6e"
+    ],
+    "RollupAdminLogic": [
+      "122060fd12a85a2e2a0f20b9640c306d0c8070faba2cad2181308ab3e59074d4",
+      "12205fb51ec1b4b8e2a07c66cc102a5312c21955cede0c56ae13a000b13a425c"
+    ],
+    "RollupUserLogic": [
+      "1220df98e30cf46a20ac928657e746d84fbbb94749586c4ec1502c5d86f7c711",
+      "1220e8c7e154546b7070fea0c5e0a951ccc57e5f7bc99b9bad3f84ea38e56db1"
+    ]
   },
   "v1.2.0": {
     "eth": {
@@ -77,9 +86,18 @@
         "12200feb0990fb1e40d8b046a8996b213f9ee17c5e9a707d81f49b65d1fb9403"
       ]
     },
-    "RollupProxy": ["hash1", "hash2"],
-    "RollupAdminLogic": ["hash1", "hash2"],
-    "RollupUserLogic": ["hash1", "hash2"]
+    "RollupProxy": [
+      "122050d53014317e8cdb5c3e4f6737c818a3257250f410e29949414733539236",
+      "1220d34b088c67fe71fb608dc2c5190dd0055bfec5d99e6c967e81aa7de3e3db"
+    ],
+    "RollupAdminLogic": [
+      "1220b6a768d2aaf1e6a24e573244a8c7f3ccc2fa8eac0f795a8425498cb9d166",
+      "1220491d37bebb6fcc3c9513875aeccad127535756ae64176e238cdc8e3b10d5"
+    ],
+    "RollupUserLogic": [
+      "1220a6e8d705d2a1712faf6be00d5ab830e152b02354d8ece419c29b60493a03",
+      "1220006ebc71336c9c98e04ba4ec89a5703c178b813d31938dfb680c4ecb1eab"
+    ]
   },
   "v1.1.1": {
     "eth": {
@@ -118,9 +136,18 @@
         "1220611c0f41c29b817325b2d56fbd2d81ce85b6458fab21ed9f950ad47db5dd"
       ]
     },
-    "RollupProxy": ["hash1", "hash2"],
-    "RollupAdminLogic": ["hash1", "hash2"],
-    "RollupUserLogic": ["hash1", "hash2"]
+    "RollupProxy": [
+      "122045d1669737d3f66bbfc5cb21688cdbc2decfc09897811ac43760f60bfdc1",
+      "1220d8dba6b8249d66315266e592d87fc58c7f412a7e7d0cd97e41edd6d17b4a"
+    ],
+    "RollupAdminLogic": [
+      "1220b130a4a88b5d102c2303c4905ebfd7378faeb598be3e7fecc4b23b4614f6",
+      "1220bdf44df72c98bd9d8d00c2eb8009307ad088253d2db2f6241b8404cd2a3f"
+    ],
+    "RollupUserLogic": [
+      "12206c1b0ffb3658a90484d9cf0290c609e5d66ceeae9d0ba15ef549fbe83ace",
+      "1220096484a43ea52dba2f6cdbcd6bfd559efd8a7c2565872c7001178e561ae9"
+    ]
   },
   "v1.0.0": {
     "eth": {
