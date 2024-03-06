@@ -119,9 +119,9 @@ function _getVersionOfDeployedContract(metadataHash: string): string | null {
     const allHashes = [
       ...Object.values(versionHashes.eth).flat(),
       ...Object.values(versionHashes.erc20).flat(),
-      versionHashes.RollupProxy,
-      versionHashes.RollupAdminLogic,
-      versionHashes.RollupUserLogic,
+      ...versionHashes.RollupProxy,
+      ...versionHashes.RollupAdminLogic,
+      ...versionHashes.RollupUserLogic,
     ]
 
     if (allHashes.includes(metadataHash)) {
