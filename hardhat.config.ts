@@ -1,6 +1,8 @@
 import { HardhatUserConfig } from 'hardhat/config'
 import '@nomicfoundation/hardhat-toolbox'
 import '@nomicfoundation/hardhat-foundry'
+import dotenv from 'dotenv'
+dotenv.config()
 
 import { SolidityUserConfig } from 'hardhat/types'
 import toml from 'toml'
@@ -13,6 +15,9 @@ const config: HardhatUserConfig = {
   networks: {
     fork: {
       url: process.env.FORK_URL || 'http://localhost:8545',
+    },
+    arb1: {
+      url: 'https://arb1.arbitrum.io/rpc',
     },
   },
 }
