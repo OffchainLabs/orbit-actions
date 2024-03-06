@@ -35,7 +35,10 @@
         "1220f587e602015bef05909a3dc4d3f302450c6b00ea429653353e9c6a202972",
         "12202ba4687d78116ae8629782b0ccc8e70f30db90127cc1ee45a07dadbab544"
       ]
-    }
+    },
+    "RollupProxy": ["hash1", "hash2"],
+    "RollupAdminLogic": ["hash1", "hash2"],
+    "RollupUserLogic": ["hash1", "hash2"]
   },
   "v1.2.0": {
     "eth": {
@@ -73,7 +76,10 @@
         "1220608c64e88e11ca7c69079c15d6e7a635d96c8c450b764d917d39c39d927a",
         "12200feb0990fb1e40d8b046a8996b213f9ee17c5e9a707d81f49b65d1fb9403"
       ]
-    }
+    },
+    "RollupProxy": ["hash1", "hash2"],
+    "RollupAdminLogic": ["hash1", "hash2"],
+    "RollupUserLogic": ["hash1", "hash2"]
   },
   "v1.1.1": {
     "eth": {
@@ -111,7 +117,10 @@
         "1220acaca6cc8d40714063ec21646cf3fb554ba0394dc105b80d1c758ae649ee",
         "1220611c0f41c29b817325b2d56fbd2d81ce85b6458fab21ed9f950ad47db5dd"
       ]
-    }
+    },
+    "RollupProxy": ["hash1", "hash2"],
+    "RollupAdminLogic": ["hash1", "hash2"],
+    "RollupUserLogic": ["hash1", "hash2"]
   },
   "v1.0.0": {
     "eth": {
@@ -127,7 +136,10 @@
       "Outbox": [],
       "SequencerInbox": [],
       "Bridge": []
-    }
+    },
+    "RollupProxy": ["hash1", "hash2"],
+    "RollupAdminLogic": ["hash1", "hash2"],
+    "RollupUserLogic": ["hash1", "hash2"]
   },
   "v0.0.0": {
     "eth": {
@@ -143,7 +155,10 @@
       "Outbox": [],
       "SequencerInbox": [],
       "Bridge": []
-    }
+    },
+    "RollupProxy": ["hash1", "hash2"],
+    "RollupAdminLogic": ["hash1", "hash2"],
+    "RollupUserLogic": ["hash1", "hash2"]
   },
   "v0.0.0-nova": {
     "eth": {
@@ -159,7 +174,10 @@
       "Outbox": [],
       "SequencerInbox": [],
       "Bridge": []
-    }
+    },
+    "RollupProxy": ["hash1", "hash2"],
+    "RollupAdminLogic": ["hash1", "hash2"],
+    "RollupUserLogic": ["hash1", "hash2"]
   },
   "v0.0.1": {
     "eth": {
@@ -175,7 +193,10 @@
       "Outbox": [],
       "SequencerInbox": [],
       "Bridge": []
-    }
+    },
+    "RollupProxy": ["hash1", "hash2"],
+    "RollupAdminLogic": ["hash1", "hash2"],
+    "RollupUserLogic": ["hash1", "hash2"]
   },
   "v0.0.2": {
     "eth": {
@@ -191,7 +212,10 @@
       "Outbox": [],
       "SequencerInbox": [],
       "Bridge": []
-    }
+    },
+    "RollupProxy": ["hash1", "hash2"],
+    "RollupAdminLogic": ["hash1", "hash2"],
+    "RollupUserLogic": ["hash1", "hash2"]
   },
   "v0.0.3": {
     "eth": {
@@ -207,6 +231,9 @@
       "Outbox": [],
       "SequencerInbox": [],
       "Bridge": []
-    }
+    },
+    "RollupProxy": ["hash1", "hash2"],
+    "RollupAdminLogic": ["hash1", "hash2"],
+    "RollupUserLogic": ["hash1", "hash2"]
   }
 }

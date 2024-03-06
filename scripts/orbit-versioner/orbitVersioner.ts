@@ -17,18 +17,23 @@ main()
 /**
  * Interfaces
  */
-interface ReferentMetadataHashes {
+interface BridgeHashes {
   Inbox: string[]
   Outbox: string[]
   SequencerInbox: string[]
   Bridge: string[]
 }
 interface MetadataHashesByNativeToken {
-  eth: ReferentMetadataHashes
-  erc20: ReferentMetadataHashes
+  eth: BridgeHashes
+  erc20: BridgeHashes
+}
+interface RollupHashes {
+  RollupProxy: string[]
+  RollupAdminLogic: string[]
+  RollupUserLogic: string[]
 }
 interface MetadataHashesByVersion {
-  [version: string]: MetadataHashesByNativeToken
+  [version: string]: MetadataHashesByNativeToken & RollupHashes
 }
 
 /**
@@ -59,43 +64,67 @@ async function main() {
   const bridgeAddress = await inbox.bridge()
   const bridge = IBridge__factory.connect(bridgeAddress, provider)
   const seqInboxAddress = await bridge.sequencerInbox()
+  const rollupAddress = await bridge.rollup()
   const outboxAddress = await IRollupCore__factory.connect(
-    await bridge.rollup(),
+    rollupAddress,
     provider
   ).outbox()
-  const isUsingFeeToken = await _isUsingFeeToken(bridgeAddress, provider)
 
   // get metadata hashes
   const metadataHashes: { [key: string]: string } = {
-    Inbox: await _getMetadataHash(inboxAddress, provider),
-    Outbox: await _getMetadataHash(outboxAddress, provider),
-    SequencerInbox: await _getMetadataHash(seqInboxAddress, provider),
-    Bridge: await _getMetadataHash(bridgeAddress, provider),
+    Inbox: await _getMetadataHash(
+      await _getLogicAddress(inboxAddress, provider),
+      provider
+    ),
+    Outbox: await _getMetadataHash(
+      await _getLogicAddress(outboxAddress, provider),
+      provider
+    ),
+    SequencerInbox: await _getMetadataHash(
+      await _getLogicAddress(seqInboxAddress, provider),
+      provider
+    ),
+    Bridge: await _getMetadataHash(
+      await _getLogicAddress(bridgeAddress, provider),
+      provider
+    ),
+    RollupProxy: await _getMetadataHash(rollupAddress, provider),
+    RollupAdminLogic: await _getMetadataHash(
+      await _getLogicAddress(rollupAddress, provider),
+      provider
+    ),
+    RollupUserLogic: await _getMetadataHash(
+      await _getAddressAtStorageSlot(
+        rollupAddress,
+        provider,
+        '0x2b1dbce74324248c222f0ec2d5ed7bd323cfc425b336f0253c5ccfda7265546d'
+      ),
+      provider
+    ),
   }
 
   console.log('\nMetadataHashes of deployed contracts:', metadataHashes, '\n')
 
   // get and print version per bridge contract
-  const nativeType = isUsingFeeToken ? 'erc20' : 'eth'
   Object.keys(metadataHashes).forEach(key => {
-    const version = _getVersionOfDeployedContract(
-      metadataHashes[key],
-      nativeType,
-      key as keyof ReferentMetadataHashes
-    )
+    const version = _getVersionOfDeployedContract(metadataHashes[key])
     console.log(`Version of deployed ${key}: ${version ? version : 'unknown'}`)
   })
 }
 
-function _getVersionOfDeployedContract(
-  metadataHash: string,
-  type: 'eth' | 'erc20',
-  contractName: keyof ReferentMetadataHashes
-): string | null {
+function _getVersionOfDeployedContract(metadataHash: string): string | null {
   for (const [version] of Object.entries(referentMetadataHashes)) {
-    if (
-      referentMetadataHashes[version][type][contractName].includes(metadataHash)
-    ) {
+    // check if given hash matches any of the referent hashes for specific version
+    const versionHashes = referentMetadataHashes[version]
+    const allHashes = [
+      ...Object.values(versionHashes.eth).flat(),
+      ...Object.values(versionHashes.erc20).flat(),
+      versionHashes.RollupProxy,
+      versionHashes.RollupAdminLogic,
+      versionHashes.RollupUserLogic,
+    ]
+
+    if (allHashes.includes(metadataHash)) {
       return version
     }
   }
@@ -106,8 +135,7 @@ async function _getMetadataHash(
   contractAddress: string,
   provider: HardhatEthersProvider
 ): Promise<string> {
-  const implAddress = await _getLogicAddress(contractAddress, provider)
-  const bytecode = await provider.getCode(implAddress)
+  const bytecode = await provider.getCode(contractAddress)
 
   // Pattern to match the metadata prefix and the following 64 hex characters (32 bytes)
   const metadataPattern = /a264697066735822([a-fA-F0-9]{64})/
@@ -118,23 +146,6 @@ async function _getMetadataHash(
     return matches[1]
   } else {
     throw new Error('No metadata hash found in bytecode')
-  }
-}
-
-async function _isUsingFeeToken(
-  bridgeAddress: string,
-  provider: HardhatEthersProvider
-): Promise<boolean> {
-  const bridge = new ethers.Contract(bridgeAddress, IERC20BridgeABI, provider)
-  try {
-    const feeToken = await bridge.nativeToken()
-    if (feeToken == ethers.ZeroAddress) {
-      return false
-    } else {
-      return true
-    }
-  } catch {
-    return false
   }
 }
 
