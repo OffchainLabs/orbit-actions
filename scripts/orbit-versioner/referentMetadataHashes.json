@@ -1,0 +1,40 @@
+{
+  "v1.2.1": {
+    "eth": {
+      "Inbox": [
+        "1220b7485c2de1f6dc3591e34e6caaa5c0e85db502f63ee4a2e1395b319d664a",
+        "1220f5ddfa2a3b4adbdaabef5a5f22ca9dc78b407ec2961d652d3aa5181b6e01"
+      ],
+      "Outbox": [
+        "12202e450a5acd14411d8e2b53eeb592dd06b55b7f63c68edc1a4a9ade28f56e",
+        "1220ce34f0aca0fcb3f7aae56b6a8b66f6d23c8866b57e15d2430d1f3a1d05a5"
+      ],
+      "SequencerInbox": [
+        "1220e4fc6065f422acff75d4a2db15fdea38753da41cb0ce3dbafc57aecdc240",
+        "1220baa313f92d69bb14ad2f42d72f7b2a5b30ff9d2e44fe119ef8d422fae9a5"
+      ],
+      "Bridge": [
+        "1220ba7a1cededf660a42a7377a73bb0d14a4397581fcbb24bebdd45d63810c2",
+        "1220c3c76b4863c78b535187aa58b9b008b260271e5be20b6319095c61fa1f62"
+      ]
+    },
+    "erc20": {
+      "Inbox": [
+        "122049d58bdcb0b372ec561909ccbdc8a8698ab4fd67328e4915702624165ea8",
+        "1220616ffbb57dcc06b1d91d0dd476091cb801e456bbb3c8d414fafcd46b2735"
+      ],
+      "Outbox": [
+        "1220f184c5915a9b00508c8f065f27c0db0022f5b81993633901b875bea47b88",
+        "12205223f334069170194a419ca1dfc8ac2fed567d5cd36bb65f1fbae6ae2fb5"
+      ],
+      "SequencerInbox": [
+        "1220e4fc6065f422acff75d4a2db15fdea38753da41cb0ce3dbafc57aecdc240",
+        "1220baa313f92d69bb14ad2f42d72f7b2a5b30ff9d2e44fe119ef8d422fae9a5"
+      ],
+      "Bridge": [
+        "1220f587e602015bef05909a3dc4d3f302450c6b00ea429653353e9c6a202972",
+        "12202ba4687d78116ae8629782b0ccc8e70f30db90127cc1ee45a07dadbab544"
+      ]
+    }
+  }
+}

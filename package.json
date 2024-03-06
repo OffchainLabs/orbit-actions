@@ -20,6 +20,7 @@
     "test:gas-check": "forge snapshot --check --tolerance 1 --match-path \"test/unit/**/*.t.sol\"",
     "test:sigs": "./test/signatures/test-sigs.bash",
     "test:storage": "./test/storage/test-storage.bash",
+    "orbit:contracts:version": "hardhat run scripts/orbit-versioner/orbitVersioner.ts",
     "fix": "yarn format; yarn build && yarn test:sigs; yarn test:storage",
     "gas-snapshot": "forge snapshot --match-path \"test/unit/**/*.t.sol\""
   },
