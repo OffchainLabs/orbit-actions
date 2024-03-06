@@ -19,6 +19,21 @@ const config: HardhatUserConfig = {
     arb1: {
       url: 'https://arb1.arbitrum.io/rpc',
     },
+    mainnet: {
+      url: 'https://mainnet.infura.io/v3/' + process.env['INFURA_KEY'],
+    },
+    sepolia: {
+      url: 'https://sepolia.infura.io/v3/' + process.env['INFURA_KEY'],
+    },
+    arbSepolia: {
+      url: 'https://sepolia-rollup.arbitrum.io/rpc',
+    },
+    nova: {
+      url: 'https://nova.arbitrum.io/rpc',
+    },
+    holesky: {
+      url: 'https://1rpc.io/holesky',
+    },
   },
 }
 
