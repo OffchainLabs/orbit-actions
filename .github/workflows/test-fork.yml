@@ -1,4 +1,4 @@
-name: Fork Test
+name: Test Fork
 
 on:
   pull_request:

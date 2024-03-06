@@ -33,5 +33,11 @@ for file in $FILES; do
     fi
 done
 
+# if we have no contracts, exit with an error
+if [ ${#all_contract_names[@]} -eq 0 ]; then
+    echo "No contracts found"
+    exit 1
+fi
+
 # Print unique contract names, removing duplicates
 printf "%s\n" "${all_contract_names[@]}" | sort | uniq
