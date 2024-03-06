@@ -2,7 +2,6 @@ import { JsonRpcProvider, Wallet } from 'ethers'
 import { testSetup as sdkTestSetup } from '../../lib/arbitrum-sdk/scripts/testSetup'
 import { L1Network, L2Network, getL1Network } from '../../lib/arbitrum-sdk/src'
 import { getEnv } from '../util/util'
-import { it } from 'mocha'
 
 export const isTestingOrbit = process.env.ORBIT_TEST === '1'
 
