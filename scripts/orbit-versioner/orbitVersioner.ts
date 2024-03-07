@@ -102,7 +102,9 @@ async function main() {
     ),
   }
 
-  console.log('\nMetadataHashes of deployed contracts:', metadataHashes, '\n')
+  if(process.env.DEV === 'true') {
+    console.log('\nMetadataHashes of deployed contracts:', metadataHashes, '\n')
+  }
 
   // get and print version per bridge contract
   Object.keys(metadataHashes).forEach(key => {
