@@ -6,7 +6,6 @@ import {
   IInbox__factory,
   IRollupCore__factory,
 } from '../../typechain-types'
-import { abi as IERC20BridgeABI } from '@arbitrum/nitro-contracts-1.2.1/build/contracts/src/bridge/IERC20Bridge.sol/IERC20Bridge.json'
 
 main()
   .then(() => process.exit(0))
