@@ -16,6 +16,9 @@
     - Check signatures and storage
     - E2E testing with Hardhat + Arbitrum SDK + testnode
 
+## Removing Sample Files
+Run `scripts/delete-samples.bash` to remove `Counter.sol` and sample test files.
+
 ## Compiler Settings
 Solc version and optimizer runs are defined in `foundry.toml` and copied by `hardhat.config.ts`.
 
