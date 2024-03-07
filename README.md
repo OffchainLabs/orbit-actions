@@ -60,6 +60,6 @@ This action schedule an upgrade of the ArbOS to a specific version at a specific
 Here is a list of common upgrade paths that can be used to upgrade the Orbit chains.
 
 ### ArbOS 20 Atlas
-1. Upgrade your Nitro node(s) to [Nitro v2.3.0](https://github.com/OffchainLabs/nitro/releases/tag/v2.3.0)
+1. Upgrade your Nitro node(s) to [Nitro v2.3.1](https://github.com/OffchainLabs/nitro/releases/tag/v2.3.1)
 1. Upgrade `nitro-contracts` to `v1.2.1` using [nitro-contract 1.2.1 upgrade action](scripts/foundry/contract-upgrades/1.2.1)
 2. Schedule the ArbOS 20 Atlas upgrade using [ArbOS upgrade at timestamp action](scripts/foundry/arbos-upgrades/at-timestamp)

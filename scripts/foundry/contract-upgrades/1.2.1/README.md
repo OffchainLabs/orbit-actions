@@ -20,6 +20,8 @@ This upgrade only support upgrading from the following [nitro-contract release](
 - RollupUserLogic: v1.1.0 - v1.2.1 inclusive
 - ChallengeManager: v1.1.0 - v1.2.1 inclusive
 
+Please refers to the top [README](../../README.md) `Check Version and Upgrade Path` on how to determine your current nitro contracts version.
+
 ## Deployed instances
 
 - L1 Sepolia (eth fee token): 0xBC1e0ca800781F58F3a2f73dA4D895FdD61B0Cb5
