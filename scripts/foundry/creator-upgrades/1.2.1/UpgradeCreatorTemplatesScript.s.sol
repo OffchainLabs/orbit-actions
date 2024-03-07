@@ -11,8 +11,10 @@ import {MockArbSys} from "../../helper/MockArbSys.sol";
  *          and finally update templates in BridgeCreator, or generate calldata for gnosis safe
  */
 contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
+    bool public isArbitrum;
+
     function run() public {
-        bool isArbitrum = vm.envBool("PARENT_CHAIN_IS_ARBITRUM");
+        isArbitrum = vm.envBool("PARENT_CHAIN_IS_ARBITRUM");
         if (isArbitrum) {
             // etch a mock ArbSys contract so that foundry simulate it nicely
             bytes memory mockArbSysCode = address(new MockArbSys()).code;
@@ -21,32 +23,62 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
 
         vm.startBroadcast();
 
-        // deploy OSP templates
-        address osp0 = vm.envAddress("OSP_0");
+        // deploy templates if not already deployed
+        (
+            address osp0,
+            address ospMemory,
+            address ospMath,
+            address ospHostIo,
+            address ospEntry,
+            address challengeManager,
+            address seqInboxEth,
+            address seqInboxErc20
+        ) = _deployTemplates();
+
+        vm.stopBroadcast();
+    }
+
+    /**
+     * @notice Deploy OSP, ChallengeManager and SequencerInbox templates if they're not already deployed
+     */
+    function _deployTemplates()
+        internal
+        returns (
+            address osp0,
+            address ospMemory,
+            address ospMath,
+            address ospHostIo,
+            address ospEntry,
+            address challengeManager,
+            address seqInboxEth,
+            address seqInboxErc20
+        )
+    {
+        osp0 = vm.envAddress("OSP_0");
         if (osp0 == address(0)) {
             osp0 = deployBytecodeFromJSON(
                 "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/osp/OneStepProver0.sol/OneStepProver0.json"
             );
         }
-        address ospMemory = vm.envAddress("OSP_MEMORY");
+        ospMemory = vm.envAddress("OSP_MEMORY");
         if (ospMemory == address(0)) {
             ospMemory = deployBytecodeFromJSON(
                 "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/osp/OneStepProverMemory.sol/OneStepProverMemory.json"
             );
         }
-        address ospMath = vm.envAddress("OSP_MATH");
+        ospMath = vm.envAddress("OSP_MATH");
         if (ospMath == address(0)) {
             ospMath = deployBytecodeFromJSON(
                 "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/osp/OneStepProverMath.sol/OneStepProverMath.json"
             );
         }
-        address ospHostIo = vm.envAddress("OSP_HOST_IO");
+        ospHostIo = vm.envAddress("OSP_HOST_IO");
         if (ospHostIo == address(0)) {
             ospHostIo = deployBytecodeFromJSON(
                 "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/osp/OneStepProverHostIo.sol/OneStepProverHostIo.json"
             );
         }
-        address ospEntry = vm.envAddress("OSP_ENTRY");
+        ospEntry = vm.envAddress("OSP_ENTRY");
         if (ospEntry == address(0)) {
             ospEntry = deployBytecodeWithConstructorFromJSON(
                 "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/osp/OneStepProofEntry.sol/OneStepProofEntry.json",
@@ -55,7 +87,7 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
         }
 
         // deploy new challenge manager templates
-        address challengeManager = vm.envAddress("CHALLENGE_MANAGER");
+        challengeManager = vm.envAddress("CHALLENGE_MANAGER");
         if (challengeManager == address(0)) {
             challengeManager = deployBytecodeFromJSON(
                 "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/challenge/ChallengeManager.sol/ChallengeManager.json"
@@ -72,15 +104,15 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
         }
 
         // deploy sequencer inbox templates
-        address seqInbox = deployBytecodeWithConstructorFromJSON(
+        seqInboxEth = deployBytecodeWithConstructorFromJSON(
             "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json",
             abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, false)
         );
-        address seqInbox2 = deployBytecodeWithConstructorFromJSON(
+        seqInboxErc20 = deployBytecodeWithConstructorFromJSON(
             "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json",
             abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, true)
         );
 
-        vm.stopBroadcast();
+        return (osp0, ospMemory, ospMath, ospHostIo, ospEntry, challengeManager, seqInboxEth, seqInboxErc20);
     }
 }
