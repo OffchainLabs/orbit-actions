@@ -149,6 +149,56 @@
       "1220096484a43ea52dba2f6cdbcd6bfd559efd8a7c2565872c7001178e561ae9"
     ]
   },
+  "v1.1.0": {
+    "eth": {
+      "Inbox": [
+        "12207d8dae84fd8ceb28dac40f916f08fa675e52cd1afd436ddf7544861310d2",
+        "1220fc64355220959d0f0222b381dcf2186536210506ea8dbeb1241cd49d94c3"
+      ],
+      "Outbox": [
+        "12201d864fde4d3fe778dfcfa436cd8c3f70afcdc0a4b262612322c379ba38ff",
+        "1220b428a4f8c0890f479963f1baf5211ff854641f48f4610169bb1e3e741bd6"
+      ],
+      "SequencerInbox": [
+        "122028728ef494db01fb2b2aeb05e75db0f55f0091d2fbe424683280c54d5c18",
+        "12207834171c755ca30b94ff7f9246e6147c60860c36d18b4ed6edb3507ecbf7"
+      ],
+      "Bridge": [
+        "122036229552e25569ee81b36ff0079ed482a0f5114c34695a273717057e68b7",
+        "12203cb53c06e3d38f5055af396f234d714307935d59ca28459db5226efad4d0"
+      ]
+    },
+    "erc20": {
+      "Inbox": [
+        "1220461ed5b89db5608c1ea62ff3a70317b28240285dcf06730c47fcfd5930e7",
+        "1220506a4b6be59d94d935eb5146306efb339ff87f1069d9e9f041004ab2723f"
+      ],
+      "Outbox": [
+        "1220085f7605c9e3c80d961629caf55d8fdad41aff6c9599f085d450b0b9be55",
+        "1220b5a07ebe532b2c8f8021cd483c531fdff73000a940579de65b9797587465"
+      ],
+      "SequencerInbox": [
+        "122028728ef494db01fb2b2aeb05e75db0f55f0091d2fbe424683280c54d5c18",
+        "12207834171c755ca30b94ff7f9246e6147c60860c36d18b4ed6edb3507ecbf7"
+      ],
+      "Bridge": [
+        "1220acaca6cc8d40714063ec21646cf3fb554ba0394dc105b80d1c758ae649ee",
+        "1220611c0f41c29b817325b2d56fbd2d81ce85b6458fab21ed9f950ad47db5dd"
+      ]
+    },
+    "RollupProxy": [
+      "122045d1669737d3f66bbfc5cb21688cdbc2decfc09897811ac43760f60bfdc1",
+      "1220d8dba6b8249d66315266e592d87fc58c7f412a7e7d0cd97e41edd6d17b4a"
+    ],
+    "RollupAdminLogic": [
+      "1220b130a4a88b5d102c2303c4905ebfd7378faeb598be3e7fecc4b23b4614f6",
+      "1220bdf44df72c98bd9d8d00c2eb8009307ad088253d2db2f6241b8404cd2a3f"
+    ],
+    "RollupUserLogic": [
+      "12206c1b0ffb3658a90484d9cf0290c609e5d66ceeae9d0ba15ef549fbe83ace",
+      "1220096484a43ea52dba2f6cdbcd6bfd559efd8a7c2565872c7001178e561ae9"
+    ]
+  },
   "v1.0.0": {
     "eth": {
       "Inbox": [
