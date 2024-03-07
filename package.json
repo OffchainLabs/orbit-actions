@@ -20,6 +20,7 @@
     "test:gas-check": "forge snapshot --check --tolerance 1 --match-path \"test/unit/**/*.t.sol\"",
     "test:sigs": "./test/signatures/test-sigs.bash",
     "test:storage": "./test/storage/test-storage.bash",
+    "orbit:contracts:version": "hardhat run scripts/orbit-versioner/orbitVersioner.ts",
     "fix": "yarn format; yarn build && yarn test:sigs; yarn test:storage",
     "gas-snapshot": "forge snapshot --match-path \"test/unit/**/*.t.sol\""
   },
@@ -41,6 +42,7 @@
     "@typescript-eslint/parser": "^7.0.1",
     "audit-ci": "^6.6.1",
     "chai": "^4.2.0",
+    "dotenv": "^16.4.5",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
