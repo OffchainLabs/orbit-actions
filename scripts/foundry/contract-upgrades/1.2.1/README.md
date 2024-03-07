@@ -10,7 +10,7 @@ NitroContracts1Point2Point1UpgradeAction will perform the following action:
 Note that contracts without code changes are not upgraded. It is normal to have some contracts still in the old version after the upgrade as they are equivalent to the new version. After the contract upgrade, you would need to schedule an ArbOS upgrade to ArbOS20 to enable the new features.
 
 ## Requirements
-This upgrade only support upgrading from the following nitro-contract release versions:
+This upgrade only support upgrading from the following [nitro-contract release](https://github.com/OffchainLabs/nitro-contracts/releases):
 - Inbox: v1.1.0 - v1.2.1 inclusive
 - Outbox: v1.1.0 - v1.2.1 inclusive
 - SequencerInbox: v1.1.0 or v1.1.1
@@ -18,6 +18,9 @@ This upgrade only support upgrading from the following nitro-contract release ve
 - RollupProxy: v1.1.0 - v1.2.1 inclusive
 - RollupAdminLogic: v1.1.0 - v1.2.1 inclusive
 - RollupUserLogic: v1.1.0 - v1.2.1 inclusive
+- ChallengeManager: v1.1.0 - v1.2.1 inclusive
+
+Please refers to the top [README](../../README.md) `Check Version and Upgrade Path` on how to determine your current nitro contracts version.
 
 ## Deployed instances
 
