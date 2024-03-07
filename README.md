@@ -27,7 +27,7 @@ yarn install
 
 Run the follow command to check the version of Nitro contracts deployed on the parent chain of your Orbit chain.
 ```
-$ hardhat run scripts/orbit-versioner/orbitVersioner.ts --network arb1
+$ INBOX_ADDRESS=0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9 yarn orbit:contracts:version --network arb1
 Get the version of Orbit chain's nitro contracts (inbox 0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9), hosted on chain 42161
 Version of deployed Inbox: v1.1.1
 Version of deployed Outbox: v1.1.1
