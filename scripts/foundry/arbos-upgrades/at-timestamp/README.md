@@ -6,7 +6,7 @@ These scripts empower `UpgradeArbOSVersionAtTimestampAction` contract which sche
 
 `DeployUpgradeArbOSVersionAtTimestampAction.s.sol` script deploys `UpgradeArbOSVersionAtTimestampAction` contract. It can be executed in this directory like this:
 ```bash
-forge script --sender $DEPLOYER --rpc-url $CHILD_CHAIN_RPC --broadcast --slow ./DeployUpgradeArbOSVersionAtTimestampActionScript.s.sol -vvv --verify
+forge script --sender $DEPLOYER --rpc-url $CHILD_CHAIN_RPC --broadcast --slow ./DeployUpgradeArbOSVersionAtTimestampAction.s.sol -vvv --verify
 # use --account XXX / --private-key XXX / --interactive / --ledger to set the account to send the transaction from
 ```
 This would deploy the upgrade action. Update your .env file with the address of the upgrade action.
