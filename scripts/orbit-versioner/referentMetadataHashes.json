@@ -47,6 +47,10 @@
     "RollupUserLogic": [
       "1220df98e30cf46a20ac928657e746d84fbbb94749586c4ec1502c5d86f7c711",
       "1220e8c7e154546b7070fea0c5e0a951ccc57e5f7bc99b9bad3f84ea38e56db1"
+    ],
+    "ChallengeManager": [
+      "12204e9beb8667db81401ddf0d2848d4f1418bb69fc687e03f3e46f3c6878310",
+      "122096e5921f11f5fcda16c07e3e825f1d118781e1f59ee6add7fa4c05afb71a"
     ]
   },
   "v1.2.0": {
@@ -97,6 +101,10 @@
     "RollupUserLogic": [
       "1220a6e8d705d2a1712faf6be00d5ab830e152b02354d8ece419c29b60493a03",
       "1220006ebc71336c9c98e04ba4ec89a5703c178b813d31938dfb680c4ecb1eab"
+    ],
+    "ChallengeManager": [
+      "1220ba6e2f22c023a5b4cecf4ff44736e60eea2dc77f8f24008452f336d2d87d",
+      "1220021b45cde2b703bccd4dc9242679973a851ae1667de1dcf997daa3b89966"
     ]
   },
   "v1.1.1": {
@@ -147,6 +155,10 @@
     "RollupUserLogic": [
       "12206c1b0ffb3658a90484d9cf0290c609e5d66ceeae9d0ba15ef549fbe83ace",
       "1220096484a43ea52dba2f6cdbcd6bfd559efd8a7c2565872c7001178e561ae9"
+    ],
+    "ChallengeManager": [
+      "1220f2e3d524f815fa253e19e898b856d5d2c33b2dd9e7d904558a73059c4081",
+      "12205e8e8e78c92ad22b54362974f20442ad9e774b7eeef26fd674854efd72e5"
     ]
   },
   "v1.1.0": {
@@ -197,6 +209,10 @@
     "RollupUserLogic": [
       "12206c1b0ffb3658a90484d9cf0290c609e5d66ceeae9d0ba15ef549fbe83ace",
       "1220096484a43ea52dba2f6cdbcd6bfd559efd8a7c2565872c7001178e561ae9"
+    ],
+    "ChallengeManager": [
+      "1220f2e3d524f815fa253e19e898b856d5d2c33b2dd9e7d904558a73059c4081",
+      "12205e8e8e78c92ad22b54362974f20442ad9e774b7eeef26fd674854efd72e5"
     ]
   },
   "v1.0.0": {
@@ -228,6 +244,9 @@
     ],
     "RollupUserLogic": [
       "1220e9f0d1b062f1e902a4d431634c8a3454dcbad676a601e68d456c42b4c646"
+    ],
+    "ChallengeManager": [
+      "122012e9433fc701a6dfa1fdf37d57551febcb7ac991ae768311932335d17387"
     ]
   },
   "v0.3.0": {
@@ -259,6 +278,9 @@
     ],
     "RollupUserLogic": [
       "12204dcfb136e55b3e3fd706b3c41c3d6ccf901395388e6fe50b4dff3ff747b9"
+    ],
+    "ChallengeManager": [
+      "12209c9826f44402dcdc96f97a72d6784973c2ca6f40f023aed06f22b54876c8"
     ]
   },
   "v0.2.0": {
@@ -290,6 +312,9 @@
     ],
     "RollupUserLogic": [
       "12204d681135c9b9538765703b0f818f7c99478afd0edf57d1abc9e2e1722ada"
+    ],
+    "ChallengeManager": [
+      "1220d8dfd2cc793b2814744d1f82e4e2ab7f138394393f072e0a0a400606f86d"
     ]
   },
   "v0.1.0": {
@@ -321,6 +346,9 @@
     ],
     "RollupUserLogic": [
       "1220d238594b8ed98048b569ffd3b8f9e2176109f3c2789144c1fcb6333e5f4c"
+    ],
+    "ChallengeManager": [
+      "12208cd33738d92417f33dc7ec84571d19b47515ab1d5742b1c2c0dd1a9c35a2"
     ]
   },
   "v0.0.0": {
@@ -352,6 +380,9 @@
     ],
     "RollupUserLogic": [
       "1220d410525d1403ad48ab6eba76b2d8e581ae7170f3e3b31ef46e3a96cb4ff3"
+    ],
+    "ChallengeManager": [
+      "12208e12e811d7f0635fdb81ccebfdda1dc016ad491fb93b16a5e7c2d4e552f5"
     ]
   },
   "v0.0.0-nova": {
@@ -381,6 +412,9 @@
     ],
     "RollupUserLogic": [
       "122071d355dd1ec8592e605e20d49c82bb50fcc64d720f14a542b61e1262c68d"
+    ],
+    "ChallengeManager": [
+      "12203c00064365826b1961fcdf6b69a139ed4bf196384dd7b53b7a8cdefdfcba"
     ]
   }
 }

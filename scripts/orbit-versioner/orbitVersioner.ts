@@ -30,6 +30,7 @@ interface RollupHashes {
   RollupProxy: string[]
   RollupAdminLogic: string[]
   RollupUserLogic: string[]
+  ChallengeManager: string[]
 }
 interface MetadataHashesByVersion {
   [version: string]: MetadataHashesByNativeToken & RollupHashes
@@ -68,6 +69,10 @@ async function main() {
     rollupAddress,
     provider
   ).outbox()
+  const challengeManagerAddress = await IRollupCore__factory.connect(
+    rollupAddress,
+    provider
+  ).challengeManager()
 
   // get metadata hashes
   const metadataHashes: { [key: string]: string } = {
@@ -100,6 +105,10 @@ async function main() {
       ),
       provider
     ),
+    ChallengeManager: await _getMetadataHash(
+      await _getLogicAddress(challengeManagerAddress, provider),
+      provider
+    ),
   }
 
   if (process.env.DEV === 'true') {
@@ -116,7 +125,7 @@ async function main() {
   })
 
   // TODO: make this more generic to support other other upgrade paths in the future
-  // TODO: also check challengeManager and osp
+  // TODO: also check  osp
   let supported = true
   const contracts1 = [
     'Inbox',
@@ -125,6 +134,7 @@ async function main() {
     'RollupProxy',
     'RollupAdminLogic',
     'RollupUserLogic',
+    'ChallengeManager',
   ]
   const contracts1SupportedVersions = ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1']
   for (const contract of contracts1) {
@@ -157,6 +167,7 @@ function _getVersionOfDeployedContract(metadataHash: string): string | null {
       ...versionHashes.RollupProxy,
       ...versionHashes.RollupAdminLogic,
       ...versionHashes.RollupUserLogic,
+      ...versionHashes.ChallengeManager,
     ]
 
     if (allHashes.includes(metadataHash)) {
