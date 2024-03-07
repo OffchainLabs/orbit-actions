@@ -106,11 +106,33 @@ async function main() {
     console.log('\nMetadataHashes of deployed contracts:', metadataHashes, '\n')
   }
 
+  const versions : { [key: string]: string | null } = {}
   // get and print version per bridge contract
   Object.keys(metadataHashes).forEach(key => {
-    const version = _getVersionOfDeployedContract(metadataHashes[key])
-    console.log(`Version of deployed ${key}: ${version ? version : 'unknown'}`)
+    versions[key] = _getVersionOfDeployedContract(metadataHashes[key])
+    console.log(`Version of deployed ${key}: ${versions[key] ? versions[key] : 'unknown'}`)
   })
+
+  // TODO: make this more generic to support other other upgrade paths in the future
+  // TODO: also check challengeManager and osp
+  let supported = true
+  const contracts1 = ['Inbox', 'Outbox', 'Bridge', 'RollupProxy', 'RollupAdminLogic', 'RollupUserLogic']
+  const contracts1SupportedVersions = ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1']
+  for (const contract of contracts1) {
+    if (!contracts1SupportedVersions.includes(versions[contract]!)) {
+      supported = false
+      break
+    }
+  }
+  const contracts2 = ['SequencerInbox']
+  const contracts2SupportedVersions = ['v1.1.0', 'v1.1.1']
+  for (const contract of contracts2) {
+    if (!contracts2SupportedVersions.includes(versions[contract]!)) {
+      supported = false
+      break
+    }
+  }
+  if(supported) console.log('This deployment can be upgraded to v1.2.1 using NitroContracts1Point2Point1UpgradeAction')
 }
 
 function _getVersionOfDeployedContract(metadataHash: string): string | null {
