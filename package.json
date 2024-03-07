@@ -12,6 +12,7 @@
     "format": "cat .prettierignore .gitignore > .pignore && prettier --ignore-path .pignore \"**/*.{js,ts,json}\" --write && rm .pignore && forge fmt",
     "lint": "tsc --noEmit && eslint . && forge fmt --check",
     "build": "hardhat compile && forge build",
+    "clean": "hardhat clean && forge clean",
     "test:unit": "./test/unit/test-unit.bash",
     "test:fork": "./test/fork/test-fork.bash",
     "test:e2e": "./test/e2e/test-e2e.bash",
