@@ -30,7 +30,7 @@ for dir in $chains; do
     else
         echo "Running hardhat tests against \$$forkUrlName ..."
         FORK_URL=$forkUrl yarn run hardhat test $hardhatFiles --network fork
-        CODE=$?
+        code=$?
     fi
     [ "$code" -ne 0 ] && exit $code
 

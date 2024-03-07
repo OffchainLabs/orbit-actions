@@ -20,6 +20,13 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-yarn hardhat compile 
+yarn hardhat compile
+
+if [ $? -ne 0 ]; then
+    echo "Failed to compile"
+    exit 1
+fi
 
 yarn mocha test/e2e/ --timeout 30000000 --bail
+
+exit $?
