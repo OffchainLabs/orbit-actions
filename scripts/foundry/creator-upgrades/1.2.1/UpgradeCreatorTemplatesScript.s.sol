@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 import {DeploymentHelpersScript} from "../../helper/DeploymentHelpers.s.sol";
-import {ArbitrumChecker} from "@arbitrum/nitro-contracts-1.2.1/src/libraries/ArbitrumChecker.sol";
 import {MockArbSys} from "../../helper/MockArbSys.sol";
+import "@arbitrum/nitro-contracts-1.2.1/src/rollup/RollupCreator.sol";
 
 /**
  * @title DeployScript
@@ -34,6 +34,16 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
             address seqInboxEth,
             address seqInboxErc20
         ) = _deployTemplates();
+
+        // updated creators with new templates
+        bool creatorOwnerIsMultisig = vm.envBool("CREATOR_OWNER_IS_MULTISIG");
+        // if (creatorOwnerIsMultisig) {
+        //     _generateUpdateTemplatesCalldata(rollupCreator, ethSeqInbox, erc20SeqInbox);
+        // } else {
+        //     _updateBridgeCreatorTemplates(rollupCreator, ethSeqInbox, erc20SeqInbox);
+        // }
+        address rollupCreator = vm.envAddress("ROLLUP_CREATOR");
+        _updateBridgeCreatorTemplates(rollupCreator, seqInboxEth, seqInboxErc20);
 
         vm.stopBroadcast();
     }
@@ -115,4 +125,87 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
 
         return (osp0, ospMemory, ospMath, ospHostIo, ospEntry, challengeManager, seqInboxEth, seqInboxErc20);
     }
+
+    function _updateBridgeCreatorTemplates(
+        address rollupCreatorAddress,
+        address newEthSeqInbox,
+        address newErc20SeqInbox
+    ) internal {
+        BridgeCreator bridgeCreator = RollupCreator(payable(rollupCreatorAddress)).bridgeCreator();
+
+        // update eth templates in BridgeCreator
+        (IBridge bridge,, IInboxBase inbox, IRollupEventInbox rollupEventInbox, IOutbox outbox) =
+            bridgeCreator.ethBasedTemplates();
+        bridgeCreator.updateTemplates(
+            BridgeCreator.BridgeContracts(
+                bridge, ISequencerInbox(address(newEthSeqInbox)), inbox, rollupEventInbox, outbox
+            )
+        );
+
+        // update erc20 templates in BridgeCreator
+        (IBridge erc20Bridge,, IInboxBase erc20Inbox, IRollupEventInbox erc20RollupEventInbox, IOutbox erc20Outbox) =
+            bridgeCreator.erc20BasedTemplates();
+        bridgeCreator.updateERC20Templates(
+            BridgeCreator.BridgeContracts(
+                erc20Bridge, ISequencerInbox(address(newErc20SeqInbox)), erc20Inbox, erc20RollupEventInbox, erc20Outbox
+            )
+        );
+
+        // verify
+        (, ISequencerInbox _ethSeqInbox,,,) = bridgeCreator.ethBasedTemplates();
+        (, ISequencerInbox _erc20SeqInbox,,,) = bridgeCreator.erc20BasedTemplates();
+        require(
+            address(_ethSeqInbox) == address(newEthSeqInbox) && address(_erc20SeqInbox) == address(newErc20SeqInbox),
+            "Templates not updated"
+        );
+    }
+
+    function _updateRollupCreatorTemplates(
+        address rollupCreatorAddress,
+        address newOspEntry,
+        address newChallengeManager
+    ) internal {
+        RollupCreator rollupCreator = RollupCreator(payable(rollupCreatorAddress));
+
+        rollupCreator.setTemplates({
+            _bridgeCreator: rollupCreator.bridgeCreator(),
+            _osp: IOneStepProofEntry(newOspEntry),
+            _challengeManagerLogic: IChallengeManager(newChallengeManager),
+            _rollupAdminLogic: rollupCreator.rollupAdminLogic(),
+            _rollupUserLogic: rollupCreator.rollupUserLogic(),
+            _upgradeExecutorLogic: (rollupCreator.upgradeExecutorLogic()),
+            _validatorUtils: rollupCreator.validatorUtils(),
+            _validatorWalletCreator: rollupCreator.validatorWalletCreator(),
+            _l2FactoriesDeployer: (rollupCreator.l2FactoriesDeployer())
+        });
+
+        // verify
+        require(
+            address(rollupCreator.osp()) == newOspEntry
+                && address(rollupCreator.challengeManagerTemplate()) == newChallengeManager,
+            "Templates not updated"
+        );
+    }
+
+    // function setTemplates(
+    //     BridgeCreator _bridgeCreator,
+    //     IOneStepProofEntry _osp,
+    //     IChallengeManager _challengeManagerLogic,
+    //     IRollupAdmin _rollupAdminLogic,
+    //     IRollupUser _rollupUserLogic,
+    //     IUpgradeExecutor _upgradeExecutorLogic,
+    //     address _validatorUtils,
+    //     address _validatorWalletCreator,
+    //     DeployHelper _l2FactoriesDeployer
+    // ) external onlyOwner {
+    //     bridgeCreator = _bridgeCreator;
+    //     osp = _osp;
+    //     challengeManagerTemplate = _challengeManagerLogic;
+    //     rollupAdminLogic = _rollupAdminLogic;
+    //     rollupUserLogic = _rollupUserLogic;
+    //     upgradeExecutorLogic = _upgradeExecutorLogic;
+    //     validatorUtils = _validatorUtils;
+    //     validatorWalletCreator = _validatorWalletCreator;
+    //     l2FactoriesDeployer = _l2FactoriesDeployer;
+    //     emit TemplatesUpdated();
 }
