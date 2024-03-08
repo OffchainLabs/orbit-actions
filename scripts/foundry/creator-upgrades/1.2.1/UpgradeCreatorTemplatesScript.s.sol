@@ -24,16 +24,8 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
         vm.startBroadcast();
 
         // deploy templates if not already deployed
-        (
-            address osp0,
-            address ospMemory,
-            address ospMath,
-            address ospHostIo,
-            address ospEntry,
-            address challengeManager,
-            address seqInboxEth,
-            address seqInboxErc20
-        ) = _deployTemplates();
+        (address ospEntry, address challengeManager, address seqInboxEth, address seqInboxErc20) =
+            _deployTemplates();
 
         // updated creators with new templates
         address rollupCreator = vm.envAddress("ROLLUP_CREATOR");
@@ -53,36 +45,27 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
      */
     function _deployTemplates()
         internal
-        returns (
-            address osp0,
-            address ospMemory,
-            address ospMath,
-            address ospHostIo,
-            address ospEntry,
-            address challengeManager,
-            address seqInboxEth,
-            address seqInboxErc20
-        )
+        returns (address ospEntry, address challengeManager, address seqInboxEth, address seqInboxErc20)
     {
-        osp0 = vm.envAddress("OSP_0");
+        address osp0 = vm.envAddress("OSP_0");
         if (osp0 == address(0)) {
             osp0 = deployBytecodeFromJSON(
                 "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/osp/OneStepProver0.sol/OneStepProver0.json"
             );
         }
-        ospMemory = vm.envAddress("OSP_MEMORY");
+        address ospMemory = vm.envAddress("OSP_MEMORY");
         if (ospMemory == address(0)) {
             ospMemory = deployBytecodeFromJSON(
                 "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/osp/OneStepProverMemory.sol/OneStepProverMemory.json"
             );
         }
-        ospMath = vm.envAddress("OSP_MATH");
+        address ospMath = vm.envAddress("OSP_MATH");
         if (ospMath == address(0)) {
             ospMath = deployBytecodeFromJSON(
                 "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/osp/OneStepProverMath.sol/OneStepProverMath.json"
             );
         }
-        ospHostIo = vm.envAddress("OSP_HOST_IO");
+        address ospHostIo = vm.envAddress("OSP_HOST_IO");
         if (ospHostIo == address(0)) {
             ospHostIo = deployBytecodeFromJSON(
                 "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/osp/OneStepProverHostIo.sol/OneStepProverHostIo.json"
@@ -108,22 +91,30 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
         address reader4844Address;
         if (!isArbitrum) {
             // deploy blob reader
-            reader4844Address = deployBytecodeFromJSON(
-                "/node_modules/@arbitrum/nitro-contracts-1.2.1/out/yul/Reader4844.yul/Reader4844.json"
-            );
+            reader4844Address = vm.envAddress("READER_4844");
+            if (reader4844Address == address(0)) {
+                reader4844Address = deployBytecodeFromJSON(
+                    "/node_modules/@arbitrum/nitro-contracts-1.2.1/out/yul/Reader4844.yul/Reader4844.json"
+                );
+            }
         }
 
         // deploy sequencer inbox templates
-        seqInboxEth = deployBytecodeWithConstructorFromJSON(
-            "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json",
-            abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, false)
-        );
-        seqInboxErc20 = deployBytecodeWithConstructorFromJSON(
-            "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json",
-            abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, true)
-        );
+        seqInboxEth = vm.envAddress("SEQUENCER_INBOX_ETH");
+        if (seqInboxEth == address(0)) {
+            seqInboxEth = deployBytecodeWithConstructorFromJSON(
+                "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json",
+                abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, false)
+            );
+        }
 
-        return (osp0, ospMemory, ospMath, ospHostIo, ospEntry, challengeManager, seqInboxEth, seqInboxErc20);
+        seqInboxErc20 = vm.envAddress("SEQUENCER_INBOX_ERC20");
+        if (seqInboxErc20 == address(0)) {
+            seqInboxErc20 = deployBytecodeWithConstructorFromJSON(
+                "/node_modules/@arbitrum/nitro-contracts-1.2.1/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json",
+                abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, true)
+            );
+        }
     }
 
     function _updateBridgeCreatorTemplates(
