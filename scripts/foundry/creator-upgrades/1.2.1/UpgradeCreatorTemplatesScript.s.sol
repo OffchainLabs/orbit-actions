@@ -234,9 +234,10 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
         // construct JSON and write to file
         string memory rootObj = "root";
         vm.serializeString(rootObj, "chainId", vm.toString(block.chainid));
-        vm.serializeString(rootObj, "to", vm.toString(address(bridgeCreator)));
+        vm.serializeString(rootObj, "toBridgeCreator", vm.toString(address(bridgeCreator)));
         vm.serializeString(rootObj, "updateBridgeEthTemplatesCalldata", vm.toString(updateTemplatesCalldata));
         vm.serializeString(rootObj, "updateBridgeErc20TemplatesCalldata", vm.toString(updateErc20TemplatesCalldata));
+        vm.serializeString(rootObj, "toRollupCreator", vm.toString(address(rollupCreatorAddress)));
         string memory finalJson = vm.serializeString(
             rootObj, "updateRollupCreatorTemplatesCalldata", vm.toString(updateRollupCreatorTemplatesCalldata)
         );
