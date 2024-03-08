@@ -36,14 +36,14 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
         ) = _deployTemplates();
 
         // updated creators with new templates
-        bool creatorOwnerIsMultisig = vm.envBool("CREATOR_OWNER_IS_MULTISIG");
-        // if (creatorOwnerIsMultisig) {
-        //     _generateUpdateTemplatesCalldata(rollupCreator, ethSeqInbox, erc20SeqInbox);
-        // } else {
-        //     _updateBridgeCreatorTemplates(rollupCreator, ethSeqInbox, erc20SeqInbox);
-        // }
         address rollupCreator = vm.envAddress("ROLLUP_CREATOR");
-        _updateBridgeCreatorTemplates(rollupCreator, seqInboxEth, seqInboxErc20);
+        bool creatorOwnerIsMultisig = vm.envBool("CREATOR_OWNER_IS_MULTISIG");
+        if (creatorOwnerIsMultisig) {
+            _generateUpdateTemplatesCalldata(rollupCreator, seqInboxEth, seqInboxErc20, ospEntry, challengeManager);
+        } else {
+            _updateBridgeCreatorTemplates(rollupCreator, seqInboxEth, seqInboxErc20);
+            _updateRollupCreatorTemplates(rollupCreator, ospEntry, challengeManager);
+        }
 
         vm.stopBroadcast();
     }
@@ -187,25 +187,76 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
         );
     }
 
-    // function setTemplates(
-    //     BridgeCreator _bridgeCreator,
-    //     IOneStepProofEntry _osp,
-    //     IChallengeManager _challengeManagerLogic,
-    //     IRollupAdmin _rollupAdminLogic,
-    //     IRollupUser _rollupUserLogic,
-    //     IUpgradeExecutor _upgradeExecutorLogic,
-    //     address _validatorUtils,
-    //     address _validatorWalletCreator,
-    //     DeployHelper _l2FactoriesDeployer
-    // ) external onlyOwner {
-    //     bridgeCreator = _bridgeCreator;
-    //     osp = _osp;
-    //     challengeManagerTemplate = _challengeManagerLogic;
-    //     rollupAdminLogic = _rollupAdminLogic;
-    //     rollupUserLogic = _rollupUserLogic;
-    //     upgradeExecutorLogic = _upgradeExecutorLogic;
-    //     validatorUtils = _validatorUtils;
-    //     validatorWalletCreator = _validatorWalletCreator;
-    //     l2FactoriesDeployer = _l2FactoriesDeployer;
-    //     emit TemplatesUpdated();
+    /**
+     * @notice Generate calldata for updating eth and erc20 templates in BridgeCreator, then write
+     *         it to JSON file at ${root}/scripts/foundry/upgrade-1.2.1/output/${chainId}.json
+     */
+    function _generateUpdateTemplatesCalldata(
+        address rollupCreatorAddress,
+        address newEthSeqInbox,
+        address newErc20SeqInbox,
+        address newOspEntry,
+        address newChallengeManager
+    ) internal {
+        /// BridgeCreator update
+        BridgeCreator bridgeCreator = RollupCreator(payable(rollupCreatorAddress)).bridgeCreator();
+        bytes memory updateTemplatesCalldata;
+        {
+            // generate calldata for updating eth templates
+            (IBridge bridge,, IInboxBase inbox, IRollupEventInbox rollupEventInbox, IOutbox outbox) =
+                bridgeCreator.ethBasedTemplates();
+            updateTemplatesCalldata = abi.encodeWithSelector(
+                BridgeCreator.updateTemplates.selector,
+                BridgeCreator.BridgeContracts(bridge, ISequencerInbox(newEthSeqInbox), inbox, rollupEventInbox, outbox)
+            );
+        }
+
+        bytes memory updateErc20TemplatesCalldata;
+        {
+            // generate calldata for updating erc20 templates
+            (IBridge erc20Bridge,, IInboxBase erc20Inbox, IRollupEventInbox erc20RollupEventInbox, IOutbox erc20Outbox)
+            = bridgeCreator.erc20BasedTemplates();
+            updateErc20TemplatesCalldata = abi.encodeWithSelector(
+                BridgeCreator.updateERC20Templates.selector,
+                BridgeCreator.BridgeContracts(
+                    erc20Bridge, ISequencerInbox(newErc20SeqInbox), erc20Inbox, erc20RollupEventInbox, erc20Outbox
+                )
+            );
+        }
+
+        bytes memory updateRollupCreatorTemplatesCalldata;
+        {
+            RollupCreator rollupCreator = RollupCreator(payable(rollupCreatorAddress));
+            updateRollupCreatorTemplatesCalldata = abi.encodeWithSelector(
+                RollupCreator.setTemplates.selector,
+                rollupCreator.bridgeCreator(),
+                IOneStepProofEntry(newOspEntry),
+                IChallengeManager(newChallengeManager),
+                rollupCreator.rollupAdminLogic(),
+                rollupCreator.rollupUserLogic(),
+                (rollupCreator.upgradeExecutorLogic()),
+                rollupCreator.validatorUtils(),
+                rollupCreator.validatorWalletCreator(),
+                (rollupCreator.l2FactoriesDeployer())
+            );
+        }
+
+        // construct JSON and write to file
+        string memory rootObj = "root";
+        vm.serializeString(rootObj, "chainId", vm.toString(block.chainid));
+        vm.serializeString(rootObj, "to", vm.toString(address(bridgeCreator)));
+        vm.serializeString(rootObj, "updateTemplatesCalldata", vm.toString(updateTemplatesCalldata));
+        vm.serializeString(rootObj, "updateErc20TemplatesCalldata", vm.toString(updateErc20TemplatesCalldata));
+        string memory finalJson = vm.serializeString(
+            rootObj, "updateRollupCreatorTemplatesCalldata", vm.toString(updateRollupCreatorTemplatesCalldata)
+        );
+        vm.writeJson(
+            finalJson,
+            string(
+                abi.encodePacked(
+                    vm.projectRoot(), "/scripts/foundry/upgrade-1.2.1/output/", vm.toString(block.chainid), ".json"
+                )
+            )
+        );
+    }
 }
