@@ -1,5 +1,26 @@
 # Nitro contracts 1.2.1 upgrade
-These scripts empower `NitroContracts1Point2Point1UpgradeAction` action contract which performs upgrade to [1.2.1 release](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v1.2.1) of Nitro contracts for existing Orbit chains. This upgrade only support upgrading from nitro-contract 1.1.0 or 1.1.1 and does NOT support other versions inclduing their beta versions. Predeployed instances of the upgrade action exists on the chains listed in the following section with vanilla ArbOS20 wasm module root set. If you have a custom nitro machine, you will need to deploy the upgrade action yourself.
+These scripts empower `NitroContracts1Point2Point1UpgradeAction` action contract which performs upgrade to [1.2.1 release](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v1.2.1) of Nitro contracts for existing Orbit chains. Predeployed instances of the upgrade action exists on the chains listed in the following section with vanilla ArbOS20 wasm module root set. If you have a custom nitro machine, you will need to deploy the upgrade action yourself.
+
+NitroContracts1Point2Point1UpgradeAction will perform the following action:
+1. Upgrade SequencerInbox to v1.2.1
+2. Upgrade ChallengeManager to v1.2.1
+3. Upgrade OneStepProof to v1.2.1
+4. Set the wasm module root to the new version
+
+Note that contracts without code changes are not upgraded. It is normal to have some contracts still in the old version after the upgrade as they are equivalent to the new version. After the contract upgrade, you would need to schedule an ArbOS upgrade to ArbOS20 to enable the new features.
+
+## Requirements
+This upgrade only support upgrading from the following [nitro-contract release](https://github.com/OffchainLabs/nitro-contracts/releases):
+- Inbox: v1.1.0 - v1.2.1 inclusive
+- Outbox: v1.1.0 - v1.2.1 inclusive
+- SequencerInbox: v1.1.0 or v1.1.1
+- Bridge: v1.1.0 - v1.2.1 inclusive
+- RollupProxy: v1.1.0 - v1.2.1 inclusive
+- RollupAdminLogic: v1.1.0 - v1.2.1 inclusive
+- RollupUserLogic: v1.1.0 - v1.2.1 inclusive
+- ChallengeManager: v1.1.0 - v1.2.1 inclusive
+
+Please refers to the top [README](../../README.md) `Check Version and Upgrade Path` on how to determine your current nitro contracts version.
 
 ## Deployed instances
 
@@ -16,12 +37,14 @@ These scripts empower `NitroContracts1Point2Point1UpgradeAction` action contract
 `DeployNitroContracts1Point2Point1UpgradeAction.s.sol` script deploys OSPs and ChallengeManager templates, blob reader and SequencerInbox template, and finally the upgrade action itself. It can be executed in this directory like this:
 ```bash
 forge script --sender $DEPLOYER --rpc-url $PARENT_CHAIN_RPC --broadcast --slow ./DeployNitroContracts1Point2Point1UpgradeAction.s.sol -vvv --verify --skip-simulation
+# use --account XXX / --private-key XXX / --interactive / --ledger to set the account to send the transaction from
 ```
 As a result, all templates and upgrade action are deployed. Note the last deployed address - that's the upgrade action.
 
 3. `ExecuteNitroContracts1Point2Point1Upgrade.s.sol` script uses previously deployed upgrade action to execute the upgrade. It makes following assumptions - L1UpgradeExecutor is the rollup owner, and there is an EOA which has executor rights on the L1UpgradeExecutor. Proceed with upgrade using the owner account (the one with executor rights on L1UpgradeExecutor):
 ```bash
 forge script --sender $EXECUTOR --rpc-url $PARENT_CHAIN_RPC --broadcast ./ExecuteNitroContracts1Point2Point1Upgrade.s.sol -vvv
+# use --account XXX / --private-key XXX / --interactive / --ledger to set the account to send the transaction from
 ```
 If you have a multisig as executor, you can still run the above command without broadcasting to get the payload for the multisig transaction.
 

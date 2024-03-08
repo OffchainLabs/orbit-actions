@@ -23,6 +23,23 @@ For token bridge related operations, these are the additional requirements:
 yarn install
 ```
 
+## Check Version and Upgrade Path
+
+Run the follow command to check the version of Nitro contracts deployed on the parent chain of your Orbit chain.
+```
+$ INBOX_ADDRESS=0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9 yarn orbit:contracts:version --network arb1
+Get the version of Orbit chain's nitro contracts (inbox 0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9), hosted on chain 42161
+Version of deployed Inbox: v1.1.1
+Version of deployed Outbox: v1.1.1
+Version of deployed SequencerInbox: v1.1.1
+Version of deployed Bridge: v1.1.1
+Version of deployed RollupProxy: v1.1.1
+Version of deployed RollupAdminLogic: v1.1.1
+Version of deployed RollupUserLogic: v1.1.1
+This deployment can be upgraded to v1.2.1 using NitroContracts1Point2Point1UpgradeAction
+```
+For other networks, replace `arb1` with the network name and configure INFURA_KEY or the rpc in hardhat.config.ts
+
 
 ## Nitro Contracts Upgrades
 *This section is also referenced in the documentation on ["How to upgrade ArbOS on your Orbit chain"](https://docs.arbitrum.io/launch-orbit-chain/how-tos/arbos-upgrade)*
@@ -43,6 +60,6 @@ This action schedule an upgrade of the ArbOS to a specific version at a specific
 Here is a list of common upgrade paths that can be used to upgrade the Orbit chains.
 
 ### ArbOS 20 Atlas
-1. Upgrade your Nitro node(s) to [Nitro v2.3.0](https://github.com/OffchainLabs/nitro/releases/tag/v2.3.0)
+1. Upgrade your Nitro node(s) to [Nitro v2.3.1](https://github.com/OffchainLabs/nitro/releases/tag/v2.3.1)
 1. Upgrade `nitro-contracts` to `v1.2.1` using [nitro-contract 1.2.1 upgrade action](scripts/foundry/contract-upgrades/1.2.1)
 2. Schedule the ArbOS 20 Atlas upgrade using [ArbOS upgrade at timestamp action](scripts/foundry/arbos-upgrades/at-timestamp)
