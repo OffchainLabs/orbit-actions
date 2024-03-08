@@ -24,8 +24,7 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
         vm.startBroadcast();
 
         // deploy templates if not already deployed
-        (address ospEntry, address challengeManager, address seqInboxEth, address seqInboxErc20) =
-            _deployTemplates();
+        (address ospEntry, address challengeManager, address seqInboxEth, address seqInboxErc20) = _deployTemplates();
 
         // updated creators with new templates
         address rollupCreator = vm.envAddress("ROLLUP_CREATOR");
@@ -180,7 +179,7 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
 
     /**
      * @notice Generate calldata for updating eth and erc20 templates in BridgeCreator, then write
-     *         it to JSON file at ${root}/scripts/foundry/upgrade-1.2.1/output/${chainId}.json
+     *         it to JSON file at ${root}/scripts/foundry/creator-upgrades1.2.1/output/${chainId}.json
      */
     function _generateUpdateTemplatesCalldata(
         address rollupCreatorAddress,
@@ -236,8 +235,8 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
         string memory rootObj = "root";
         vm.serializeString(rootObj, "chainId", vm.toString(block.chainid));
         vm.serializeString(rootObj, "to", vm.toString(address(bridgeCreator)));
-        vm.serializeString(rootObj, "updateTemplatesCalldata", vm.toString(updateTemplatesCalldata));
-        vm.serializeString(rootObj, "updateErc20TemplatesCalldata", vm.toString(updateErc20TemplatesCalldata));
+        vm.serializeString(rootObj, "updateBridgeEthTemplatesCalldata", vm.toString(updateTemplatesCalldata));
+        vm.serializeString(rootObj, "updateBridgeErc20TemplatesCalldata", vm.toString(updateErc20TemplatesCalldata));
         string memory finalJson = vm.serializeString(
             rootObj, "updateRollupCreatorTemplatesCalldata", vm.toString(updateRollupCreatorTemplatesCalldata)
         );
@@ -245,7 +244,10 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
             finalJson,
             string(
                 abi.encodePacked(
-                    vm.projectRoot(), "/scripts/foundry/upgrade-1.2.1/output/", vm.toString(block.chainid), ".json"
+                    vm.projectRoot(),
+                    "/scripts/foundry/creator-upgrades/1.2.1/output/",
+                    vm.toString(block.chainid),
+                    ".json"
                 )
             )
         );
