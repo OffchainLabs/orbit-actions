@@ -24,6 +24,10 @@ Please refers to the top [README](../../README.md) `Check Version and Upgrade Pa
 
 ## Deployed instances
 
+- L1 mainnet (eth fee token): 0xC159A3a21aFb34Dbc601a7A42aCD2eCa019393F7
+- L1 mainnet (custom fee token): 0x2e0c12e2478a0dEc2EF6C2CCC2ED8d4fEd3597d1
+- L1 Arb1 (eth fee token): 0x606Bb75B1f910F82086557aa14eD2Dc0bEB85D6B
+- L1 Arb1 (custom fee token): 0xb28c89b6997F025BD35205b99a7968C264cCe353
 - L1 Sepolia (eth fee token): 0xBC1e0ca800781F58F3a2f73dA4D895FdD61B0Cb5
 - L1 Sepolia (custom fee token): 0xEFf65644557573e3E781B0B586fD7488a26c8E46
 - L2 ArbSepolia (eth fee token): 0xe9F95d0975e87e8E633fceCDF17fFc0f646cCfb8
