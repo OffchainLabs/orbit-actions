@@ -25,6 +25,7 @@
     "fix": "yarn format; yarn test:sigs; yarn test:storage; yarn gas-snapshot"
   },
   "devDependencies": {
+    "@arbitrum/nitro-contracts-2.0.0": "npm:@arbitrum/nitro-contracts@2.0.0",
     "@arbitrum/nitro-contracts-1.2.1": "npm:@arbitrum/nitro-contracts@1.2.1",
     "@offchainlabs/upgrade-executor": "1.1.0-beta.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
