@@ -22,6 +22,16 @@
     "@openzeppelin/contracts-upgradeable" "4.5.2"
     patch-package "^6.4.7"
 
+"@arbitrum/nitro-contracts-1.3.0@npm:@arbitrum/nitro-contracts@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@arbitrum/nitro-contracts/-/nitro-contracts-1.3.0.tgz#75c78e074a18dc95fc5bcf5dd270896b59df4918"
+  integrity sha512-nNNOgqqyiOxFiF1k53u0upC6tRWar1aj2arRZoE8C99/0eMnWk9az6rUO1yhxgMyMmk5fx9Pg42oSsZ9H7noOg==
+  dependencies:
+    "@offchainlabs/upgrade-executor" "1.1.0-beta.0"
+    "@openzeppelin/contracts" "4.5.0"
+    "@openzeppelin/contracts-upgradeable" "4.5.2"
+    patch-package "^6.4.7"
+
 "@arbitrum/nitro-contracts-2.0.0@npm:@arbitrum/nitro-contracts@2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@arbitrum/nitro-contracts/-/nitro-contracts-2.0.0.tgz#93b20334ec9e1a985f40a63f2d38096cf530a3c0"
