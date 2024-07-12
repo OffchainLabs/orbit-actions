@@ -78,12 +78,6 @@ contract DeployNitroContracts2Point0Point0UpgradeActionScript is DeploymentHelpe
             _condOsp: IOneStepProofEntry(condOsp)
         });
 
-        //         bytes32 _newWasmModuleRoot,
-        // address _newChallengeManagerImpl,
-        // IOneStepProofEntry _osp,
-        // bytes32 _condRoot,
-        // IOneStepProofEntry _condOsp
-
         vm.stopBroadcast();
     }
 }
