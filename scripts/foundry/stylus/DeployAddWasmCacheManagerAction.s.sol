@@ -3,6 +3,7 @@ pragma solidity 0.8.16;
 
 import {DeploymentHelpersScript} from "../helper/DeploymentHelpers.s.sol";
 import {AddWasmCacheManagerAction} from "../../../contracts/child-chain/stylus/AddWasmCacheManagerAction.sol";
+import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 interface ICacheManager {
     function initialize(uint64 initCacheSize, uint64 initDecay) external;
@@ -23,10 +24,10 @@ contract DeployAddWasmCacheManagerActionScript is DeploymentHelpersScript {
         address cacheManagerLogic = deployBytecodeFromJSON(
             "/node_modules/@arbitrum/nitro-contracts-2.0.0/build/contracts/src/chain/CacheManager.sol/CacheManager.json"
         );
-        address cacheManagerProxy = deployBytecodeWithConstructorFromJSON(
-            "/node_modules/@openzeppelin/contracts/build/contracts/TransparentUpgradeableProxy.json",
-            abi.encode(cacheManagerLogic, vm.envAddress("CACHE_MANAGER_PROXY_ADMIN_ADDRESS"), "0x")
+        address cacheManagerProxy = address(
+            new TransparentUpgradeableProxy(cacheManagerLogic, vm.envAddress("CACHE_MANAGER_PROXY_ADMIN_ADDRESS"), "")
         );
+
         ICacheManager cacheManager = ICacheManager(cacheManagerProxy);
         cacheManager.initialize(uint64(vm.envUint("INIT_CACHE_SIZE")), uint64(vm.envUint("INIT_DECAY")));
 
