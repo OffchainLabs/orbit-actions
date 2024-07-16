@@ -25,8 +25,8 @@ contract ExecuteNitroContracts2Point0Point0UpgradeScript is Script {
         vm.startBroadcast();
 
         // prepare upgrade calldata
-        ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("ROLLUP_ADDRESS"));
-        IRollupCore rollup = IRollupCore(vm.envAddress("PROXY_ADMIN_ADDRESS"));
+        ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
+        IRollupCore rollup = IRollupCore(vm.envAddress("ROLLUP_ADDRESS"));
         bytes memory upgradeCalldata =
             abi.encodeCall(NitroContracts2Point0Point0UpgradeAction.perform, (rollup, proxyAdmin));
 

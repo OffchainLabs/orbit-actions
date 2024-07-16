@@ -17,7 +17,7 @@ contract DeployNitroContracts2Point0Point0UpgradeActionScript is DeploymentHelpe
     bytes32 public constant WASM_MODULE_ROOT = 0x260f5fa5c3176a856893642e149cf128b5a8de9f828afec8d11184415dd8dc69;
 
     // ArbOS v20 https://github.com/OffchainLabs/nitro/releases/tag/consensus-v20
-    bytes32 public constant COND_WASM_MODULE_ROOT = 0x260f5fa5c3176a856893642e149cf128b5a8de9f828afec8d11184415dd8dc69;
+    bytes32 public constant COND_WASM_MODULE_ROOT = 0x8b104a2e80ac6165dc58b9048de12f301d70b02a0ab51396c22b4b4b802a16a4;
 
     function run() public {
         vm.startBroadcast();
