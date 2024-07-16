@@ -3,7 +3,7 @@ pragma solidity 0.8.16;
 
 import "forge-std/Script.sol";
 import {
-    NitroContracts1Point2Point1UpgradeAction,
+    NitroContracts2Point0Point0UpgradeAction,
     ProxyAdmin
 } from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts2Point0Point0UpgradeAction.sol";
 import {IBridge} from "@arbitrum/nitro-contracts-2.0.0/src/bridge/IBridge.sol";
@@ -19,13 +19,16 @@ contract ExecuteNitroContracts2Point0Point0UpgradeScript is Script {
         // used to check upgrade was successful
         bytes32 wasmModuleRoot = vm.envBytes32("WASM_MODULE_ROOT");
 
+        NitroContracts2Point0Point0UpgradeAction upgradeAction =
+            NitroContracts2Point0Point0UpgradeAction(vm.envAddress("UPGRADE_ACTION_ADDRESS"));
+
         vm.startBroadcast();
 
         // prepare upgrade calldata
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("ROLLUP_ADDRESS"));
         IRollupCore rollup = IRollupCore(vm.envAddress("PROXY_ADMIN_ADDRESS"));
         bytes memory upgradeCalldata =
-            abi.encodeCall(NitroContracts1Point2Point1UpgradeAction.perform, (rollup, proxyAdmin));
+            abi.encodeCall(NitroContracts2Point0Point0UpgradeAction.perform, (rollup, proxyAdmin));
 
         // execute the upgrade
         IUpgradeExecutor executor = IUpgradeExecutor(vm.envAddress("PARENT_UPGRADE_EXECUTOR_ADDRESS"));
@@ -33,6 +36,7 @@ contract ExecuteNitroContracts2Point0Point0UpgradeScript is Script {
 
         // sanity check, full checks are done on-chain by the upgrade action
         require(rollup.wasmModuleRoot() == upgradeAction.newWasmModuleRoot(), "Wasm module root not set");
+        require(rollup.wasmModuleRoot() == wasmModuleRoot, "Unexpected wasm module root set");
 
         vm.stopBroadcast();
     }

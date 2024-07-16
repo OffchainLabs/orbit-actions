@@ -2,7 +2,7 @@
 pragma solidity 0.8.16;
 
 import "forge-std/Script.sol";
-import {AddWasmCacheManagerAction} from "../../../../contracts/child-chain/sty;us/AddWasmCacheManagerAction.sol";
+import {AddWasmCacheManagerAction} from "../../../contracts/child-chain/stylus/AddWasmCacheManagerAction.sol";
 
 /**
  * @title DeployAddWasmCacheManagerActionScript
@@ -17,8 +17,8 @@ contract DeployAddWasmCacheManagerActionScript is Script {
 
         // deploy action
         new AddWasmCacheManagerAction({
-            _wasmCachemanager: vm.envUint("WASM_CACHE_MANAGER_ADDRESS"),
-            _targetArbOSVersion: TARGET_ARBOS_VERSION,
+            _wasmCachemanager: vm.envAddress("WASM_CACHE_MANAGER_ADDRESS"),
+            _targetArbOSVersion: TARGET_ARBOS_VERSION
         });
 
         vm.stopBroadcast();
