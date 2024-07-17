@@ -14,6 +14,7 @@ interface IChallengeManagerUpgradeInit {
 interface IRollupUpgrade {
     function upgradeTo(address newImplementation) external;
     function upgradeSecondaryTo(address newImplementation) external;
+    function anyTrustFastConfirmer() external returns (address);
 }
 
 /**
@@ -31,10 +32,10 @@ contract NitroContracts2Point0Point0UpgradeAction {
     address public immutable newRollupAdminLogic;
     address public immutable newRollupUserLogic;
 
-    bytes32 internal constant _IMPLEMENTATION_SECONDARY_SLOT =
-        0x2b1dbce74324248c222f0ec2d5ed7bd323cfc425b336f0253c5ccfda7265546d;
     bytes32 private constant _IMPLEMENTATION_PRIMARY_SLOT =
         0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;
+    bytes32 internal constant _IMPLEMENTATION_SECONDARY_SLOT =
+        0x2b1dbce74324248c222f0ec2d5ed7bd323cfc425b336f0253c5ccfda7265546d;
 
     constructor(
         bytes32 _newWasmModuleRoot,
@@ -120,18 +121,9 @@ contract NitroContracts2Point0Point0UpgradeAction {
         rollup.upgradeSecondaryTo(_newUserLogic);
 
         // verify
-        address currentAdminLogic;
-        assembly {
-            currentAdminLogic := sload(_IMPLEMENTATION_PRIMARY_SLOT)
-        }
         require(
-            currentAdminLogic == _newAdminLogic, "NitroContracts2Point0Point0UpgradeAction: new admin logic not set"
+            rollup.anyTrustFastConfirmer() == address(0),
+            "NitroContracts2Point0Point0UpgradeAction: fast confirmer feature not available"
         );
-
-        address currentUserLogic;
-        assembly {
-            currentUserLogic := sload(_IMPLEMENTATION_SECONDARY_SLOT)
-        }
-        require(currentUserLogic == _newUserLogic, "NitroContracts2Point0Point0UpgradeAction: new user logic not set");
     }
 }

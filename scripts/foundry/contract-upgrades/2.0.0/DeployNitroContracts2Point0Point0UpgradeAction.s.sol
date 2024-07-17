@@ -6,6 +6,7 @@ import {
     NitroContracts2Point0Point0UpgradeAction,
     IOneStepProofEntry
 } from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts2Point0Point0UpgradeAction.sol";
+import {MockArbSys} from "../../helper/MockArbSys.sol";
 
 /**
  * @title DeployNitroContracts2Point0Point0UpgradeActionScript
@@ -19,6 +20,13 @@ contract DeployNitroContracts2Point0Point0UpgradeActionScript is DeploymentHelpe
     bytes32 public constant COND_WASM_MODULE_ROOT = 0x8b104a2e80ac6165dc58b9048de12f301d70b02a0ab51396c22b4b4b802a16a4;
 
     function run() public {
+        bool isArbitrum = vm.envBool("PARENT_CHAIN_IS_ARBITRUM");
+        if (isArbitrum) {
+            // etch a mock ArbSys contract so that foundry simulate it nicely
+            bytes memory mockArbSysCode = address(new MockArbSys()).code;
+            vm.etch(address(100), mockArbSysCode);
+        }
+
         vm.startBroadcast();
 
         // deploy new osp from v2.0.0
