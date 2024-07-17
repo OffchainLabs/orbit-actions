@@ -17,6 +17,10 @@ interface IRollupUpgrade {
     function anyTrustFastConfirmer() external returns (address);
 }
 
+interface ISequencerInbox_v1_2_1 {
+    function isUsingFeeToken() external returns (bool);
+}
+
 /**
  * @title DeployNitroContracts2Point0Point0UpgradeActionScript
  * @notice  Set wasm module root and upgrade challenge manager for stylus ArbOS upgrade.
@@ -77,6 +81,14 @@ contract NitroContracts2Point0Point0UpgradeAction {
     }
 
     function perform(IRollupCore rollup, ProxyAdmin proxyAdmin) external {
+        /// check if previous upgrade v1.2.1 was performed by polling function which was introduced in that version
+        ISequencerInbox_v1_2_1 sequencerInbox = ISequencerInbox_v1_2_1(address(rollup.sequencerInbox()));
+        try sequencerInbox.isUsingFeeToken() returns (bool) {}
+        catch {
+            revert("NitroContracts2Point0Point0UpgradeAction: sequencer inbox needs to be at version >= 1.2.1");
+        }
+
+        /// do the upgrade
         _upgradeChallengerManager(rollup, proxyAdmin);
         _upgradeRollup(address(rollup));
     }
