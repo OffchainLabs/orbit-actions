@@ -132,11 +132,16 @@ async function main() {
 function _checkForPossibleUpgrades(currentVersions: {
   [key: string]: string | null
 }) {
-  const targetVersionsDescending = ['v2.0.0', 'v1.2.1']
+  const targetVersionsDescending = {
+    'v2.0.0': 'NitroContracts2Point0Point0UpgradeAction',
+    'v1.2.1': 'NitroContracts1Point2Point1UpgradeAction',
+  }
 
-  for (const targetVersion of targetVersionsDescending) {
+  for (const targetVersion of Object.keys(targetVersionsDescending)) {
     if (_canBeUpgradedToTragetVersion(targetVersion, currentVersions)) {
-      console.log(`This deployment can be upgraded to ${targetVersion}`)
+      console.log(
+        `This deployment can be upgraded to ${targetVersion} using ${targetVersionsDescending[targetVersion as keyof typeof targetVersionsDescending]}`
+      )
       return
     }
   }
