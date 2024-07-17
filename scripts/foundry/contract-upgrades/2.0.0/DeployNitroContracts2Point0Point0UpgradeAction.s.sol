@@ -9,8 +9,7 @@ import {
 
 /**
  * @title DeployNitroContracts2Point0Point0UpgradeActionScript
- * @notice This script deploys OSPs and ChallengeManager templates, blob reader and SequencerInbox template.
- *          Not applicable for Arbitrum based chains due to precompile call in SequencerInbox (Foundry simulation breaks).
+ * @notice This script deploys OSPs, ChallengeManager and Rollup templates, and the upgrade action.
  */
 contract DeployNitroContracts2Point0Point0UpgradeActionScript is DeploymentHelpersScript {
     // ArbOS v31 https://github.com/OffchainLabs/nitro/releases/tag/consensus-v31
@@ -69,13 +68,25 @@ contract DeployNitroContracts2Point0Point0UpgradeActionScript is DeploymentHelpe
             "/node_modules/@arbitrum/nitro-contracts-2.0.0/build/contracts/src/challenge/ChallengeManager.sol/ChallengeManager.json"
         );
 
+        // deploy new RollupAdminLogic contract from v2.0.0
+        address newRollupAdminLogic = deployBytecodeFromJSON(
+            "/node_modules/@arbitrum/nitro-contracts-2.0.0/build/contracts/src/rollup/RollupAdminLogic.sol/RollupAdminLogic.json"
+        );
+
+        // deploy new RollupUserLogic contract from v2.0.0
+        address newRollupUserLogic = deployBytecodeFromJSON(
+            "/node_modules/@arbitrum/nitro-contracts-2.0.0/build/contracts/src/rollup/RollupUserLogic.sol/RollupUserLogic.json"
+        );
+
         // finally deploy upgrade action
         new NitroContracts2Point0Point0UpgradeAction({
             _newWasmModuleRoot: WASM_MODULE_ROOT,
             _newChallengeManagerImpl: challengeManager,
             _osp: IOneStepProofEntry(newOsp),
             _condRoot: COND_WASM_MODULE_ROOT,
-            _condOsp: IOneStepProofEntry(condOsp)
+            _condOsp: IOneStepProofEntry(condOsp),
+            _newRollupAdminLogic: newRollupAdminLogic,
+            _newRollupUserLogic: newRollupUserLogic
         });
 
         vm.stopBroadcast();
