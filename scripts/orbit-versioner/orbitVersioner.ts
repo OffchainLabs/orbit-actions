@@ -180,8 +180,8 @@ function _canBeUpgradedToTragetVersion(
         'v1.3.0',
         'v2.0.0',
       ],
-      ChallengeManager: ['v1.2.0', 'v1.2.1', 'v1.3.0'],
-      SequencerInbox: ['v1.2.0', 'v1.2.1', 'v1.3.0', 'v2.0.0'],
+      ChallengeManager: ['v1.2.1', 'v1.3.0'],
+      SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0'],
     }
   } else if (targetVersion === 'v1.2.1') {
     supportedSourceVersionsPerContract = {
