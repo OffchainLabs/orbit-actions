@@ -49,7 +49,3 @@ If you have a multisig as executor, you can still run the above command without 
 ```bash
 cast call --rpc-url $PARENT_CHAIN_RPC $ROLLUP "wasmModuleRoot()"
 ```
-
-
-
-forge script --private-key XXX --rpc-url $PARENT_CHAIN_RPC --slow --broadcast ./DeployNitroContracts2Point0Point0UpgradeAction.s.sol:DeployNitroContracts2Point0Point0UpgradeActionScript -vvv

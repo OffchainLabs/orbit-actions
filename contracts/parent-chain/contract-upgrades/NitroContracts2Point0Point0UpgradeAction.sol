@@ -36,11 +36,6 @@ contract NitroContracts2Point0Point0UpgradeAction {
     address public immutable newRollupAdminLogic;
     address public immutable newRollupUserLogic;
 
-    bytes32 private constant _IMPLEMENTATION_PRIMARY_SLOT =
-        0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;
-    bytes32 internal constant _IMPLEMENTATION_SECONDARY_SLOT =
-        0x2b1dbce74324248c222f0ec2d5ed7bd323cfc425b336f0253c5ccfda7265546d;
-
     constructor(
         bytes32 _newWasmModuleRoot,
         address _newChallengeManagerImpl,
@@ -125,12 +120,10 @@ contract NitroContracts2Point0Point0UpgradeAction {
 
     function _upgradeRollup(address rollupProxy) internal {
         IRollupUpgrade rollup = IRollupUpgrade(rollupProxy);
-        address _newAdminLogic = newRollupAdminLogic;
-        address _newUserLogic = newRollupUserLogic;
 
         // set new logic contracts
-        rollup.upgradeTo(_newAdminLogic);
-        rollup.upgradeSecondaryTo(_newUserLogic);
+        rollup.upgradeTo(newRollupAdminLogic);
+        rollup.upgradeSecondaryTo(newRollupUserLogic);
 
         // verify
         require(
