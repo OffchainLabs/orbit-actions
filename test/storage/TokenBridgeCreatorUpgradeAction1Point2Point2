@@ -1,0 +1,4 @@
+| Name                                 | Type    | Slot | Offset | Bytes | Contract                                                                                                                              |
+|--------------------------------------|---------|------|--------|-------|---------------------------------------------------------------------------------------------------------------------------------------|
+| newL1AtomicTokenBridgeCreatorLogic   | address | 0    | 0      | 20    | contracts/parent-chain/factory-upgrades/TokenBridgeCreatorUpgradeAction1Point2Point2.sol:TokenBridgeCreatorUpgradeAction1Point2Point2 |
+| newL1TokenBridgeRetryableSenderLogic | address | 1    | 0      | 20    | contracts/parent-chain/factory-upgrades/TokenBridgeCreatorUpgradeAction1Point2Point2.sol:TokenBridgeCreatorUpgradeAction1Point2Point2 |
