@@ -17,7 +17,7 @@
     - E2E testing with Hardhat + Arbitrum SDK + testnode
 
 ## Removing Sample Files
-Run `scripts/delete-samples.bash` to remove `Counter.sol` and sample test files.
+Run `scripts/template/delete-samples.bash` to remove `Counter.sol` and sample test files.
 
 ## Compiler Settings
 Solc version and optimizer runs are defined in `foundry.toml` and copied by `hardhat.config.ts`.
@@ -79,7 +79,7 @@ To add the end to end setup to an existing hardhat+foundry project:
 ## Signatures and Storage Tests
 These will fail if signatures or storage of any contract defined in `contracts/` changes.
 
-Abstract contracts and interfaces are not checked. `scripts/print-contracts.bash` produces the list of contracts that are checked in these tests.
+Abstract contracts and interfaces are not checked. `scripts/template/print-contracts.bash` produces the list of contracts that are checked in these tests.
 
 Use `yarn test:signatures` and `yarn test:storage`.
 
@@ -107,7 +107,7 @@ A helper script, `minimal-publish` is included to generate a minimal `package.js
 - Restore original files
 - Commit and tag if published successfully
 
-Note that `yarn publish --non-interactive` is used, so there will be no prompt for package version. See `scripts/publish.bash`
+Note that `yarn publish --non-interactive` is used, so there will be no prompt for package version. See `scripts/template/publish.bash`
 
 ## TODO / Wishlist
 - license?

@@ -16,4 +16,4 @@ rm test/fork/eth/Sample.t.sol test/fork/eth/Sample.test.ts
 rm test/e2e/Counter.test.ts
 
 # delete this script as it is no longer needed
-rm scripts/delete-samples.bash
+rm scripts/template/delete-samples.bash
