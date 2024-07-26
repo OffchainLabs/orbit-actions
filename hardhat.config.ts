@@ -1,15 +1,27 @@
 import { HardhatUserConfig } from 'hardhat/config'
 import '@nomicfoundation/hardhat-toolbox'
 import '@nomicfoundation/hardhat-foundry'
+import 'hardhat-contract-sizer'
 
-import { SolidityUserConfig } from 'hardhat/types'
+import { SolcUserConfig } from 'hardhat/types'
 import toml from 'toml'
 import fs from 'fs'
 
 const config: HardhatUserConfig = {
-  solidity: getSolidityConfigFromFoundryToml(
-    process.env.FOUNDRY_PROFILE || 'default'
-  ),
+  solidity: {
+    ...getSolidityConfigFromFoundryToml(process.env.FOUNDRY_PROFILE),
+    // overrides here
+    // overrides: {
+    //   'contracts/MyContract.sol': {
+    //     version: '0.8.0',
+    //     settings: {
+    //       optimizer: {
+    //         enabled: false,
+    //       },
+    //     },
+    //   },
+    // },
+  },
   networks: {
     fork: {
       url: process.env.FORK_URL || 'http://localhost:8545',
@@ -17,7 +29,9 @@ const config: HardhatUserConfig = {
   },
 }
 
-function getSolidityConfigFromFoundryToml(profile: string): SolidityUserConfig {
+function getSolidityConfigFromFoundryToml(
+  profile: string | undefined
+): SolcUserConfig {
   const data = toml.parse(fs.readFileSync('foundry.toml', 'utf-8'))
 
   const defaultConfig = data.profile['default']
