@@ -23,11 +23,8 @@ Run `scripts/template/delete-samples.bash` to remove `Counter.sol` and sample te
 Solc version and optimizer runs are defined in `foundry.toml` and copied by `hardhat.config.ts`.
 
 ## Fork Tests
-Fork tests are located in `test/fork/<chain_name>/` and will run against the latest block of `$<CHAIN_NAME>_FORK_URL`.
+Fork tests are located in `test/fork/`.
 Use `$<CHAIN_NAME>_FORK_URL=*** $<CHAIN_NAME>_FORK_URL=*** yarn test:fork`.
-
-Test files should only be placed in `test/fork/<chain_name>/` (subdrectories are allowed).
-Test files placed directly in `test/fork/` will not run.
 
 `yarn test:fork` will pass if there are no test files.
 

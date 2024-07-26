@@ -1,7 +1,12 @@
 import { expect } from 'chai'
 import { ethers } from 'hardhat'
+import { reset } from '@nomicfoundation/hardhat-network-helpers'
 
 describe('Sample', () => {
+  before(async () => {
+    await reset(process.env.ETH_FORK_URL)
+  })
+
   it('should have code at sequencer inbox', async () => {
     expect(
       (
