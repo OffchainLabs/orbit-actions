@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.16;
 
-import "@arbitrum/nitro-contracts-2.0.0/src/precompiles/ArbSys.sol";
+import "@arbitrum/nitro-contracts-2.1.0/src/precompiles/ArbSys.sol";
 
 // ArbOwner interface will include addWasmCacheManager as of stylus upgrade
 interface IUpdatedArbOwner {

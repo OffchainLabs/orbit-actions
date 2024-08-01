@@ -3,24 +3,24 @@ pragma solidity 0.8.16;
 
 import "forge-std/Script.sol";
 import {
-    NitroContracts2Point0Point0UpgradeAction,
+    NitroContracts2Point1Point0UpgradeAction,
     ProxyAdmin
-} from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts2Point0Point0UpgradeAction.sol";
-import {IBridge} from "@arbitrum/nitro-contracts-2.0.0/src/bridge/IBridge.sol";
-import {IRollupCore} from "@arbitrum/nitro-contracts-2.0.0/src/rollup/IRollupCore.sol";
+} from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts2Point1Point0UpgradeAction.sol";
+import {IBridge} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/IBridge.sol";
+import {IRollupCore} from "@arbitrum/nitro-contracts-2.1.0/src/rollup/IRollupCore.sol";
 import {IUpgradeExecutor} from "@offchainlabs/upgrade-executor/src/IUpgradeExecutor.sol";
 
 /**
  * @title ExecuteNitroContracts1Point2Point1UpgradeScript
- * @notice This script executes nitro contracts 2.0.0 upgrade through UpgradeExecutor
+ * @notice This script executes nitro contracts 2.1.0 upgrade through UpgradeExecutor
  */
-contract ExecuteNitroContracts2Point0Point0UpgradeScript is Script {
+contract ExecuteNitroContracts2Point1Point0UpgradeScript is Script {
     function run() public {
         // used to check upgrade was successful
         bytes32 wasmModuleRoot = vm.envBytes32("WASM_MODULE_ROOT");
 
-        NitroContracts2Point0Point0UpgradeAction upgradeAction =
-            NitroContracts2Point0Point0UpgradeAction(vm.envAddress("UPGRADE_ACTION_ADDRESS"));
+        NitroContracts2Point1Point0UpgradeAction upgradeAction =
+            NitroContracts2Point1Point0UpgradeAction(vm.envAddress("UPGRADE_ACTION_ADDRESS"));
 
         vm.startBroadcast();
 
@@ -28,7 +28,7 @@ contract ExecuteNitroContracts2Point0Point0UpgradeScript is Script {
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
         IRollupCore rollup = IRollupCore(vm.envAddress("ROLLUP_ADDRESS"));
         bytes memory upgradeCalldata =
-            abi.encodeCall(NitroContracts2Point0Point0UpgradeAction.perform, (rollup, proxyAdmin));
+            abi.encodeCall(NitroContracts2Point1Point0UpgradeAction.perform, (rollup, proxyAdmin));
 
         // execute the upgrade
         IUpgradeExecutor executor = IUpgradeExecutor(vm.envAddress("PARENT_UPGRADE_EXECUTOR_ADDRESS"));
