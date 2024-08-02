@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.16;
 
-import {DeploymentHelpersScript} from "../helper/DeploymentHelpers.s.sol";
-import {AddWasmCacheManagerAction} from "../../../contracts/child-chain/stylus/AddWasmCacheManagerAction.sol";
+import {DeploymentHelpersScript} from "../../helper/DeploymentHelpers.s.sol";
+import {AddWasmCacheManagerAction} from "../../../../contracts/child-chain/stylus/AddWasmCacheManagerAction.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 interface ICacheManager {
