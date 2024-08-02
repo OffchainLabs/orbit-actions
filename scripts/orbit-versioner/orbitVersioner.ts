@@ -144,7 +144,7 @@ function _checkForPossibleUpgrades(currentVersions: {
   ]
 
   for (const target of targetVersionsDescending) {
-    if (_canBeUpgradedToTragetVersion(target.version, currentVersions)) {
+    if (_canBeUpgradedToTargetVersion(target.version, currentVersions)) {
       console.log(
         `This deployment can be upgraded to ${target.version} using ${target.actionName}`
       )
@@ -155,7 +155,7 @@ function _checkForPossibleUpgrades(currentVersions: {
   console.log('No upgrade path found')
 }
 
-function _canBeUpgradedToTragetVersion(
+function _canBeUpgradedToTargetVersion(
   targetVersion: string,
   currentVersions: {
     [key: string]: string | null
@@ -166,15 +166,7 @@ function _canBeUpgradedToTragetVersion(
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
   if (targetVersion === 'v2.1.0') {
     supportedSourceVersionsPerContract = {
-      Inbox: [
-        'v1.1.0',
-        'v1.1.1',
-        'v1.2.0',
-        'v1.2.1',
-        'v1.3.0',
-        'v2.0.0',
-        'v2.1.0',
-      ],
+      Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
       Outbox: [
         'v1.1.0',
         'v1.1.1',
@@ -184,15 +176,7 @@ function _canBeUpgradedToTragetVersion(
         'v2.0.0',
         'v2.1.0',
       ],
-      Bridge: [
-        'v1.1.0',
-        'v1.1.1',
-        'v1.2.0',
-        'v1.2.1',
-        'v1.3.0',
-        'v2.0.0',
-        'v2.1.0',
-      ],
+      Bridge: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
       RollupProxy: [
         'v1.1.0',
         'v1.1.1',
@@ -202,24 +186,8 @@ function _canBeUpgradedToTragetVersion(
         'v2.0.0',
         'v2.1.0',
       ],
-      RollupAdminLogic: [
-        'v1.1.0',
-        'v1.1.1',
-        'v1.2.0',
-        'v1.2.1',
-        'v1.3.0',
-        'v2.0.0',
-        'v2.1.0',
-      ],
-      RollupUserLogic: [
-        'v1.1.0',
-        'v1.1.1',
-        'v1.2.0',
-        'v1.2.1',
-        'v1.3.0',
-        'v2.0.0',
-        'v2.1.0',
-      ],
+      RollupAdminLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
+      RollupUserLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
       ChallengeManager: ['v1.2.1', 'v1.3.0'],
       SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0'],
     }
