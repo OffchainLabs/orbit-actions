@@ -58,3 +58,25 @@ If you have a multisig as executor, you can still run the above command without 
 ```bash
 cast call --rpc-url $PARENT_CHAIN_RPC $ROLLUP "wasmModuleRoot()"
 ```
+
+## FAQ
+
+### Q: node error: unable to find validator machine directory for the on-chain WASM module root
+
+```
+unable to find validator machine directory for the on-chain WASM module root err="stat /home/user/target/machines/0x260f5fa5c3176a856893642e149cf128b5a8de9f828afec8d11184415dd8dc69: no such file or directory"
+```
+
+A: upgrade to nitro-node v3.1.0+
+
+### Q: error generating node action: wasmroot doesn't match rollup
+
+```
+error acting as staker                   err="error advancing stake from node 0 (hash 0x0000000000000000000000000000000000000000000000000000000000000000): error generating node action: wasmroot doesn't match rollup : 0x260f5fa5c3176a856893642e149cf128b5a8de9f828afec8d11184415dd8dc69, valid: [0x8b104a2e80ac6165dc58b9048de12f301d70b02a0ab51396c22b4b4b802a16a4]"
+```
+
+A: make sure there is activity on the child chain and a new batch is posted after the upgrade
+
+### Q: intrinsic gas too low when running foundry script
+
+A: try to add -g 1000 to the command
