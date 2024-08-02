@@ -14,13 +14,6 @@ contract DeployEnableFastConfirmAction is DeploymentHelpersScript {
     address public immutable GNOSIS_COMPATIBILITY_FALLBACK_HANDLER = 0x017062a1dE2FE6b99BE3d9d37841FeD19F573804;
 
     function run() public {
-        require(GNOSIS_SAFE_PROXY_FACTORY.code.length > 0, "GNOSIS_SAFE_PROXY_FACTORY doesn't exist on this chain");
-        require(GNOSIS_SAFE_1_3_0.code.length > 0, "GNOSIS_SAFE_1_3_0 doesn't exist on this chain");
-        require(
-            GNOSIS_COMPATIBILITY_FALLBACK_HANDLER.code.length > 0,
-            "GNOSIS_COMPATIBILITY_FALLBACK_HANDLER doesn't exist on this chain"
-        );
-
         vm.startBroadcast();
 
         // deploy action

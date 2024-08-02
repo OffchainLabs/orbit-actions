@@ -21,6 +21,12 @@ contract EnableFastConfirmAction {
     address public immutable GNOSIS_COMPATIBILITY_FALLBACK_HANDLER;
 
     constructor(address gnosisSafeProxyFactory, address gnosisSafe1_3_0, address gnosisCompatibilityFallbackHandler) {
+        require(gnosisSafeProxyFactory.code.length > 0, "gnosisSafeProxyFactory doesn't exist on this chain");
+        require(gnosisSafe1_3_0.code.length > 0, "gnosisSafe1_3_0 doesn't exist on this chain");
+        require(
+            gnosisCompatibilityFallbackHandler.code.length > 0,
+            "gnosisCompatibilityFallbackHandler doesn't exist on this chain"
+        );
         GNOSIS_SAFE_PROXY_FACTORY = gnosisSafeProxyFactory;
         GNOSIS_SAFE_1_3_0 = gnosisSafe1_3_0;
         GNOSIS_COMPATIBILITY_FALLBACK_HANDLER = gnosisCompatibilityFallbackHandler;
