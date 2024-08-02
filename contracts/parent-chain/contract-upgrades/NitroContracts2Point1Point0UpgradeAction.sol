@@ -128,7 +128,7 @@ contract NitroContracts2Point1Point0UpgradeAction {
         // verify
         require(
             rollup.anyTrustFastConfirmer() == address(0),
-            "NitroContracts2Point1Point0UpgradeAction: fast confirmer feature not available"
+            "NitroContracts2Point1Point0UpgradeAction: unexpected fast confirmer address"
         );
     }
 }
