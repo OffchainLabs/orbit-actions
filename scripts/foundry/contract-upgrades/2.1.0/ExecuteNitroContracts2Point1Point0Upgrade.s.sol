@@ -22,11 +22,14 @@ contract ExecuteNitroContracts2Point1Point0UpgradeScript is Script {
         NitroContracts2Point1Point0UpgradeAction upgradeAction =
             NitroContracts2Point1Point0UpgradeAction(vm.envAddress("UPGRADE_ACTION_ADDRESS"));
 
+        // check prerequisites
+        IRollupCore rollup = IRollupCore(vm.envAddress("ROLLUP_ADDRESS"));
+        require(rollup.wasmModuleRoot() == upgradeAction.condRoot(), "Incorrect starting wasm module root");
+
         vm.startBroadcast();
 
         // prepare upgrade calldata
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
-        IRollupCore rollup = IRollupCore(vm.envAddress("ROLLUP_ADDRESS"));
         bytes memory upgradeCalldata =
             abi.encodeCall(NitroContracts2Point1Point0UpgradeAction.perform, (rollup, proxyAdmin));
 
