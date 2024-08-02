@@ -83,6 +83,9 @@ contract NitroContracts2Point1Point0UpgradeAction {
             revert("NitroContracts2Point1Point0UpgradeAction: sequencer inbox needs to be at version >= 1.2.1");
         }
 
+        /// check that condRoot is being used
+        require(rollup.wasmModuleRoot() == condRoot, "NitroContracts2Point1Point0UpgradeAction: wasm root mismatch");
+
         /// do the upgrade
         _upgradeChallengerManager(rollup, proxyAdmin);
         _upgradeRollup(address(rollup));

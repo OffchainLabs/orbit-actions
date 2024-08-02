@@ -26,6 +26,8 @@ This upgrade only support upgrading from the following [nitro-contract release](
 
 Please refer to the top [README](../../README.md) `Check Version and Upgrade Path` on how to determine your current nitro contracts version.
 
+Also, expectation is that rollup being upgraded currently uses official ArbOS20 wasm module root. If other module root is used upgrade will revert with `NitroContracts2Point1Point0UpgradeAction: wasm root mismatch` message. In case you're using custom module root and want to perform this upgrade, please deploy another instance of upgrade action and provide yours wasm module root as cond root in the constructor.
+
 ## Deployed instances
 
 TBD
