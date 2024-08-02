@@ -82,3 +82,9 @@ Here is a list of common upgrade paths that can be used to upgrade the Orbit cha
 1. Upgrade your Nitro node(s) to [Nitro v2.3.1](https://github.com/OffchainLabs/nitro/releases/tag/v2.3.1)
 1. Upgrade `nitro-contracts` to `v1.2.1` using [nitro-contract 1.2.1 upgrade action](scripts/foundry/contract-upgrades/1.2.1)
 1. Schedule the ArbOS 20 Atlas upgrade using [ArbOS upgrade at timestamp action](scripts/foundry/arbos-upgrades/at-timestamp)
+
+# Other Actions
+
+## Enable Fast Confirmation
+
+See [EnableFastConfirmAction](scripts/foundry/fast-confirm)
