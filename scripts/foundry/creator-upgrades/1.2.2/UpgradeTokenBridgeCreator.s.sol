@@ -36,7 +36,7 @@ contract UpgradeTokenBridgeCreatorScript is DeploymentHelpersScript {
         TransparentUpgradeableProxy retryableSenderProxy =
             TransparentUpgradeableProxy(payable(IL1AtomicTokenBridgeCreator(tokenBridgeCreator).retryableSender()));
 
-        /// prepare upgrade calldata
+        /// prepare upgrade calldata (not a proper gnosis safe format, used just for a reference)
         if (creatorOwnerIsMultisig) {
             bytes memory creatorCalldata = abi.encodeWithSelector(
                 ProxyAdmin.upgrade.selector, tokenBridgeCreatorProxy, newL1AtomicTokenBridgeCreatorLogic
