@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.16;
 
-import "@arbitrum/nitro-contracts-2.0.0/src/osp/IOneStepProofEntry.sol";
-import "@arbitrum/nitro-contracts-2.0.0/src/rollup/IRollupAdmin.sol";
+import "@arbitrum/nitro-contracts-2.1.0/src/osp/IOneStepProofEntry.sol";
+import "@arbitrum/nitro-contracts-2.1.0/src/rollup/IRollupAdmin.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 
@@ -22,11 +22,11 @@ interface ISequencerInbox_v1_2_1 {
 }
 
 /**
- * @title DeployNitroContracts2Point0Point0UpgradeActionScript
+ * @title DeployNitroContracts2Point1Point0UpgradeActionScript
  * @notice  Set wasm module root and upgrade challenge manager for stylus ArbOS upgrade.
  *          Also upgrade Rollup logic contracts to include fast confirmations feature.
  */
-contract NitroContracts2Point0Point0UpgradeAction {
+contract NitroContracts2Point1Point0UpgradeAction {
     bytes32 public immutable newWasmModuleRoot;
     address public immutable newChallengeManagerImpl;
     IOneStepProofEntry public immutable osp;
@@ -46,24 +46,24 @@ contract NitroContracts2Point0Point0UpgradeAction {
         address _newRollupUserLogic
     ) {
         require(
-            _newWasmModuleRoot != bytes32(0), "NitroContracts2Point0Point0UpgradeAction: _newWasmModuleRoot is empty"
+            _newWasmModuleRoot != bytes32(0), "NitroContracts2Point1Point0UpgradeAction: _newWasmModuleRoot is empty"
         );
         require(
             Address.isContract(_newChallengeManagerImpl),
-            "NitroContracts2Point0Point0UpgradeAction: _newChallengeManagerImpl is not a contract"
+            "NitroContracts2Point1Point0UpgradeAction: _newChallengeManagerImpl is not a contract"
         );
-        require(Address.isContract(address(_osp)), "NitroContracts2Point0Point0UpgradeAction: _osp is not a contract");
+        require(Address.isContract(address(_osp)), "NitroContracts2Point1Point0UpgradeAction: _osp is not a contract");
         require(
             Address.isContract(address(_condOsp)),
-            "NitroContracts2Point0Point0UpgradeAction: _condOsp is not a contract"
+            "NitroContracts2Point1Point0UpgradeAction: _condOsp is not a contract"
         );
         require(
             Address.isContract(_newRollupAdminLogic),
-            "NitroContracts2Point0Point0UpgradeAction: _newRollupAdminLogic is not a contract"
+            "NitroContracts2Point1Point0UpgradeAction: _newRollupAdminLogic is not a contract"
         );
         require(
             Address.isContract(_newRollupUserLogic),
-            "NitroContracts2Point0Point0UpgradeAction: _newRollupUserLogic is not a contract"
+            "NitroContracts2Point1Point0UpgradeAction: _newRollupUserLogic is not a contract"
         );
 
         newWasmModuleRoot = _newWasmModuleRoot;
@@ -80,8 +80,11 @@ contract NitroContracts2Point0Point0UpgradeAction {
         ISequencerInbox_v1_2_1 sequencerInbox = ISequencerInbox_v1_2_1(address(rollup.sequencerInbox()));
         try sequencerInbox.isUsingFeeToken() returns (bool) {}
         catch {
-            revert("NitroContracts2Point0Point0UpgradeAction: sequencer inbox needs to be at version >= 1.2.1");
+            revert("NitroContracts2Point1Point0UpgradeAction: sequencer inbox needs to be at version >= 1.2.1");
         }
+
+        /// check that condRoot is being used
+        require(rollup.wasmModuleRoot() == condRoot, "NitroContracts2Point1Point0UpgradeAction: wasm root mismatch");
 
         /// do the upgrade
         _upgradeChallengerManager(rollup, proxyAdmin);
@@ -101,11 +104,11 @@ contract NitroContracts2Point0Point0UpgradeAction {
         // verify
         require(
             proxyAdmin.getProxyImplementation(challengeManager) == newChallengeManagerImpl,
-            "NitroContracts2Point0Point0UpgradeAction: new challenge manager implementation set"
+            "NitroContracts2Point1Point0UpgradeAction: new challenge manager implementation set"
         );
         require(
             IChallengeManagerUpgradeInit(address(challengeManager)).osp() == address(osp),
-            "NitroContracts2Point0Point0UpgradeAction: new OSP not set"
+            "NitroContracts2Point1Point0UpgradeAction: new OSP not set"
         );
 
         // set new wasm module root
@@ -114,7 +117,7 @@ contract NitroContracts2Point0Point0UpgradeAction {
         // verify:
         require(
             rollup.wasmModuleRoot() == newWasmModuleRoot,
-            "NitroContracts2Point0Point0UpgradeAction: wasm module root not set"
+            "NitroContracts2Point1Point0UpgradeAction: wasm module root not set"
         );
     }
 
@@ -128,7 +131,7 @@ contract NitroContracts2Point0Point0UpgradeAction {
         // verify
         require(
             rollup.anyTrustFastConfirmer() == address(0),
-            "NitroContracts2Point0Point0UpgradeAction: fast confirmer feature not available"
+            "NitroContracts2Point1Point0UpgradeAction: unexpected fast confirmer address"
         );
     }
 }

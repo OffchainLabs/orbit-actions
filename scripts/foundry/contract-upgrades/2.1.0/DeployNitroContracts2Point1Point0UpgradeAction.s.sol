@@ -3,16 +3,16 @@ pragma solidity 0.8.16;
 
 import {DeploymentHelpersScript} from "../../helper/DeploymentHelpers.s.sol";
 import {
-    NitroContracts2Point0Point0UpgradeAction,
+    NitroContracts2Point1Point0UpgradeAction,
     IOneStepProofEntry
-} from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts2Point0Point0UpgradeAction.sol";
+} from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts2Point1Point0UpgradeAction.sol";
 import {MockArbSys} from "../../helper/MockArbSys.sol";
 
 /**
- * @title DeployNitroContracts2Point0Point0UpgradeActionScript
+ * @title DeployNitroContracts2Point1Point0UpgradeActionScript
  * @notice This script deploys OSPs, ChallengeManager and Rollup templates, and the upgrade action.
  */
-contract DeployNitroContracts2Point0Point0UpgradeActionScript is DeploymentHelpersScript {
+contract DeployNitroContracts2Point1Point0UpgradeActionScript is DeploymentHelpersScript {
     // ArbOS v31 https://github.com/OffchainLabs/nitro/releases/tag/consensus-v31
     bytes32 public constant WASM_MODULE_ROOT = 0x260f5fa5c3176a856893642e149cf128b5a8de9f828afec8d11184415dd8dc69;
 
@@ -20,32 +20,25 @@ contract DeployNitroContracts2Point0Point0UpgradeActionScript is DeploymentHelpe
     bytes32 public constant COND_WASM_MODULE_ROOT = 0x8b104a2e80ac6165dc58b9048de12f301d70b02a0ab51396c22b4b4b802a16a4;
 
     function run() public {
-        bool isArbitrum = vm.envBool("PARENT_CHAIN_IS_ARBITRUM");
-        if (isArbitrum) {
-            // etch a mock ArbSys contract so that foundry simulate it nicely
-            bytes memory mockArbSysCode = address(new MockArbSys()).code;
-            vm.etch(address(100), mockArbSysCode);
-        }
-
         vm.startBroadcast();
 
-        // deploy new osp from v2.0.0
+        // deploy new osp from v2.1.0
         address newOsp;
         {
             address osp0 = deployBytecodeFromJSON(
-                "/node_modules/@arbitrum/nitro-contracts-2.0.0/build/contracts/src/osp/OneStepProver0.sol/OneStepProver0.json"
+                "/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/osp/OneStepProver0.sol/OneStepProver0.json"
             );
             address ospMemory = deployBytecodeFromJSON(
-                "/node_modules/@arbitrum/nitro-contracts-2.0.0/build/contracts/src/osp/OneStepProverMemory.sol/OneStepProverMemory.json"
+                "/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/osp/OneStepProverMemory.sol/OneStepProverMemory.json"
             );
             address ospMath = deployBytecodeFromJSON(
-                "/node_modules/@arbitrum/nitro-contracts-2.0.0/build/contracts/src/osp/OneStepProverMath.sol/OneStepProverMath.json"
+                "/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/osp/OneStepProverMath.sol/OneStepProverMath.json"
             );
             address ospHostIo = deployBytecodeFromJSON(
-                "/node_modules/@arbitrum/nitro-contracts-2.0.0/build/contracts/src/osp/OneStepProverHostIo.sol/OneStepProverHostIo.json"
+                "/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/osp/OneStepProverHostIo.sol/OneStepProverHostIo.json"
             );
             newOsp = deployBytecodeWithConstructorFromJSON(
-                "/node_modules/@arbitrum/nitro-contracts-2.0.0/build/contracts/src/osp/OneStepProofEntry.sol/OneStepProofEntry.json",
+                "/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/osp/OneStepProofEntry.sol/OneStepProofEntry.json",
                 abi.encode(osp0, ospMemory, ospMath, ospHostIo)
             );
         }
@@ -71,23 +64,23 @@ contract DeployNitroContracts2Point0Point0UpgradeActionScript is DeploymentHelpe
             );
         }
 
-        // deploy new challenge manager from v2.0.0
+        // deploy new challenge manager from v2.1.0
         address challengeManager = deployBytecodeFromJSON(
-            "/node_modules/@arbitrum/nitro-contracts-2.0.0/build/contracts/src/challenge/ChallengeManager.sol/ChallengeManager.json"
+            "/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/challenge/ChallengeManager.sol/ChallengeManager.json"
         );
 
-        // deploy new RollupAdminLogic contract from v2.0.0
+        // deploy new RollupAdminLogic contract from v2.1.0
         address newRollupAdminLogic = deployBytecodeFromJSON(
-            "/node_modules/@arbitrum/nitro-contracts-2.0.0/build/contracts/src/rollup/RollupAdminLogic.sol/RollupAdminLogic.json"
+            "/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/rollup/RollupAdminLogic.sol/RollupAdminLogic.json"
         );
 
-        // deploy new RollupUserLogic contract from v2.0.0
+        // deploy new RollupUserLogic contract from v2.1.0
         address newRollupUserLogic = deployBytecodeFromJSON(
-            "/node_modules/@arbitrum/nitro-contracts-2.0.0/build/contracts/src/rollup/RollupUserLogic.sol/RollupUserLogic.json"
+            "/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/rollup/RollupUserLogic.sol/RollupUserLogic.json"
         );
 
         // finally deploy upgrade action
-        new NitroContracts2Point0Point0UpgradeAction({
+        new NitroContracts2Point1Point0UpgradeAction({
             _newWasmModuleRoot: WASM_MODULE_ROOT,
             _newChallengeManagerImpl: challengeManager,
             _osp: IOneStepProofEntry(newOsp),

@@ -1,4 +1,58 @@
 {
+  "v2.1.0": {
+    "eth": {
+      "Inbox": [
+        "12209255f9f561164f66608f4f7ada0d574e9e21f9b1d72b67c9a7de6ddf10ec",
+        "12206f949a071060d1ab2aa0e55c5a967234b4de9d4b4d08a637d1e15adf6836"
+      ],
+      "Outbox": [
+        "1220a71c0b2b1bb378b4e87b3d74997da580d1aeddfa0020bf7828e35ac6e461",
+        "122017a52a06af92d3ccff2b5949dfefb100c735ae2619a0e12b32d5fb0a875e"
+      ],
+      "SequencerInbox": [
+        "1220e88914bcb42e9ba6cc6b21b3b482f5460c0748ffb5d983dc26f4334cffad",
+        "12207fee234b805c2c835368e9bca098cf20390b4bdfc04ed2b6f0c155439877"
+      ],
+      "Bridge": [
+        "12206c38d558afd13c030589dace1d3b4f8d157625dfc5f1ee771258bbf86c5d",
+        "12202046bd5adb858c77c93e2b65a31b8f11b3f381d5055793f137e085421542"
+      ]
+    },
+    "erc20": {
+      "Inbox": [
+        "1220b619f34ba272ec72ca2035fc421c7dd2bc6f98ff5f8a9cdeda227076bac5",
+        "1220be4a5be2857eac52060d02a1f29f0ba5a69c4d7ceb9bfd8344732be47942"
+      ],
+      "Outbox": [
+        "122065c63281532ea50f5bde466e32959b8197898044c1677fa59f725f274ff2",
+        "1220d646b1c850d3bcffe33a268735030d828b4075aef2c3a32b478b5a419ff0"
+      ],
+      "SequencerInbox": [
+        "1220e88914bcb42e9ba6cc6b21b3b482f5460c0748ffb5d983dc26f4334cffad",
+        "12207fee234b805c2c835368e9bca098cf20390b4bdfc04ed2b6f0c155439877"
+      ],
+      "Bridge": [
+        "122091f2b3a26837eb7f6ae1ee1395e00da6a57a8923d02f716ccaebf4348167",
+        "12202b5d5c431949e42cc0f94ae888b71651bdbd6aad7d357822e0b769a9310d"
+      ]
+    },
+    "RollupProxy": [
+      "1220039b2791e4013e004cd51e37e19e1137184e0a7f5dec2621e721140c54ba",
+      "122032742cba8a368320d6b2e989e36e7b86c1625af627fd038ea31ae53bdfb8"
+    ],
+    "RollupAdminLogic": [
+      "12208c91b00a35773fa5f9f6ee5c7bb5fa9b2863c1129a3a8e512d1c9b1a35a2",
+      "1220700e0bf9bfb6e156f76c4243adcea824b4d1f386f85a2e9f9dbd22ddeccc"
+    ],
+    "RollupUserLogic": [
+      "1220ceb732965916699eebfe23818550c54f6679f9b5d8111c6af8500de2c223",
+      "1220c981a481ad88429a6ae4fd2af63c08c7dd959d32d67e9cde7aa35d042077"
+    ],
+    "ChallengeManager": [
+      "1220a10b85e7c0f109a0a569ed2fe7e8603230eaa7d5df62f1531f548fe0eff8",
+      "12208c192a653d3db0b78ccccbd354b76744de722b31bcaf552a267a137d523d"
+    ]
+  },
   "v2.0.0": {
     "eth": {
       "Inbox": [
