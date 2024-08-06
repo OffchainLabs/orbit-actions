@@ -14,8 +14,8 @@ interface IL1AtomicTokenBridgeCreator {
  *         Contains support for deploying token bridge on non-18 decimals fee token chains.
  */
 contract TokenBridgeCreatorUpgradeAction1Point2Point2 {
-    address public newL1AtomicTokenBridgeCreatorLogic;
-    address public newL1TokenBridgeRetryableSenderLogic;
+    address public immutable newL1AtomicTokenBridgeCreatorLogic;
+    address public immutable newL1TokenBridgeRetryableSenderLogic;
 
     constructor(address _newL1AtomicTokenBridgeCreatorLogic, address _newL1TokenBridgeRetryableSenderLogic) {
         require(Address.isContract(_newL1AtomicTokenBridgeCreatorLogic), "Invalid token bridge creator logic");
@@ -26,24 +26,21 @@ contract TokenBridgeCreatorUpgradeAction1Point2Point2 {
     }
 
     function perform(ProxyAdmin proxyAdmin, address tokenBridgeCreator) external {
-        address _newL1AtomicTokenBridgeCreatorLogic = newL1AtomicTokenBridgeCreatorLogic;
-        address _newL1TokenBridgeRetryableSenderLogic = newL1TokenBridgeRetryableSenderLogic;
-
-        TransparentUpgradeableProxy _tokenBridgeCreator = TransparentUpgradeableProxy(payable(tokenBridgeCreator));
-        TransparentUpgradeableProxy _retryableSender =
+        TransparentUpgradeableProxy tokenBridgeCreatorProxy = TransparentUpgradeableProxy(payable(tokenBridgeCreator));
+        TransparentUpgradeableProxy retryableSenderProxy =
             TransparentUpgradeableProxy(payable(IL1AtomicTokenBridgeCreator(tokenBridgeCreator).retryableSender()));
 
         // upgrade logic contracts
-        proxyAdmin.upgrade(_tokenBridgeCreator, newL1AtomicTokenBridgeCreatorLogic);
-        proxyAdmin.upgrade(_retryableSender, newL1TokenBridgeRetryableSenderLogic);
+        proxyAdmin.upgrade(tokenBridgeCreatorProxy, newL1AtomicTokenBridgeCreatorLogic);
+        proxyAdmin.upgrade(retryableSenderProxy, newL1TokenBridgeRetryableSenderLogic);
 
         // verify
         require(
-            proxyAdmin.getProxyImplementation(_tokenBridgeCreator) == _newL1AtomicTokenBridgeCreatorLogic,
+            proxyAdmin.getProxyImplementation(tokenBridgeCreatorProxy) == newL1AtomicTokenBridgeCreatorLogic,
             "Token bridge creator upgrade failed"
         );
         require(
-            proxyAdmin.getProxyImplementation(_retryableSender) == _newL1TokenBridgeRetryableSenderLogic,
+            proxyAdmin.getProxyImplementation(retryableSenderProxy) == newL1TokenBridgeRetryableSenderLogic,
             "Retryable sender upgrade failed"
         );
     }
