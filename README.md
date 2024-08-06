@@ -53,6 +53,7 @@ For ArbOS upgrades, a pre-requisite is to deploy new Nitro contracts to the pare
 ### Nitro contracts 2.1.0 (for ArbOS 31 Bianca)
 
 The [`nitro-contracts 2.1.0` upgrade action](scripts/foundry/contract-upgrades/2.1.0) will deploy `nitro-contracts v2.1.0` contracts to your Orbit's parent chain. Note that this action will only work for chains with `nitro-contracts v1.2.1` or `nitro-contracts v1.3.0`. ArbOS 31 Bianca, shipped via [Nitro v3.1.0](https://github.com/OffchainLabs/nitro/releases/tag/v3.1.0), requires [**`nitro-contracts v2.1.0`**](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v2.1.0) or higher.
+Note: this upgrade enables Stylus. In case you wish to opt-out of Stylus support, you can skip wasm module root update and deploying/enabling the CacheManager.
 
 ### Nitro contracts 1.2.1 (for ArbOS 20 Atlas)
 
