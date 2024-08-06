@@ -24,15 +24,17 @@ contract DeployTokenBridgeCreatorUpgradeAction is DeploymentHelpersScript {
         vm.startBroadcast();
 
         address newL1AtomicTokenBridgeCreatorLogic = deployBytecodeFromJSON(
-            "/node_modules/@arbitrum/token-bridge-1.2.2/build/contracts/contracts/tokenbridge/ethereum/L1AtomicTokenBridgeCreator/L1AtomicTokenBridgeCreator.json"
+            "/node_modules/@arbitrum/token-bridge-1.2.2/build/contracts/contracts/tokenbridge/ethereum/L1AtomicTokenBridgeCreator.sol/L1AtomicTokenBridgeCreator.json"
         );
         address newL1TokenBridgeRetryableSenderLogic = deployBytecodeFromJSON(
-            "/node_modules/@arbitrum/token-bridge-1.2.2/build/contracts/contracts/tokenbridge/ethereum/L1TokenBridgeRetryableSender/L1TokenBridgeRetryableSender.json"
+            "/node_modules/@arbitrum/token-bridge-1.2.2/build/contracts/contracts/tokenbridge/ethereum/L1TokenBridgeRetryableSender.sol/L1TokenBridgeRetryableSender.json"
         );
 
         // deploy TokenBridgeCreatorUpgradeAction1Point2Point2
-        new TokenBridgeCreatorUpgradeAction1Point2Point2(
-            newL1AtomicTokenBridgeCreatorLogic, newL1TokenBridgeRetryableSenderLogic
+        address(
+            new TokenBridgeCreatorUpgradeAction1Point2Point2(
+                newL1AtomicTokenBridgeCreatorLogic, newL1TokenBridgeRetryableSenderLogic
+            )
         );
 
         vm.stopBroadcast();
