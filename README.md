@@ -44,7 +44,7 @@ To add the fork test setup to an existing hardhat+foundry project:
 - Copy `test/fork/` directory
 - Copy `test:fork` package script
 
-## E2E Tests and the Arbitrum SDK
+## E2E Tests, the Arbitrum SDK, and `DoubleWallet` / `DoubleProvider`
 End to end tests are located in `test/e2e/`, and ran by `yarn test:e2e`.
 
 The GitHub workflow defined in `.github/workflows/test-e2e.yml` will run test files against an L1+L2 nitro testnode setup by default. There are commented out jobs that add an L3 with ETH or custom fees.
@@ -55,6 +55,16 @@ This repository uses ethers v6, but the Arbitrum SDK uses ethers v5.
 A separate ethers v5 dev dependency is included and can be imported for use with the SDK.
 ```typescript
 import { ethers as ethersv5 } from 'ethers-v5'
+```
+
+Instead of using providers and wallets directly, use `DoubleProvider` and `DoubleWallet` defined in `scripts/template/util.ts`. Using these classes / types makes dealing with the two ethers version much easier.
+
+## Using Mock Contracts
+Mock contracts like test tokens should live in `test/mocks`. Hardhat does not generate artifacts or types for contracts in `test/`, so to deploy and use them you should use foundry artifacts. For example:
+
+```typescript
+import ArbSysMockArtifact from 'out/ArbSysMock.sol/ArbSysMock.json'
+new ContractFactory(ArbSysMockArtifact.abi, ArbSysMockArtifact.bytecode, signer).deploy()
 ```
 
 ### Disabling / Removing

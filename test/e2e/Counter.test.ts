@@ -7,6 +7,8 @@ This repository uses ethers v6, but the arbitrum sdk uses ethers v5.
 
 Using the sdk might be a bit tricky, but you can import v5 like this:
 import { ethers as ethersv5 } from 'ethers-v5'
+
+testSetup will return both v5 and v6 versions of signers and providers.
 */
 
 describe('E2E Sample', () => {
