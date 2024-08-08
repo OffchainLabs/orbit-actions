@@ -24,7 +24,7 @@ Please refer to the top [README](../../README.md) `Check Version and Upgrade Pat
 
 - L1 mainnet: 
 - L2 Arb1: 
-- L1 Sepolia: 
+- L1 Sepolia: 0xC22834581EbC8527d974F8a1c97E1bEA4EF910BC
 - L2 ArbSepolia: 0xf7aA2f6B1163142Cb886a0C392D59DD5f1c4F8a2
 
 ## How to use it
@@ -32,7 +32,7 @@ Please refer to the top [README](../../README.md) `Check Version and Upgrade Pat
 
 `DeployEnableFastConfirmAction.s.s.sol` script deploys `EnableFastConfirmAction` contract. It can be executed in this directory like this:
 ```bash
-forge script --sender $DEPLOYER --rpc-url $PARENT_CHAIN_RPC --broadcast --slow ./DeployEnableFastConfirmAction.s.sol -vvv --verify
+forge script --sender $DEPLOYER --rpc-url $PARENT_CHAIN_RPC --broadcast --slow DeployEnableFastConfirmAction -vvv --verify
 # use --account XXX / --private-key XXX / --interactive / --ledger to set the account to send the transaction from
 ```
 This would deploy the EnableFastConfirmAction. Update your .env file with the address of the upgrade action.
