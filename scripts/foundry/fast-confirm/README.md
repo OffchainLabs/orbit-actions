@@ -24,7 +24,7 @@ Please refer to the top [README](../../README.md) `Check Version and Upgrade Pat
 
 - L1 mainnet: 
 - L2 Arb1: 
-- L1 Sepolia: 0xC22834581EbC8527d974F8a1c97E1bEA4EF910BC
+- L1 Sepolia: 0x0a055A227E01eb2BC72D799f3dDB8cd7C40e1684
 - L2 ArbSepolia: 0xf7aA2f6B1163142Cb886a0C392D59DD5f1c4F8a2
 
 ## How to use it
