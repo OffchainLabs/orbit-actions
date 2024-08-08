@@ -30,7 +30,10 @@ Also, expectation is that rollup being upgraded currently uses official ArbOS20 
 
 ## Deployed instances
 
-TBD
+- L1 mainnet:
+- L2 Arb1:
+- L1 Sepolia: 0x16f0a57F730b4C645a3b3c02B33A5a34F5a4bb6A
+- L2 ArbSepolia: 0x7c6282fF5032aE3F66BaB070a2033979022fc059
 
 ## How to use it
 
@@ -40,7 +43,7 @@ TBD
    `DeployNitroContracts2Point1Point0UpgradeActionScript.s.sol` script deploys templates, and upgrade action itself. It can be executed in this directory like this:
 
 ```bash
-forge script --sender $DEPLOYER --rpc-url $PARENT_CHAIN_RPC --broadcast --slow ./DeployNitroContracts2Point1Point0UpgradeAction.s.sol -vvv --verify --skip-simulation
+forge script --sender $DEPLOYER --rpc-url $PARENT_CHAIN_RPC --broadcast --slow DeployNitroContracts2Point1Point0UpgradeActionScript -vvv --verify --skip-simulation
 # use --account XXX / --private-key XXX / --interactive / --ledger to set the account to send the transaction from
 ```
 
@@ -49,7 +52,7 @@ As a result, all templates and upgrade action are deployed. Note the last deploy
 3. `ExecuteNitroContracts2Point1Point0Upgrade.s.sol` script uses previously deployed upgrade action to execute the upgrade. It makes following assumptions - L1UpgradeExecutor is the rollup owner, and there is an EOA which has executor rights on the L1UpgradeExecutor. Proceed with upgrade using the owner account (the one with executor rights on L1UpgradeExecutor):
 
 ```bash
-forge script --sender $EXECUTOR --rpc-url $PARENT_CHAIN_RPC --broadcast ./ExecuteNitroContracts2Point1Point0Upgrade.s.sol -vvv
+forge script --sender $EXECUTOR --rpc-url $PARENT_CHAIN_RPC --broadcast ExecuteNitroContracts2Point1Point0UpgradeScript -vvv
 # use --account XXX / --private-key XXX / --interactive / --ledger to set the account to send the transaction from
 ```
 
