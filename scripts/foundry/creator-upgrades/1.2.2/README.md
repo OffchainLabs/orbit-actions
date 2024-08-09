@@ -4,7 +4,7 @@ This script is used to deploy new token bridge creator 1.2.2 logic contracts (L1
 
 ## How to use it
 
-Script can be simulated in this directory like this:
+Script can be simulated in this directory like this (note that you may need to create the output directory `mkdir -p output`):
 
 ```bash
 forge script --sender $DEPLOYER --rpc-url $PARENT_CHAIN_RPC --slow ./UpgradeTokenBridgeCreator.s.sol -vvv
