@@ -38,11 +38,11 @@ contract UpgradeTokenBridgeCreatorScript is DeploymentHelpersScript {
 
         /// prepare upgrade calldata (not a proper gnosis safe format, used just for a reference)
         if (creatorOwnerIsMultisig) {
-            bytes memory creatorCalldata = abi.encodeWithSelector(
-                ProxyAdmin.upgrade.selector, tokenBridgeCreatorProxy, newL1AtomicTokenBridgeCreatorLogic
+            bytes memory creatorCalldata = abi.encodeCall(
+                ProxyAdmin.upgrade, (tokenBridgeCreatorProxy, newL1AtomicTokenBridgeCreatorLogic)
             );
-            bytes memory retryableSenderCalldata = abi.encodeWithSelector(
-                ProxyAdmin.upgrade.selector, retryableSenderProxy, newL1TokenBridgeRetryableSenderLogic
+            bytes memory retryableSenderCalldata = abi.encodeCall(
+                ProxyAdmin.upgrade, (retryableSenderProxy, newL1TokenBridgeRetryableSenderLogic)
             );
 
             string memory rootObj = "root";
