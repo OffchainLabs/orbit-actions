@@ -24,8 +24,8 @@ Please refer to the top [README](../../README.md) `Check Version and Upgrade Pat
 
 - L1 mainnet: 
 - L2 Arb1: 
-- L1 Sepolia: TBD
-- L2 ArbSepolia: TBD
+- L1 Sepolia: 0x618e44fd8a7639386256880ef8100e09a8bcd4f3
+- L2 ArbSepolia: 0x618e44Fd8a7639386256880Ef8100e09A8BcD4F3
 
 ## How to use it
 1. Setup .env according to the example files, make sure your fast confirm committee is secure (it should match your DAS committee). See the previous section for predeployed instances of the action contract. If you need to deploy the action contract yourself, follow the steps below.
