@@ -50,7 +50,7 @@ _This section is also referenced in the documentation on ["How to upgrade ArbOS 
 
 For ArbOS upgrades, a pre-requisite is to deploy new Nitro contracts to the parent chain of your Orbit chain before scheduling the ArbOS upgrade. These contracts include the rollup logic, fraud proof contracts, and interfaces for interacting with Nitro precompiles.
 
-### Nitro contracts 2.1.0
+### Nitro contracts 2.1.0 (for ArbOS 31 Bianca)
 
 The [`nitro-contracts 2.1.0` upgrade action](scripts/foundry/contract-upgrades/2.1.0) will deploy `nitro-contracts v2.1.0` contracts to your Orbit's parent chain. Note that this action will only work for chains with `nitro-contracts v1.2.1` or `nitro-contracts v1.3.0`.
 
