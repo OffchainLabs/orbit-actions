@@ -24,8 +24,8 @@ Please refer to the top [README](../../README.md) `Check Version and Upgrade Pat
 
 - L1 mainnet: 
 - L2 Arb1: 
-- L1 Sepolia: 0x0a055A227E01eb2BC72D799f3dDB8cd7C40e1684
-- L2 ArbSepolia: 0xf7aA2f6B1163142Cb886a0C392D59DD5f1c4F8a2
+- L1 Sepolia: 0x618e44fd8a7639386256880ef8100e09a8bcd4f3
+- L2 ArbSepolia: 0x618e44Fd8a7639386256880Ef8100e09A8BcD4F3
 
 ## How to use it
 1. Setup .env according to the example files, make sure your fast confirm committee is secure (it should match your DAS committee). See the previous section for predeployed instances of the action contract. If you need to deploy the action contract yourself, follow the steps below.
@@ -39,13 +39,13 @@ This would deploy the EnableFastConfirmAction. Update your .env file with the ad
 
 2. Next step is to execute the action. Upgrade can be executed using `cast` CLI command (part of Foundry installation), using the owner account (the one with executor rights on parent chain UpgradeExecutor) to send the transaction:
 ```bash
-(export $(cat .env | xargs) && cast send $PARENT_UPGRADE_EXECUTOR_ADDRESS "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform(address, address[])" $ROLLUP \[$FAST_CONFIRM_COMMITTEE\]) --rpc-url $PARENT_CHAIN_RPC --account EXECUTOR)
+(export $(cat .env | xargs) && cast send $PARENT_UPGRADE_EXECUTOR_ADDRESS "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform(address, address[], uint256)" $ROLLUP \[$FAST_CONFIRM_COMMITTEE\] $SALT) --rpc-url $PARENT_CHAIN_RPC --account EXECUTOR)
 # use --account XXX / --private-key XXX / --interactive / --ledger to set the account to send the transaction from
 ```
 
 If you have a multisig as executor, you will can use the following command to create the payload for calling into the PARENT_UPGRADE_EXECUTOR:
 ```bash
-(export $(cat .env | xargs) && cast calldata "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform(address, address[])" $ROLLUP \[$FAST_CONFIRM_COMMITTEE\]))
+(export $(cat .env | xargs) && cast calldata "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform(address, address[], uint256)" $ROLLUP \[$FAST_CONFIRM_COMMITTEE\] $SALT))
 ```
 
 3. That's it, the Fast Confirmation has been enabled. Make sure all the committee members are enabling fast confirmation on their nodes and the AnyTrust chain will start using fast confirmation.

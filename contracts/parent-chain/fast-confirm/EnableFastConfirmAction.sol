@@ -32,7 +32,7 @@ contract EnableFastConfirmAction {
         GNOSIS_COMPATIBILITY_FALLBACK_HANDLER = gnosisCompatibilityFallbackHandler;
     }
 
-    function perform(IRollupAdmin rollup, address[] calldata fastConfirmCommittee) external {
+    function perform(IRollupAdmin rollup, address[] calldata fastConfirmCommittee, uint256 salt) external {
         require(rollup.anyTrustFastConfirmer() == address(0), "Fast confirm already enabled");
         for (uint256 i = 0; i < fastConfirmCommittee.length; i++) {
             require(fastConfirmCommittee[i] != address(0), "Invalid address");
@@ -51,7 +51,7 @@ contract EnableFastConfirmAction {
                 0,
                 address(0)
             ),
-            uint256(keccak256(abi.encodePacked(rollup)))
+            salt
         );
         rollup.setAnyTrustFastConfirmer(fastConfirmer);
         address[] memory validators = new address[](1);
