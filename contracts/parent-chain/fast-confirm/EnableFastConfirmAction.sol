@@ -32,7 +32,9 @@ contract EnableFastConfirmAction {
         GNOSIS_COMPATIBILITY_FALLBACK_HANDLER = gnosisCompatibilityFallbackHandler;
     }
 
-    function perform(IRollupAdmin rollup, address[] calldata fastConfirmCommittee, uint256 threshold, uint256 salt) external {
+    function perform(IRollupAdmin rollup, address[] calldata fastConfirmCommittee, uint256 threshold, uint256 salt)
+        external
+    {
         require(rollup.anyTrustFastConfirmer() == address(0), "Fast confirm already enabled");
         require(threshold > 0 && threshold <= fastConfirmCommittee.length, "Invalid threshold");
         for (uint256 i = 0; i < fastConfirmCommittee.length; i++) {
