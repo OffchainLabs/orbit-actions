@@ -87,3 +87,7 @@ Here is a list of common upgrade paths that can be used to upgrade the Orbit cha
 ## Enable Fast Confirmation
 
 See [EnableFastConfirmAction](scripts/foundry/fast-confirm)
+
+## Enable Stylus Cache Manager
+
+See [setCacheManager](scripts/foundry/stylus/setCacheManager]
