@@ -15,7 +15,7 @@ forge script --sender $DEPLOYER --rpc-url $CHILD_CHAIN_RPC --broadcast --slow ./
 
 This would deploy the action. Update your .env file with the address of the upgrade action.
 
-2. Next step is to execute the ArbOs upgrade action. Make sure your .env file contains `UPGRADE_ACTION_ADDRESS` and `CHILD_UPGRADE_EXECUTOR_ADDRESS` vars. Assumption is that child chain UpgradeExecutor is the arbowner, and there is an EOA which has executor rights on the child chain UpgradeExecutor. Upgrade can be executed using `cast` CLI command (part of Foundry installation), using the owner account (the one with executor rights on child chain UpgradeExecutor) to send the transaction:
+2. Next step is to execute the AddWasmCacheManager upgrade action. Make sure your .env file contains `UPGRADE_ACTION_ADDRESS` and `CHILD_UPGRADE_EXECUTOR_ADDRESS` vars. Assumption is that child chain UpgradeExecutor is the arbowner, and there is an EOA which has executor rights on the child chain UpgradeExecutor. Upgrade can be executed using `cast` CLI command (part of Foundry installation), using the owner account (the one with executor rights on child chain UpgradeExecutor) to send the transaction:
 
 ```bash
 (export $(cat .env | xargs) && cast send $CHILD_UPGRADE_EXECUTOR_ADDRESS "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform()") --rpc-url $CHILD_CHAIN_RPC --account EXECUTOR)
