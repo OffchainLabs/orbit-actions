@@ -6,7 +6,7 @@ import {MockArbSys} from "../../helper/MockArbSys.sol";
 import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 
 interface IL1AtomicTokenBridgeCreator {
-    function retryableSender() external returns (address);
+    function retryableSender() external view returns (address);
 }
 
 /**
