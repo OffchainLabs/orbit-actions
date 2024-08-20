@@ -126,35 +126,99 @@ async function main() {
 
   // TODO: make this more generic to support other other upgrade paths in the future
   // TODO: also check  osp
-  let supported = true
-  const contracts1 = [
-    'Inbox',
-    'Outbox',
-    'Bridge',
-    'RollupProxy',
-    'RollupAdminLogic',
-    'RollupUserLogic',
-    'ChallengeManager',
+  _checkForPossibleUpgrades(versions)
+}
+
+function _checkForPossibleUpgrades(currentVersions: {
+  [key: string]: string | null
+}) {
+  const targetVersionsDescending = [
+    {
+      version: 'v2.1.0',
+      actionName: 'NitroContracts2Point1Point0UpgradeAction',
+    },
+    {
+      version: 'v1.2.1',
+      actionName: 'NitroContracts1Point2Point1UpgradeAction',
+    },
   ]
-  const contracts1SupportedVersions = ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1']
-  for (const contract of contracts1) {
-    if (!contracts1SupportedVersions.includes(versions[contract]!)) {
-      supported = false
-      break
+
+  for (const target of targetVersionsDescending) {
+    if (_canBeUpgradedToTargetVersion(target.version, currentVersions)) {
+      console.log(
+        `This deployment can be upgraded to ${target.version} using ${target.actionName}`
+      )
+      return
     }
   }
-  const contracts2 = ['SequencerInbox']
-  const contracts2SupportedVersions = ['v1.1.0', 'v1.1.1']
-  for (const contract of contracts2) {
-    if (!contracts2SupportedVersions.includes(versions[contract]!)) {
-      supported = false
-      break
+
+  console.log('No upgrade path found')
+}
+
+function _canBeUpgradedToTargetVersion(
+  targetVersion: string,
+  currentVersions: {
+    [key: string]: string | null
+  }
+): boolean {
+  console.log('\nChecking if deployment can be upgraded to', targetVersion)
+
+  let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
+  if (targetVersion === 'v2.1.0') {
+    supportedSourceVersionsPerContract = {
+      Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
+      Outbox: [
+        'v1.1.0',
+        'v1.1.1',
+        'v1.2.0',
+        'v1.2.1',
+        'v1.3.0',
+        'v2.0.0',
+        'v2.1.0',
+      ],
+      Bridge: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
+      RollupProxy: [
+        'v1.1.0',
+        'v1.1.1',
+        'v1.2.0',
+        'v1.2.1',
+        'v1.3.0',
+        'v2.0.0',
+        'v2.1.0',
+      ],
+      RollupAdminLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
+      RollupUserLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
+      ChallengeManager: ['v1.2.1', 'v1.3.0'],
+      SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0'],
+    }
+  } else if (targetVersion === 'v1.2.1') {
+    supportedSourceVersionsPerContract = {
+      Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
+      Outbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
+      Bridge: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
+      RollupProxy: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
+      RollupAdminLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
+      RollupUserLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
+      ChallengeManager: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
+      SequencerInbox: ['v1.1.0', 'v1.1.1'],
+    }
+  } else {
+    console.log('Unsupported target version')
+    return false
+  }
+
+  // check if all contracts can be upgraded to target version
+  for (const [contract, supportedSourceVersions] of Object.entries(
+    supportedSourceVersionsPerContract
+  )) {
+    if (!supportedSourceVersions.includes(currentVersions[contract]!)) {
+      // found contract that can't be upgraded to target version
+      console.log('Cannot upgrade', contract, 'to', targetVersion)
+      return false
     }
   }
-  if (supported)
-    console.log(
-      'This deployment can be upgraded to v1.2.1 using NitroContracts1Point2Point1UpgradeAction'
-    )
+  // all contracts can be upgraded to target version
+  return true
 }
 
 function _getVersionOfDeployedContract(metadataHash: string): string | null {

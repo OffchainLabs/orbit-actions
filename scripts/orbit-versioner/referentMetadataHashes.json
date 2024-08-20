@@ -1,4 +1,166 @@
 {
+  "v2.1.0": {
+    "eth": {
+      "Inbox": [
+        "12209255f9f561164f66608f4f7ada0d574e9e21f9b1d72b67c9a7de6ddf10ec",
+        "12206f949a071060d1ab2aa0e55c5a967234b4de9d4b4d08a637d1e15adf6836"
+      ],
+      "Outbox": [
+        "1220a71c0b2b1bb378b4e87b3d74997da580d1aeddfa0020bf7828e35ac6e461",
+        "122017a52a06af92d3ccff2b5949dfefb100c735ae2619a0e12b32d5fb0a875e"
+      ],
+      "SequencerInbox": [
+        "1220e88914bcb42e9ba6cc6b21b3b482f5460c0748ffb5d983dc26f4334cffad",
+        "12207fee234b805c2c835368e9bca098cf20390b4bdfc04ed2b6f0c155439877"
+      ],
+      "Bridge": [
+        "12206c38d558afd13c030589dace1d3b4f8d157625dfc5f1ee771258bbf86c5d",
+        "12202046bd5adb858c77c93e2b65a31b8f11b3f381d5055793f137e085421542"
+      ]
+    },
+    "erc20": {
+      "Inbox": [
+        "1220b619f34ba272ec72ca2035fc421c7dd2bc6f98ff5f8a9cdeda227076bac5",
+        "1220be4a5be2857eac52060d02a1f29f0ba5a69c4d7ceb9bfd8344732be47942"
+      ],
+      "Outbox": [
+        "122065c63281532ea50f5bde466e32959b8197898044c1677fa59f725f274ff2",
+        "1220d646b1c850d3bcffe33a268735030d828b4075aef2c3a32b478b5a419ff0"
+      ],
+      "SequencerInbox": [
+        "1220e88914bcb42e9ba6cc6b21b3b482f5460c0748ffb5d983dc26f4334cffad",
+        "12207fee234b805c2c835368e9bca098cf20390b4bdfc04ed2b6f0c155439877"
+      ],
+      "Bridge": [
+        "122091f2b3a26837eb7f6ae1ee1395e00da6a57a8923d02f716ccaebf4348167",
+        "12202b5d5c431949e42cc0f94ae888b71651bdbd6aad7d357822e0b769a9310d"
+      ]
+    },
+    "RollupProxy": [
+      "1220039b2791e4013e004cd51e37e19e1137184e0a7f5dec2621e721140c54ba",
+      "122032742cba8a368320d6b2e989e36e7b86c1625af627fd038ea31ae53bdfb8"
+    ],
+    "RollupAdminLogic": [
+      "12208c91b00a35773fa5f9f6ee5c7bb5fa9b2863c1129a3a8e512d1c9b1a35a2",
+      "1220700e0bf9bfb6e156f76c4243adcea824b4d1f386f85a2e9f9dbd22ddeccc"
+    ],
+    "RollupUserLogic": [
+      "1220e68e0c126844f69e7ea9566bd629fa52e806bb4e71f1a3dcf0b6859c5f41",
+      "1220c981a481ad88429a6ae4fd2af63c08c7dd959d32d67e9cde7aa35d042077"
+    ],
+    "ChallengeManager": [
+      "1220a10b85e7c0f109a0a569ed2fe7e8603230eaa7d5df62f1531f548fe0eff8",
+      "12208c192a653d3db0b78ccccbd354b76744de722b31bcaf552a267a137d523d"
+    ]
+  },
+  "v2.0.0": {
+    "eth": {
+      "Inbox": [
+        "1220658ffd74767066e56f506727cd2a968c720cc5708a4bcf14e8268a3473f8",
+        "12208deb57cf37b229868b69170c50ba49202222ce835b39b0f879ab13dfc1d2"
+      ],
+      "Outbox": [
+        "12201f0331a91a1c32dd8d152a191e417c2f7bc0a4b6d3e8b84507d99bbfa105",
+        "1220e47d64b76961e67168fdf357aeb6c4c6b77bb4f333c7578fbf054a639f79"
+      ],
+      "SequencerInbox": [
+        "1220aeb3a7c60269dbef440b7bfd31eb8c99da9324832ad61b6234c0d19e8311",
+        "1220d854b321e2db5732c18e4fe3e850728a36635254b2af54c1894aa2f5a6dc"
+      ],
+      "Bridge": [
+        "1220506ed7ef8395a03cfb43943c618809bd281b51ea77ecd261aed28bb30a8d",
+        "12201a9f67fb3c7f5bfec02931dc84a6854b5cb012b0746f1476e2c0a03cdafb"
+      ]
+    },
+    "erc20": {
+      "Inbox": [
+        "1220da552a3045fda7321304c91d61aeb3f65bbddadd63a87507fd1fdca00510",
+        "122079f052d1ec4e42930c6a783311e0d885f1c23cd4a42e70b3be33207a3c45"
+      ],
+      "Outbox": [
+        "1220ca5879af8888e3b7615dc30f65b73a6d1a270e787726f0ee1e9aa2ea4b23",
+        "12203786a1e22757d97183071dcc189f33c0f8895af74ecd587e325f11b9a099"
+      ],
+      "SequencerInbox": [
+        "1220aeb3a7c60269dbef440b7bfd31eb8c99da9324832ad61b6234c0d19e8311",
+        "1220d854b321e2db5732c18e4fe3e850728a36635254b2af54c1894aa2f5a6dc"
+      ],
+      "Bridge": [
+        "12203ff1e011449147ed6c37be48c3ee711841c26d4edb6eec8f48144eac53c7",
+        "12200597a9ae76302c33df923d6ed948d9378de1e91f0c351cf3b1c0410fad28"
+      ]
+    },
+    "RollupProxy": [
+      "1220c1a242275798d8f2e0b3a59eea6aea18c580869c70ad2fbf232f106e4ce5",
+      "1220800a21658be2a5347c05832e78293e3d991ad18137e5e52f26d19c9823fd"
+    ],
+    "RollupAdminLogic": [
+      "122002cdec807b81ea3123ef953761f44c4c47f8b0a656c18a9227449c42242e",
+      "1220f3bb3fd3c0145b9d0d76d82665409035383f72a189261dfdc8d2df5b414f"
+    ],
+    "RollupUserLogic": [
+      "1220ceb732965916699eebfe23818550c54f6679f9b5d8111c6af8500de2c223",
+      "12206a4e667c98ec1368d25f90c0fd71243642c54cc841fa3a622c0d72ae0e25"
+    ],
+    "ChallengeManager": [
+      "12205896a74cbcb8259e873bd971acd765afa10a18c4fc534367b4aab61e5725",
+      "122031c6bc1d97593d4173674d59d3f294750960bcafbe8338bbe79f66f2d72c"
+    ]
+  },
+  "v1.3.0": {
+    "eth": {
+      "Inbox": [
+        "1220b7485c2de1f6dc3591e34e6caaa5c0e85db502f63ee4a2e1395b319d664a",
+        "1220b2236fa1c71d503c2249d1ba68300e80a852a2cb61d2c5f5f9a502756765"
+      ],
+      "Outbox": [
+        "12202e450a5acd14411d8e2b53eeb592dd06b55b7f63c68edc1a4a9ade28f56e",
+        "1220ef1ef338d107f1f0ca8ce025302890a96bfc0d119951505f80479d40304e"
+      ],
+      "SequencerInbox": [
+        "12204f8f021822cf7176fea38232b408aef0ea4bb11955495cb6a95ac3949760",
+        "1220715892ad19c929ea4ff302535ed1346c288e1ba1171ed0bb31af4d55e6c9"
+      ],
+      "Bridge": [
+        "1220ba7a1cededf660a42a7377a73bb0d14a4397581fcbb24bebdd45d63810c2",
+        "1220cf8a2df9168c7d5af713d037a7a686dc8face22911e8979f91a80e8c1560"
+      ]
+    },
+    "erc20": {
+      "Inbox": [
+        "122049d58bdcb0b372ec561909ccbdc8a8698ab4fd67328e4915702624165ea8",
+        "1220a86e06167a12a30777dfe45d75df681623b79e9f9a16354753ac8a3e8733"
+      ],
+      "Outbox": [
+        "1220f184c5915a9b00508c8f065f27c0db0022f5b81993633901b875bea47b88",
+        "1220bddba45bc243a3f3fbb3abb06a6438b7e679d030632696332305c3d0957d"
+      ],
+      "SequencerInbox": [
+        "12204f8f021822cf7176fea38232b408aef0ea4bb11955495cb6a95ac3949760",
+        "1220715892ad19c929ea4ff302535ed1346c288e1ba1171ed0bb31af4d55e6c9"
+      ],
+      "Bridge": [
+        "1220f587e602015bef05909a3dc4d3f302450c6b00ea429653353e9c6a202972",
+        "12204de6c5de92ad43eb67bffc52cab35d3bfe43bdbe1c92a87b47c52c4219fe"
+      ]
+    },
+    "RollupProxy": [
+      "12201b31c429a0e4c8b02c3e9ecc213345054112368bf2c3821ae941dd87167c",
+      "12203c63fe44897f48b54b48cd0122022da24e3d826a7094477bee4b141a3719"
+    ],
+    "RollupAdminLogic": [
+      "12200cccacba20823fc9fd4317eedf3bde7cd34298b6c44e0524c6fd7c432500",
+      "12206e4b14f0ba1867838a380d5a96840b0bad0f8f8432684fcb768d34adfa96"
+    ],
+    "RollupUserLogic": [
+      "1220163235316aa07543121cd3c56a9496cf1f9bbef6c006a218feb9ada2564c",
+      "122006286e4932e73a20a8fd87110c086184ed247dd089921e395ef286daa96c"
+    ],
+    "ChallengeManager": [
+      "1220b4c1d6d5dd4fa305937ef1b868b0f129d6ac3cf3252a6d1652939c5d1431",
+      "122016dbae74f1e8194cb2f0122feb8899b1c3268ecd7af3f7e5b5ae4b90b899"
+    ]
+  },
   "v1.2.1": {
     "eth": {
       "Inbox": [
