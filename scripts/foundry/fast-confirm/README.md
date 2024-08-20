@@ -39,13 +39,13 @@ This would deploy the EnableFastConfirmAction. Update your .env file with the ad
 
 2. Next step is to execute the action. Upgrade can be executed using `cast` CLI command (part of Foundry installation), using the owner account (the one with executor rights on parent chain UpgradeExecutor) to send the transaction:
 ```bash
-(export $(cat .env | xargs) && cast send $PARENT_UPGRADE_EXECUTOR_ADDRESS "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform(address, address[], uint256)" $ROLLUP \[$FAST_CONFIRM_COMMITTEE\] $SALT) --rpc-url $PARENT_CHAIN_RPC --account EXECUTOR)
+(export $(cat .env | xargs) && cast send $PARENT_UPGRADE_EXECUTOR_ADDRESS "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform(address, address[], uint256, uint256)" $ROLLUP \[$FAST_CONFIRM_COMMITTEE\] $THRESHOLD $SALT) --rpc-url $PARENT_CHAIN_RPC --account EXECUTOR)
 # use --account XXX / --private-key XXX / --interactive / --ledger to set the account to send the transaction from
 ```
 
 If you have a multisig as executor, you will can use the following command to create the payload for calling into the PARENT_UPGRADE_EXECUTOR:
 ```bash
-(export $(cat .env | xargs) && cast calldata "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform(address, address[], uint256)" $ROLLUP \[$FAST_CONFIRM_COMMITTEE\] $SALT))
+(export $(cat .env | xargs) && cast calldata "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform(address, address[], uint256, uint256)" $ROLLUP \[$FAST_CONFIRM_COMMITTEE\] $THRESHOLD $SALT))
 ```
 
 3. That's it, the Fast Confirmation has been enabled. Make sure all the committee members are enabling fast confirmation on their nodes and the AnyTrust chain will start using fast confirmation.
