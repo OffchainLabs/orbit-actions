@@ -30,10 +30,17 @@ Also, expectation is that rollup being upgraded currently uses official ArbOS20 
 
 ## Deployed instances
 
-- L1 mainnet:
-- L2 Arb1:
+### Mainnets
+- L1 Mainnet: 0x9e0049B901531Aee041AD0D63FaEEefFBF442225
+- L2 Arb1: 0xf6DdDf2C0C61571d2BD6F76f696287638ff012b8
+- L2 Nova: 0xE2e3ab774aa0Bf4011C541F0C6b5c0B777A073c2
+- L2 Base: 0x5F3bC0ff791AfCf8CbFb3AA08589e66c1711399D
+
+### Testnets
 - L1 Sepolia: 0x16f0a57F730b4C645a3b3c02B33A5a34F5a4bb6A
+- L1 Holesky: 0x8fE5E84C07D8c002A8E7475df1280CA8f1979c5f
 - L2 ArbSepolia: 0x7c6282fF5032aE3F66BaB070a2033979022fc059
+- L2 BaseSepolia: 0x1a4B5212C58CD252345bF1E066b7d5E4f8785Ec9
 
 ## How to use it
 
