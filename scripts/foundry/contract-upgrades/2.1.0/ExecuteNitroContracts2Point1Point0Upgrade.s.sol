@@ -9,6 +9,7 @@ import {
 import {IBridge} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/IBridge.sol";
 import {IRollupCore} from "@arbitrum/nitro-contracts-2.1.0/src/rollup/IRollupCore.sol";
 import {IUpgradeExecutor} from "@offchainlabs/upgrade-executor/src/IUpgradeExecutor.sol";
+import {IInboxBase} from "@arbitrum/nitro-contracts-1.2.1/src/bridge/IInboxBase.sol";
 
 /**
  * @title ExecuteNitroContracts1Point2Point1UpgradeScript
@@ -22,8 +23,10 @@ contract ExecuteNitroContracts2Point1Point0UpgradeScript is Script {
         NitroContracts2Point1Point0UpgradeAction upgradeAction =
             NitroContracts2Point1Point0UpgradeAction(vm.envAddress("UPGRADE_ACTION_ADDRESS"));
 
+        IInboxBase inbox = IInboxBase(vm.envAddress("INBOX_ADDRESS"));
+
         // check prerequisites
-        IRollupCore rollup = IRollupCore(vm.envAddress("ROLLUP_ADDRESS"));
+        IRollupCore rollup = IRollupCore(address(inbox.bridge().rollup()));
         require(rollup.wasmModuleRoot() == upgradeAction.condRoot(), "Incorrect starting wasm module root");
 
         vm.startBroadcast();
