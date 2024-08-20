@@ -44,7 +44,10 @@ Also, expectation is that rollup being upgraded currently uses official ArbOS20 
 
 ## How to use it
 
-1. Setup .env according to the example files, make sure you have everything correctly defined. The script will do some sanity checks but not everything can be checked.
+1. Setup .env according to the example files, make sure you have everything correctly defined. The script will do some sanity checks but not everything can be checked. The .env file must be in project root for recent foundary versions.
+
+> [!CAUTION]
+> The .env file must be in project root.
 
 2. (Skip this step if you can use the deployed instances of action contract)
    `DeployNitroContracts2Point1Point0UpgradeActionScript.s.sol` script deploys templates, and upgrade action itself. It can be executed in this directory like this:

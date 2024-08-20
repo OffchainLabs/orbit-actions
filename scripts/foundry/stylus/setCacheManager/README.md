@@ -6,6 +6,9 @@ This script empowers `AddWasmCacheManagerAction` contract which enables CacheMan
 
 1. Setup .env according to the example files, make sure you provide correct values. You can use default values for `INIT_CACHE_SIZE` and `INIT_DECAY`.
 
+> [!CAUTION]
+> The .env file must be in project root.
+
 `DeployAddWasmCacheManagerAction.s.sol` script deploys `AddWasmCacheManagerAction` contract. It can be executed in this directory like this:
 
 ```bash

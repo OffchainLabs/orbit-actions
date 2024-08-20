@@ -37,6 +37,9 @@ Please refer to the top [README](../../README.md) `Check Version and Upgrade Pat
 ## How to use it
 1. Setup .env according to the example files, make sure your fast confirm committee is secure (it should match your DAS committee). See the previous section for predeployed instances of the action contract. If you need to deploy the action contract yourself, follow the steps below.
 
+> [!CAUTION]
+> The .env file must be in project root.
+
 `DeployEnableFastConfirmAction.s.s.sol` script deploys `EnableFastConfirmAction` contract. It can be executed in this directory like this:
 ```bash
 forge script --sender $DEPLOYER --rpc-url $PARENT_CHAIN_RPC --broadcast --slow DeployEnableFastConfirmAction -vvv --verify

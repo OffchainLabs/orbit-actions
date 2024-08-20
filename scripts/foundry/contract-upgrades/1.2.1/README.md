@@ -37,6 +37,9 @@ Please refers to the top [README](../../README.md) `Check Version and Upgrade Pa
 
 1. Setup .env according to the example files, make sure you have everything correctly defined. The script do some sanity checks but not everything can be checked.
 
+> [!CAUTION]
+> The .env file must be in project root.
+
 2. (Skip this step if you can use the deployed instances of action contract) 
 `DeployNitroContracts1Point2Point1UpgradeAction.s.sol` script deploys OSPs and ChallengeManager templates, blob reader and SequencerInbox template, and finally the upgrade action itself. It can be executed in this directory like this:
 ```bash
