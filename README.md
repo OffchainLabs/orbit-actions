@@ -74,7 +74,7 @@ Here is a list of common upgrade paths that can be used to upgrade the Orbit cha
 
 ### [ArbOS 31 Bianca](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos31)
 
-1. Upgrade your Nitro node(s) to [Nitro v3.1.1](https://github.com/OffchainLabs/nitro/releases/tag/v3.1.1)
+1. Upgrade your Nitro node(s) to [Nitro v3.1.2](https://github.com/OffchainLabs/nitro/releases/tag/v3.1.2)
 1. Upgrade `nitro-contracts` to `2.1.0` using [nitro-contract 2.1.0 upgrade action](scripts/foundry/contract-upgrades/2.1.0)
 1. Schedule the ArbOS 31 Bianca upgrade using [ArbOS upgrade at timestamp action](scripts/foundry/arbos-upgrades/at-timestamp)
 
