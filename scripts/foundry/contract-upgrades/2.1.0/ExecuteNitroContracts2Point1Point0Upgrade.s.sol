@@ -18,7 +18,7 @@ import {IInboxBase} from "@arbitrum/nitro-contracts-1.2.1/src/bridge/IInboxBase.
 contract ExecuteNitroContracts2Point1Point0UpgradeScript is Script {
     function run() public {
         // used to check upgrade was successful
-        bytes32 wasmModuleRoot = vm.envBytes32("WASM_MODULE_ROOT");
+        bytes32 wasmModuleRoot = vm.envBytes32("TARGET_WASM_MODULE_ROOT");
 
         NitroContracts2Point1Point0UpgradeAction upgradeAction =
             NitroContracts2Point1Point0UpgradeAction(vm.envAddress("UPGRADE_ACTION_ADDRESS"));
