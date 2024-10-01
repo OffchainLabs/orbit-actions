@@ -50,11 +50,11 @@ _This section is also referenced in the documentation on ["How to upgrade ArbOS 
 
 For ArbOS upgrades, a common pre-requisite is to deploy new Nitro contracts to the parent chain of your Orbit chain before scheduling the ArbOS upgrade. These contracts include the rollup logic, fraud proof contracts, and interfaces for interacting with Nitro precompiles. The scripts and instructions in this repository are meant for Orbit chain owners to upgrade the aforementioned contracts, set the new WASM module root, and then schedule the ArbOS upgrade.
 
-### Nitro contracts 2.1.0 (for [ArbOS 31 Bianca](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos31))
+### Nitro contracts 2.1.0 (for [ArbOS 32 Bianca](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos32))
 
 The [`nitro-contracts 2.1.0` upgrade action](scripts/foundry/contract-upgrades/2.1.0) will deploy `nitro-contracts v2.1.0` contracts to your Orbit's parent chain. Note that this action will only work for chains with `nitro-contracts v1.2.1` or `nitro-contracts v1.3.0`.
 
-Note: nitro contracts upgrade brings support for AnyTrust fast confirmations and Stylus. However, Stylus will be enabled only when `ArbOS 31 Bianca` upgrade takes place, once it will be officially supported for Orbit chains.
+Note: nitro contracts upgrade brings support for AnyTrust fast confirmations and Stylus. However, Stylus will be enabled only when `ArbOS 32 Bianca` upgrade takes place, once it will be officially supported for Orbit chains.
 
 ### Nitro contracts 1.2.1 (for [ArbOS 20 Atlas](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos20))
 
@@ -72,11 +72,11 @@ This action schedule an upgrade of the ArbOS to a specific version at a specific
 
 Here is a list of common upgrade paths that can be used to upgrade the Orbit chains. These instructions are duplicated from the docs on [How to upgrade ArbOS on your Orbit chain](https://docs.arbitrum.io/launch-orbit-chain/how-tos/arbos-upgrade), specifically Steps 1 through 3. Step 4 is mentioned below under "Other Actions".
 
-### [ArbOS 31 Bianca](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos31)
+### [ArbOS 32 Bianca](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos32)
 
 1. Upgrade your Nitro node(s) to [Nitro v3.1.2](https://github.com/OffchainLabs/nitro/releases/tag/v3.1.2)
 1. Upgrade `nitro-contracts` to `2.1.0` using [nitro-contract 2.1.0 upgrade action](scripts/foundry/contract-upgrades/2.1.0)
-1. Schedule the ArbOS 31 Bianca upgrade using [ArbOS upgrade at timestamp action](scripts/foundry/arbos-upgrades/at-timestamp)
+1. Schedule the ArbOS 32 Bianca upgrade using [ArbOS upgrade at timestamp action](scripts/foundry/arbos-upgrades/at-timestamp)
 
 ### [ArbOS 20 Atlas](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos20)
 

@@ -1,6 +1,6 @@
 # Adding the wasm CacheManager
 
-This script empowers `AddWasmCacheManagerAction` contract which enables CacheManager for the Orbit chain. Please note that the prerequisite for this action is running the ArbOS 31 version which introduces Stylus support.
+This script empowers `AddWasmCacheManagerAction` contract which enables CacheManager for the Orbit chain. Please note that the prerequisite for this action is running the ArbOS 32 version which introduces Stylus support.
 
 ## How to use it
 
