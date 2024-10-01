@@ -1,6 +1,6 @@
 # Nitro contracts 2.1.0 upgrade
 
-These scripts empower `NitroContracts2Point1Point0UpgradeAction` action contract which performs upgrade to [2.1.0 release](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v2.1.0) of Nitro contracts for existing Orbit chains. Predeployed instances of the upgrade action exists on the chains listed in the following section with vanilla ArbOS31 wasm module root set. If you have a custom nitro machine, you will need to deploy the upgrade action yourself.
+These scripts empower `NitroContracts2Point1Point0UpgradeAction` action contract which performs upgrade to [2.1.0 release](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v2.1.0) of Nitro contracts for existing Orbit chains. Predeployed instances of the upgrade action exists on the chains listed in the following section with vanilla ArbOS32 wasm module root set. If you have a custom nitro machine, you will need to deploy the upgrade action yourself.
 
 NitroContracts2Point1Point0UpgradeAction will perform the following action:
 
