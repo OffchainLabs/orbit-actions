@@ -13,8 +13,8 @@ import {MockArbSys} from "../../helper/MockArbSys.sol";
  * @notice This script deploys OSPs, ChallengeManager and Rollup templates, and the upgrade action.
  */
 contract DeployNitroContracts2Point1Point0UpgradeActionScript is DeploymentHelpersScript {
-    // ArbOS v31 https://github.com/OffchainLabs/nitro/releases/tag/consensus-v31
-    bytes32 public constant WASM_MODULE_ROOT = 0x260f5fa5c3176a856893642e149cf128b5a8de9f828afec8d11184415dd8dc69;
+    // ArbOS v32 https://github.com/OffchainLabs/nitro/releases/tag/consensus-v32
+    bytes32 public constant WASM_MODULE_ROOT = 0x184884e1eb9fefdc158f6c8ac912bb183bf3cf83f0090317e0bc4ac5860baa39;
 
     // ArbOS v20 https://github.com/OffchainLabs/nitro/releases/tag/consensus-v20
     bytes32 public constant COND_WASM_MODULE_ROOT = 0x8b104a2e80ac6165dc58b9048de12f301d70b02a0ab51396c22b4b4b802a16a4;
