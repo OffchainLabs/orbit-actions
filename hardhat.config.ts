@@ -20,10 +20,10 @@ const config: HardhatUserConfig = {
       url: 'https://arb1.arbitrum.io/rpc',
     },
     mainnet: {
-      url: 'https://mainnet.infura.io/v3/' + process.env['INFURA_KEY'],
+      url: 'https://eth-mainnet.g.alchemy.com/v2/vptzjr-B0MGFskb9rh6G8AtzK4dWUzLA',
     },
     sepolia: {
-      url: 'https://sepolia.infura.io/v3/' + process.env['INFURA_KEY'],
+      url: 'https://eth-sepolia.g.alchemy.com/v2/fpQPC7q22cy7i2rILZBCiibBXQkjpwJO',
     },
     arbSepolia: {
       url: 'https://sepolia-rollup.arbitrum.io/rpc',
