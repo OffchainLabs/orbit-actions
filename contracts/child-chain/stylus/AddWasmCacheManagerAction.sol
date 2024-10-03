@@ -21,7 +21,7 @@ contract AddWasmCacheManagerAction {
     address public immutable wasmCachemanager;
 
     // ArbOS version; use value as it's set and commonly used, NOT the value returned by
-    // ArbSys, which adds 55. E.g., the value here should be 31, not 85
+    // ArbSys, which adds 55. E.g., the value here should be 32, not 86
     uint256 public immutable targetArbOSVersion;
 
     constructor(address _wasmCachemanager, uint256 _targetArbOSVersion) {

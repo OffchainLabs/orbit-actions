@@ -1,6 +1,6 @@
 # Nitro contracts 2.1.0 upgrade
 
-These scripts empower `NitroContracts2Point1Point0UpgradeAction` action contract which performs upgrade to [2.1.0 release](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v2.1.0) of Nitro contracts for existing Orbit chains. Predeployed instances of the upgrade action exists on the chains listed in the following section with vanilla ArbOS31 wasm module root set. If you have a custom nitro machine, you will need to deploy the upgrade action yourself.
+These scripts empower `NitroContracts2Point1Point0UpgradeAction` action contract which performs upgrade to [2.1.0 release](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v2.1.0) of Nitro contracts for existing Orbit chains. Predeployed instances of the upgrade action exists on the chains listed in the following section with vanilla ArbOS32 wasm module root set. If you have a custom nitro machine, you will need to deploy the upgrade action yourself.
 
 NitroContracts2Point1Point0UpgradeAction will perform the following action:
 
@@ -31,16 +31,16 @@ Also, expectation is that rollup being upgraded currently uses official ArbOS20 
 ## Deployed instances
 
 ### Mainnets
-- L1 Mainnet: 0x9e0049B901531Aee041AD0D63FaEEefFBF442225
-- L2 Arb1: 0xf6DdDf2C0C61571d2BD6F76f696287638ff012b8
-- L2 Nova: 0xE2e3ab774aa0Bf4011C541F0C6b5c0B777A073c2
-- L2 Base: 0x5F3bC0ff791AfCf8CbFb3AA08589e66c1711399D
+- L1 Mainnet: 0x7F7C304843e6B933C01A0462cAD0Acc2FBB865E7
+- L2 Arb1: 0x6B9a2769B259f36FBd503fec0bbF4408459a3876
+- L2 Nova: 0x917e701B4F4ff29dd5e0e1585E88d59147069D29
+- L2 Base: 0xA3Cf11DEcb78C4699dAb7039F471F08c0655986C
 
 ### Testnets
-- L1 Sepolia: 0x16f0a57F730b4C645a3b3c02B33A5a34F5a4bb6A
-- L1 Holesky: 0x8fE5E84C07D8c002A8E7475df1280CA8f1979c5f
-- L2 ArbSepolia: 0x7c6282fF5032aE3F66BaB070a2033979022fc059
-- L2 BaseSepolia: 0x1a4B5212C58CD252345bF1E066b7d5E4f8785Ec9
+- L1 Sepolia: 0xa21C4006b9C61d2fd0Bdd6A735dA665509cF649C
+- L1 Holesky: 0x02B74b729e3F00BF1f3645f9A9e94dD791b2c348
+- L2 ArbSepolia: 0x5A81728757b52e2A3b4889531399B015F24C7772
+- L2 BaseSepolia: 0xEa5e25Faf37e5d23eCe60D49b11252794Ac2DA0E
 
 ## How to use it
 

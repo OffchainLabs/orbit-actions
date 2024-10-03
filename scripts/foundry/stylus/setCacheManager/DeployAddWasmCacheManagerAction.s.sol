@@ -14,8 +14,8 @@ interface ICacheManager {
  * @notice This script deploys action that's used to add pre-deployed wasm cache manager on a child chain.
  */
 contract DeployAddWasmCacheManagerActionScript is DeploymentHelpersScript {
-    // https://github.com/OffchainLabs/nitro/releases/tag/consensus-v31
-    uint256 public constant TARGET_ARBOS_VERSION = 31;
+    // https://github.com/OffchainLabs/nitro/releases/tag/consensus-v32
+    uint256 public constant TARGET_ARBOS_VERSION = 32;
 
     function run() public {
         vm.startBroadcast();
