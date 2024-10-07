@@ -1,6 +1,6 @@
 # Adding the wasm CacheManager
 
-This script empowers `AddWasmCacheManagerAction` contract which enables CacheManager for the Orbit chain. Please note that the prerequisite for this action is running the ArbOS 32 version which introduces Stylus support.
+This script empowers `AddWasmCacheManagerAction` contract which deploys and enables CacheManager for the Orbit chain. Please note that the prerequisite for this action is running the ArbOS 32 version which introduces Stylus support.
 
 ## How to use it
 
@@ -9,7 +9,7 @@ This script empowers `AddWasmCacheManagerAction` contract which enables CacheMan
 > [!CAUTION]
 > The .env file must be in project root.
 
-`DeployAddWasmCacheManagerAction.s.sol` script deploys `AddWasmCacheManagerAction` contract. It can be executed in this directory like this:
+`DeployAddWasmCacheManagerAction.s.sol` script deploys `CacheManager` behind the proxy and action `AddWasmCacheManagerAction` contract. It can be executed in this directory like this:
 
 ```bash
 forge script --sender $DEPLOYER --rpc-url $CHILD_CHAIN_RPC --broadcast --slow ./DeployAddWasmCacheManagerAction.s.sol -vvv --verify --broadcast
