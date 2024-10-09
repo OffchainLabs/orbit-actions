@@ -11,7 +11,7 @@ interface ICacheManager {
 
 /**
  * @title DeployAddWasmCacheManagerActionScript
- * @notice This script deploys action that's used to add pre-deployed wasm cache manager on a child chain.
+ * @notice This script deploys CacheManager and then deploys action that's used to add cache manager on a child chain.
  */
 contract DeployAddWasmCacheManagerActionScript is DeploymentHelpersScript {
     // https://github.com/OffchainLabs/nitro/releases/tag/consensus-v32
@@ -22,7 +22,7 @@ contract DeployAddWasmCacheManagerActionScript is DeploymentHelpersScript {
 
         // deploy CacheManger behind proxy
         address cacheManagerLogic = deployBytecodeFromJSON(
-            "/node_modules/@arbitrum/nitro-contracts-2.0.0/build/contracts/src/chain/CacheManager.sol/CacheManager.json"
+            "/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/chain/CacheManager.sol/CacheManager.json"
         );
         address cacheManagerProxy = address(
             new TransparentUpgradeableProxy(cacheManagerLogic, vm.envAddress("CACHE_MANAGER_PROXY_ADMIN_ADDRESS"), "")
