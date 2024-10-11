@@ -1,0 +1,86 @@
+Cheeschain test (ino-22362):
+MD commit: 4c2de2a0581866fa953831b9dcec30d4f269538d
+
+Upgrade to 1.2.1:
+
+export WASM_MODULE_ROOT = "0x8b104a2e80ac6165dc58b9048de12f301d70b02a0ab51396c22b4b4b802a16a4"
+export PARENT_CHAIN_IS_ARBITRUM = true
+export IS_FEE_TOKEN_CHAIN = false
+export MAX_DATA_SIZE = 117964
+export UPGRADE_ACTION_ADDRESS = ""
+export INBOX_ADDRESS = "0xDA5b61B604e5C95E320c2ac58A760A04321dd91f"
+export PROXY_ADMIN_ADDRESS = "0x2963C94a51031154CFf859083D02eF7d2C8A5A5b"
+export PARENT_UPGRADE_EXECUTOR_ADDRESS = "0x5c47018E4bD1E2f91F22243263b3C6B00a9a4709"
+export ETHERSCAN_API_KEY = VAQC4ZPAQGBRUMW8AR5CVAUKE96VNM2735
+inomurko @Inos-MBP: ~/opt/orbit - actions$ forge script--private - key 759679e6422d31588f2b42e3f127830f254d58b7620d9e2ec8916ad252709bf1--rpc - url https://arb-sepolia.g.alchemy.com/v2/8H6n2nvfKEgvm8oT2BO9PB_-5VqWUZI0 --broadcast  DeployNitroContracts1Point2Point1UpgradeActionScript  -vvv --verify --skip-simulation
+
+
+
+export UPGRADE_ACTION_ADDRESS=0xF04c527F4687edcCE24aBffe4635aae27c03A56D
+with owner private key and address: 
+forge script --private-key 398997ad0ca279bfa198160f4900712d976259db5a988dbd9f463dbd412475cb --rpc-url https://arb-sepolia.g.alchemy.com/v2/8H6n2nvfKEgvm8oT2BO9PB_-5VqWUZI0 --broadcast  ExecuteNitroContracts1Point2Point1UpgradeScript -vvv
+
+*upgrade to 2.1.0*
+unset UPGRADE_ACTION_ADDRESS
+Rollup contract 0x6B171aea44f1De9d213EbAb4e221600E2E371add
+cast call --rpc-url https://arb-sepolia.g.alchemy.com/v2/6k9VHyAZ6Qgk_x9Nn8YjhoPS1EWq872j 0x6B171aea44f1De9d213EbAb4e221600E2E371add "wasmModuleRoot()"
+0x8b104a2e80ac6165dc58b9048de12f301d70b02a0ab51396c22b4b4b802a16a4
+
+v32!!
+export TARGET_WASM_MODULE_ROOT=0x184884e1eb9fefdc158f6c8ac912bb183bf3cf83f0090317e0bc4ac5860baa39
+
+forge script --private-key 759679e6422d31588f2b42e3f127830f254d58b7620d9e2ec8916ad252709bf1 --rpc-url https://arb-sepolia.g.alchemy.com/v2/8H6n2nvfKEgvm8oT2BO9PB_-5VqWUZI0 --broadcast  DeployNitroContracts2Point1Point0UpgradeActionScript -vvv
+
+
+export UPGRADE_ACTION_ADDRESS=0x9c0eF5Ff95eA4D5DF07c6Ed9636E836B15DCa440
+forge script --private-key 398997ad0ca279bfa198160f4900712d976259db5a988dbd9f463dbd412475cb --rpc-url https://arb-sepolia.g.alchemy.com/v2/8H6n2nvfKEgvm8oT2BO9PB_-5VqWUZI0 --broadcast  ExecuteNitroContracts2Point1Point0UpgradeScript -vvv
+
+
+naredis upgrade na v3.2.1-d81324d
+
+preveris:
+DEV=true INBOX_ADDRESS=0xDA5b61B604e5C95E320c2ac58A760A04321dd91f yarn orbit:contracts:version --network arbSepolia
+Version of deployed Inbox: v1.1.0
+Version of deployed Outbox: v1.1.0
+Version of deployed SequencerInbox: v1.2.1
+Version of deployed Bridge: v1.1.0
+Version of deployed RollupProxy: v1.1.0
+Version of deployed RollupAdminLogic: v2.1.0
+Version of deployed RollupUserLogic: v2.1.0
+Version of deployed ChallengeManager: v2.1.0
+
+Checking if deployment can be upgraded to v2.1.0
+Cannot upgrade RollupAdminLogic to v2.1.0
+
+Checking if deployment can be upgraded to v1.2.1
+Cannot upgrade RollupAdminLogic to v1.2.1
+No upgrade path found
+✨  Done in 12.84s.
+
+
+ArbOS version:
+cast call --rpc-url https://ino-22362.rpc.dev.caldera.xyz/http 0x0000000000000000000000000000000000000064 "arbOSVersion()(uint64)"
+75
+
+
+75 - 55
+-----
+20
+
+
+
+export UPGRADE_ACTION_ADDRESS=""
+export CHILD_UPGRADE_EXECUTOR_ADDRESS="0x5c47018E4bD1E2f91F22243263b3C6B00a9a4709"
+export ARBOS_VERSION=32
+export SCHEDULE_TIMESTAMP=1728498603
+
+
+forge script --private-key 759679e6422d31588f2b42e3f127830f254d58b7620d9e2ec8916ad252709bf1 --rpc-url https://arb-sepolia.g.alchemy.com/v2/8H6n2nvfKEgvm8oT2BO9PB_-5VqWUZI0 --broadcast DeployUpgradeArbOSVersionAtTimestampActionScript -vvv
+
+
+
+export UPGRADE_ACTION_ADDRESS=0x18096c6A06EFd59661336F25967998F6Aa738e90
+
+
+
+cast send $CHILD_UPGRADE_EXECUTOR_ADDRESS "execute(address, bytes)" $UPGRADE_ACTION_ADDRESS $(cast calldata "perform()") --rpc-url https://arb-sepolia.g.alchemy.com/v2/8H6n2nvfKEgvm8oT2BO9PB_-5VqWUZI0 --private-key 398997ad0ca279bfa198160f4900712d976259db5a988dbd9f463dbd412475cb
