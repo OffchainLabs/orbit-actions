@@ -11,10 +11,10 @@ import "forge-std/interfaces/IERC20.sol";
 contract ExecuteUpgradeArbOSVersionAtTimestampActionScript is Script {
     function run() public {
         bool multisig = vm.envBool("MULTISIG");
+        bool ct = vm.envBool("CUSTOM_TOKEN_ENABLED");
         address parentUpgradeExecutor = vm.envAddress("PARENT_UPGRADE_EXECUTOR_ADDRESS");
         uint256 arbosVersion = vm.envUint("ARBOS_VERSION");
         uint256 scheduleTimestamp = vm.envUint("SCHEDULE_TIMESTAMP");
-        //IInbox inbox = IInbox(vm.envAddress("INBOX_ADDRESS"));
         address upgradeExecutorL2 = vm.envAddress("UPGRADE_EXECUTOR_L2");
         address l2ArbOwner = 0x0000000000000000000000000000000000000070;
         IUpgradeExecutor executor = IUpgradeExecutor(parentUpgradeExecutor);
@@ -50,22 +50,38 @@ contract ExecuteUpgradeArbOSVersionAtTimestampActionScript is Script {
         if (arbosVersion > type(uint64).max || scheduleTimestamp > type(uint64).max) {
             revert("ARBOS_VERSION and SCHEDULE_TIMESTAMP must be uint64");
         }
+        if (ct) {
+            bytes memory approveERC20Inbox =
+                abi.encodeCall(IERC20.approve, (vm.envAddress("INBOX_ADDRESS"), 2 ** 256 - 1));
+            if (!multisig) {
+                vm.startBroadcast();
+                executor.executeCall(vm.envAddress("CUSTOM_TOKEN"), approveERC20Inbox);
+                vm.stopBroadcast();
+            } else {
+                console.log("First TX:");
+                console.logString("L1 executor executeCall(vm.envAddress(CUSTOM_TOKEN), approveERC20Inbox)");
+                console.log("Executor address");
+                console.logAddress(parentUpgradeExecutor);
+                console.logString("Custom token address");
+                console.logAddress(vm.envAddress("CUSTOM_TOKEN"));
+                console.logString("Calldata:");
+                console.logBytes(approveERC20Inbox);
+            }
+        }
 
         if (!multisig) {
             vm.startBroadcast();
-            bytes memory approveERC20Inbox =
-                abi.encodeCall(IERC20.approve, (vm.envAddress("INBOX_ADDRESS"), 2 ** 256 - 1));
-            //cast call --rpc-url https://sepolia-rollup.arbitrum.io/rpc 0x1aa17ADea40230C8341406fEAF8B0c859fc1D6eA "allowance(address owner, address spender)" $PARENT_UPGRADE_EXECUTOR_ADDRESS $INBOX_ADDRESS
-            console.logString("approveERC20Inbox");
-            console.logBytes(approveERC20Inbox);
-            //executor.executeCall(vm.envAddress("CUSTOM_TOKEN"), approveERC20Inbox);
-            console.logString("Create Retryable Ticket");
-            console.logBytes(inboxData);
             executor.executeCall(vm.envAddress("INBOX_ADDRESS"), inboxData);
             vm.stopBroadcast();
         } else {
             console.log("Use calldata below to initiate tx towards %s", "executor");
-            console.logString("executeCall(inbox.address, inboxData)");
+            console.logString("executor.executeCall(inbox.address, inboxData)");
+            console.logString("Create Retryable Ticket");
+            console.log("Executor");
+            console.logAddress(parentUpgradeExecutor);
+            console.log("INBOX_ADDRESS");
+            console.logAddress(vm.envAddress("INBOX_ADDRESS"));
+            console.log("Calldata");
             console.logBytes(inboxData);
         }
     }
