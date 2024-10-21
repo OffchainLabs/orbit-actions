@@ -17,12 +17,11 @@ import {console} from "forge-std/console.sol";
  * @notice This script executes nitro contracts 2.1.0 upgrade through UpgradeExecutor
  */
 contract ExecuteNitroContractsEigenDA2Point1Point0UpgradeScript is Script {
-
     function run() public {
         // used to check if upgrade was successful
         bytes32 wasmModuleRoot = vm.envBytes32("TARGET_WASM_MODULE_ROOT");
         address zeroAdress = address(0);
-        
+
         NitroContractsEigenDA2Point1Point0UpgradeAction upgradeAction =
             NitroContractsEigenDA2Point1Point0UpgradeAction(vm.envAddress("UPGRADE_ACTION_ADDRESS"));
 
@@ -39,7 +38,6 @@ contract ExecuteNitroContractsEigenDA2Point1Point0UpgradeScript is Script {
         bytes memory upgradeCalldata =
             abi.encodeCall(NitroContractsEigenDA2Point1Point0UpgradeAction.execute, (rollup, proxyAdmin));
         console.log("Loaded proxy admin", address(proxyAdmin));
-
 
         // execute the upgrade
         IUpgradeExecutor executor = IUpgradeExecutor(vm.envAddress("PARENT_UPGRADE_EXECUTOR_ADDRESS"));

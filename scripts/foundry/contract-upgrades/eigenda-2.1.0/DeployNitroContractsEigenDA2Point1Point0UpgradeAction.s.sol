@@ -27,7 +27,7 @@ contract DeployNitroContractsEigenDA2Point1Point0UpgradeActionScript is Deployme
             vm.etch(address(100), mockArbSysCode);
         }
 
-      address reader4844Address;
+        address reader4844Address;
         if (!isArbitrum) {
             // deploy blob reader from arbitrum v2.1.0
             reader4844Address = deployBytecodeFromJSON(
@@ -36,7 +36,7 @@ contract DeployNitroContractsEigenDA2Point1Point0UpgradeActionScript is Deployme
         }
 
         vm.startBroadcast();
-        
+
         // deploy old osp from arbitrum v2.1.0
         address oldOsp;
         {
@@ -79,25 +79,24 @@ contract DeployNitroContractsEigenDA2Point1Point0UpgradeActionScript is Deployme
             );
         }
 
-
         // inheritance chain for the new one step prover entry:
-        // OneStepProverHostIO --immutably_held_by--> OneStepProofEntry --immutably_held_by--> ChallengeManager 
+        // OneStepProverHostIO --immutably_held_by--> OneStepProofEntry --immutably_held_by--> ChallengeManager
         //                                                                        |              |
         //                                                                        |   immutably  |
         //                                                                        v   held by    v
-        //                                                          RollupAdmin <--              --> RollupUser        
-        // deploying new one step prover requires upgrading 
-        // caller contracts to maintain a new storage 
+        //                                                          RollupAdmin <--              --> RollupUser
+        // deploying new one step prover requires upgrading
+        // caller contracts to maintain a new storage
         // mapping for the new one step prover entry.
-        // this immutable field pattern goes up to the core RollupAdmin 
-        // and RollupUser contracts. 
-
+        // this immutable field pattern goes up to the core RollupAdmin
+        // and RollupUser contracts.
 
         // understand which rollup manager to deploy based on parent chain context.
         address rollupManager;
         uint256 parentChainID = block.chainid;
 
-        if (parentChainID == 17000 || parentChainID == 1) { // holesky or ETH
+        if (parentChainID == 17000 || parentChainID == 1) {
+            // holesky or ETH
             console.log("(SAFE) Deploying EigenDA x Orbit L1 Blob Verifier contract");
             rollupManager = deployBytecodeFromJSON(
                 "/node_modules/@eigenda/nitro-contracts-2.1.0/build/contracts/src/bridge/EigenDABlobVerifierL1.sol/EigenDABlobVerifierL1.json"
@@ -123,13 +122,11 @@ contract DeployNitroContractsEigenDA2Point1Point0UpgradeActionScript is Deployme
 
         console.log("Successfully deployed EigenDA x Orbit RollupAdminLogic");
 
-
         // deploy new RollupUserLogic contract from v2.1.0
         address newRollupUserLogic = deployBytecodeFromJSON(
             "/node_modules/@eigenda/nitro-contracts-2.1.0/build/contracts/src/rollup/RollupUserLogic.sol/RollupUserLogic.json"
         );
         console.log("Successfully deployed EigenDA x Orbit RollupUserLogic");
-
 
         // deploy new new sequencer inbox from eigenda v2.1.0
         address sequencerInbox = deployBytecodeWithConstructorFromJSON(
@@ -138,7 +135,7 @@ contract DeployNitroContractsEigenDA2Point1Point0UpgradeActionScript is Deployme
         );
 
         // finally deploy upgrade action
-       new NitroContractsEigenDA2Point1Point0UpgradeAction({
+        new NitroContractsEigenDA2Point1Point0UpgradeAction({
             _newWasmModuleRoot: WASM_MODULE_ROOT,
             _newSequencerInboxImpl: sequencerInbox,
             _newChallengeMangerImpl: challengeManager,
