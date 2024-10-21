@@ -1,0 +1,12 @@
+{
+  "challengeMgrImpl()": "e76be55a",
+  "condOsp()": "acdf78b9",
+  "condRoot()": "828545a7",
+  "execute(address,address)": "d80aea15",
+  "newRollupAdminLogic()": "719c1d83",
+  "newRollupUserLogic()": "98ab2129",
+  "osp()": "f26a62c6",
+  "rollupManager()": "49b7b802",
+  "seqInboxImpl()": "290a09f2",
+  "wasmModuleRoot()": "8ee1a126"
+}
