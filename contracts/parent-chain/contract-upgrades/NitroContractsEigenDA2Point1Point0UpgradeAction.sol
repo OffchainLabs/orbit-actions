@@ -77,7 +77,7 @@ contract NitroContractsEigenDA2Point1Point0UpgradeAction {
         osp = _newOsp;
         wasmModuleRoot = _newWasmModuleRoot;
 
-        // require(Address.isContract(address(_condOsp)), 'Invalid conditional OSP contract');
+        require(Address.isContract(address(_condOsp)), 'Invalid conditional OSP contract');
         condOsp = _condOsp;
         condRoot = _condOspRoot;
 
@@ -157,6 +157,8 @@ contract NitroContractsEigenDA2Point1Point0UpgradeAction {
             rollup.wasmModuleRoot() == wasmModuleRoot,
             "NitroContracts2Point1Point0UpgradeAction: wasm module root not set"
         );
+
+        _upgradeRollup(address(rollup));
     }
 
     function _upgradeRollup(address rollupProxy) internal {

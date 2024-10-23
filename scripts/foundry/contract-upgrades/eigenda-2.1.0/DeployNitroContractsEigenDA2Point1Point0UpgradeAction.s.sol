@@ -15,7 +15,7 @@ import {console} from "forge-std/console.sol";
  */
 contract DeployNitroContractsEigenDA2Point1Point0UpgradeActionScript is DeploymentHelpersScript {
     // ArbOS x EigenDA v32 {LINK OFFICIAL RELEASE HERE WHEN READY}
-    bytes32 public constant WASM_MODULE_ROOT = 0xddc237b76a502661518781d4fcf4b42461439cb7fc670b40f7689efcd27b9113;
+    bytes32 public constant WASM_MODULE_ROOT = 0xe8c8b8228ea07ce8fec67d88d7a7f5fd52c104d262f2cca255569b38b183d285;
     // ArbOS v32 https://github.com/OffchainLabs/nitro/releases/tag/consensus-v32
     bytes32 public constant COND_WASM_MODULE_ROOT = 0x184884e1eb9fefdc158f6c8ac912bb183bf3cf83f0090317e0bc4ac5860baa39;
 
