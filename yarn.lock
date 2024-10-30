@@ -43,6 +43,17 @@
     patch-package "^6.4.7"
     solady "0.0.182"
 
+"@arbitrum/nitro-contracts-2.1.1@npm:@arbitrum/nitro-contracts@2.1.1-beta.0":
+  version "2.1.1-beta.0"
+  resolved "https://registry.yarnpkg.com/@arbitrum/nitro-contracts/-/nitro-contracts-2.1.1-beta.0.tgz#ee75671ea1d4b62a9ba9818311865b573dd0b382"
+  integrity sha512-CWhU0s0VPv1IWF+nBxMy6iS9L6hRfXpuebknykAzjFOGVfK2Un7OVBXp1c7p172nTwYYerjuAqo/KFIQUOU2Kg==
+  dependencies:
+    "@offchainlabs/upgrade-executor" "1.1.0-beta.0"
+    "@openzeppelin/contracts" "4.5.0"
+    "@openzeppelin/contracts-upgradeable" "4.5.2"
+    patch-package "^6.4.7"
+    solady "0.0.182"
+
 "@arbitrum/nitro-contracts@1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@arbitrum/nitro-contracts/-/nitro-contracts-1.1.1.tgz#2d8a2f9ab757bb7654562aebe435bff833c4b98d"
