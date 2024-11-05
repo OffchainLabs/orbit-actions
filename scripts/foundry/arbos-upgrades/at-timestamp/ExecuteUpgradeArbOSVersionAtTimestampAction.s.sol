@@ -21,16 +21,18 @@ contract ExecuteUpgradeArbOSVersionAtTimestampActionScript is Script {
         IUpgradeExecutor executor = IUpgradeExecutor(parentUpgradeExecutor);
         ArbOwner arbOwner = ArbOwner(l2ArbOwner);
 
+        console.log("SCHEDULE_TIMESTAMP");
+        console.logUint(scheduleTimestamp);
         bytes memory data =
             abi.encodeWithSelector(arbOwner.scheduleArbOSUpgrade.selector, arbosVersion, scheduleTimestamp);
 
         bytes memory onL2data = abi.encodeWithSelector(executor.executeCall.selector, l2ArbOwner, data);
 
-        uint256 gasPrice = 10 gwei;
         bytes memory inboxData;
         if (ct) {
+            uint256 maxFeePerGas = 10 gwei;
             uint256 gasLimit = 1_000_0000;
-            uint256 maxGas = 1_000_0000;
+            uint256 tokenTotalFeeAmount = gasLimit * gasPrice;
             inboxData = abi.encodeCall(
             IERC20Inbox.createRetryableTicket,
                 (
@@ -39,16 +41,15 @@ contract ExecuteUpgradeArbOSVersionAtTimestampActionScript is Script {
                     0,
                     vm.envAddress("EXCESS_FEE_REFUND_ADDRESS"),
                     vm.envAddress("EXCESS_FEE_REFUND_ADDRESS"),
-                    maxGas,
-                    gasPrice,
-                    gasLimit * gasPrice,
+                    gasLimit,
+                    maxFeePerGas,
+                    tokenTotalFeeAmount,
                     onL2data
                 )
             );
         } else {
-            uint256 gasLimit = 6000000;
-            uint256 maxGas = 1_000_000;
-            uint256 gasPrice = .1 gwei;
+            uint256 gasLimit = 1_000_000;
+            uint256 maxFeePerGas = .1 gwei;
             uint maxSubmissionCost = 2000000000000;
             inboxData = abi.encodeCall(
             IInbox.createRetryableTicket,
@@ -58,8 +59,8 @@ contract ExecuteUpgradeArbOSVersionAtTimestampActionScript is Script {
                     maxSubmissionCost,
                     vm.envAddress("EXCESS_FEE_REFUND_ADDRESS"),
                     vm.envAddress("EXCESS_FEE_REFUND_ADDRESS"),
-                    maxGas,
-                    gasPrice,
+                    gasLimit,
+                    maxFeePerGas,
                     onL2data
                 )
             );
