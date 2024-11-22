@@ -65,7 +65,6 @@ contract NitroContractsEigenDA2Point1Point0UpgradeAction {
         address _newRollupUserLogic
     ) {
         require(_newWasmModuleRoot != bytes32(0), "Invalid wasm root hash");
-        // wasmModuleRoot = _newWasmModuleRoot;
 
         require(Address.isContract(_newSequencerInboxImpl), "Invalid Sequencer Inbox implementation");
         seqInboxImpl = _newSequencerInboxImpl;
@@ -77,7 +76,7 @@ contract NitroContractsEigenDA2Point1Point0UpgradeAction {
         osp = _newOsp;
         wasmModuleRoot = _newWasmModuleRoot;
 
-        require(Address.isContract(address(_condOsp)), 'Invalid conditional OSP contract');
+        require(Address.isContract(address(_condOsp)), "Invalid conditional OSP contract");
         condOsp = _condOsp;
         condRoot = _condOspRoot;
 

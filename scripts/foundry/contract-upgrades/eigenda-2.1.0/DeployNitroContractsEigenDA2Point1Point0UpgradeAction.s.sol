@@ -15,7 +15,7 @@ import {console} from "forge-std/console.sol";
  */
 contract DeployNitroContractsEigenDA2Point1Point0UpgradeActionScript is DeploymentHelpersScript {
     // ArbOS x EigenDA v32 {LINK OFFICIAL RELEASE HERE WHEN READY}
-    bytes32 public constant WASM_MODULE_ROOT = 0xe8c8b8228ea07ce8fec67d88d7a7f5fd52c104d262f2cca255569b38b183d285;
+    bytes32 public constant WASM_MODULE_ROOT = 0xfabd74983c0f747eeff0872f38d8cd982e750efb5148572c0f194b6a228ccd73;
     // ArbOS v32 https://github.com/OffchainLabs/nitro/releases/tag/consensus-v32
     bytes32 public constant COND_WASM_MODULE_ROOT = 0x184884e1eb9fefdc158f6c8ac912bb183bf3cf83f0090317e0bc4ac5860baa39;
 
@@ -97,15 +97,15 @@ contract DeployNitroContractsEigenDA2Point1Point0UpgradeActionScript is Deployme
 
         if (parentChainID == 17000 || parentChainID == 1) {
             // holesky or ETH
-            console.log("(SAFE) Deploying EigenDA x Orbit L1 Blob Verifier contract");
             rollupManager = deployBytecodeFromJSON(
                 "/node_modules/@eigenda/nitro-contracts-2.1.0/build/contracts/src/bridge/EigenDABlobVerifierL1.sol/EigenDABlobVerifierL1.json"
             );
+            console.log("(SAFE) Deployed EigenDA x Orbit L1 Blob Verifier contract @", rollupManager);
         } else {
-            console.log("(DANGEROUS) Deploying EigenDA x Orbit L2 Blob Verifier contract");
             rollupManager = deployBytecodeFromJSON( // non ETH or L3 deployment - this contract performs no verifications
                 "/node_modules/@eigenda/nitro-contracts-2.1.0/build/contracts/src/bridge/EigenDABlobVerifierL2.sol/EigenDABlobVerifierL2.json"
             );
+            console.log("(DANGEROUS) Deployed EigenDA x Orbit L2 Blob Verifier contract @", rollupManager);
         }
 
         // deploy new challenge manager from v2.1.0
@@ -113,20 +113,20 @@ contract DeployNitroContractsEigenDA2Point1Point0UpgradeActionScript is Deployme
             "/node_modules/@eigenda/nitro-contracts-2.1.0/build/contracts/src/challenge/ChallengeManager.sol/ChallengeManager.json"
         );
 
-        console.log("Successfully deployed EigenDA x Orbit ChallengeManager");
+        console.log("Successfully deployed EigenDA x Orbit ChallengeManager @", challengeManager);
 
         // deploy new RollupAdminLogic contract from v2.1.0
         address newRollupAdminLogic = deployBytecodeFromJSON(
             "/node_modules/@eigenda/nitro-contracts-2.1.0/build/contracts/src/rollup/RollupAdminLogic.sol/RollupAdminLogic.json"
         );
 
-        console.log("Successfully deployed EigenDA x Orbit RollupAdminLogic");
+        console.log("Successfully deployed EigenDA x Orbit RollupAdminLogic @", newRollupAdminLogic);
 
         // deploy new RollupUserLogic contract from v2.1.0
         address newRollupUserLogic = deployBytecodeFromJSON(
             "/node_modules/@eigenda/nitro-contracts-2.1.0/build/contracts/src/rollup/RollupUserLogic.sol/RollupUserLogic.json"
         );
-        console.log("Successfully deployed EigenDA x Orbit RollupUserLogic");
+        console.log("Successfully deployed EigenDA x Orbit RollupUserLogic @", newRollupUserLogic);
 
         // deploy new new sequencer inbox from eigenda v2.1.0
         address sequencerInbox = deployBytecodeWithConstructorFromJSON(
@@ -134,8 +134,10 @@ contract DeployNitroContractsEigenDA2Point1Point0UpgradeActionScript is Deployme
             abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, !vm.envBool("IS_FEE_TOKEN_CHAIN"))
         );
 
+        console.log("Successfullly deployed EigenDA x Orbit SequencerInbox @", sequencerInbox);
+
         // finally deploy upgrade action
-        new NitroContractsEigenDA2Point1Point0UpgradeAction({
+        NitroContractsEigenDA2Point1Point0UpgradeAction action = new NitroContractsEigenDA2Point1Point0UpgradeAction({
             _newWasmModuleRoot: WASM_MODULE_ROOT,
             _newSequencerInboxImpl: sequencerInbox,
             _newChallengeMangerImpl: challengeManager,
@@ -147,7 +149,7 @@ contract DeployNitroContractsEigenDA2Point1Point0UpgradeActionScript is Deployme
             _newRollupUserLogic: newRollupUserLogic
         });
 
-        console.log("Successfully deployed EigenDA x Orbit 2.1.0 upgrade/migration action");
+        console.log("Successfully deployed EigenDA x Orbit 2.1.0 upgrade/migration action @", address(action));
 
         vm.stopBroadcast();
     }
