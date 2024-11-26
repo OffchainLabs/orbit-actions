@@ -18,7 +18,7 @@ contract DeployCelestiaNitroContracts2Point1Point0UpgradeActionScript is
 
   // ArbOS v20 https://github.com/OffchainLabs/nitro/releases/tag/consensus-v20
   bytes32 public constant COND_WASM_MODULE_ROOT =
-    0x8b104a2e80ac6165dc58b9048de12f301d70b02a0ab51396c22b4b4b802a16a4;
+    0x184884e1eb9fefdc158f6c8ac912bb183bf3cf83f0090317e0bc4ac5860baa39;
 
   function run() public {
     bool isArbitrum = vm.envBool('PARENT_CHAIN_IS_ARBITRUM');
@@ -34,13 +34,13 @@ contract DeployCelestiaNitroContracts2Point1Point0UpgradeActionScript is
 
     address condOsp = vm.envAddress('COND_OSP');
 
-    address challengeManager = vm.envAddress('CHALLENGE_MANAGER');
+    address challengeManager = vm.envAddress('NEW_CHALLENGE_MANAGER');
 
-    address newRollupAdminLogic = vm.envAddress('ROLLUP_ADMIN');
+    address newRollupAdminLogic = vm.envAddress('NEW_ROLLUP_ADMIN');
 
-    address newRollupUserLogic = vm.envAddress('ROLLUP_USER_LOGIC');
+    address newRollupUserLogic = vm.envAddress('NEW_ROLLUP_USER_LOGIC');
 
-    address newSequencerInbox = vm.envAddress('SEQUENCER_INBOX');
+    address newSequencerInbox = vm.envAddress('NEW_SEQUENCER_INBOX');
 
     // finally deploy upgrade action
     new CelestiaNitroContracts2Point1Point0UpgradeAction({

@@ -7,6 +7,10 @@ import { IBridge } from '@arbitrum/nitro-contracts-2.1.0/src/bridge/IBridge.sol'
 import { IRollupCore } from '@arbitrum/nitro-contracts-2.1.0/src/rollup/IRollupCore.sol';
 import { IUpgradeExecutor } from '@offchainlabs/upgrade-executor/src/IUpgradeExecutor.sol';
 import { IInboxBase } from '@arbitrum/nitro-contracts-1.2.1/src/bridge/IInboxBase.sol';
+import { IERC20Inbox } from '@arbitrum/nitro-contracts-1.2.1/src/bridge/IERC20Inbox.sol';
+import { IERC20Bridge } from '@arbitrum/nitro-contracts-1.2.1/src/bridge/IERC20Bridge.sol';
+import { IIsUsingFeeToken } from '../../helper/IIsUsingFeeToken.sol';
+import { ISequencerInbox } from '@arbitrum/nitro-contracts-1.2.1/src/bridge/ISequencerInbox.sol';
 
 /**
  * @title ExecuteCelestiaNitroContracts1Point2Point1UpgradeScript
@@ -20,6 +24,35 @@ contract ExecuteCelestiaNitroContracts2Point1Point0UpgradeScript is Script {
     CelestiaNitroContracts2Point1Point0UpgradeAction upgradeAction = CelestiaNitroContracts2Point1Point0UpgradeAction(
         vm.envAddress('UPGRADE_ACTION_ADDRESS')
       );
+
+    {
+      bool isFeeTokenChain = vm.envBool('IS_FEE_TOKEN_CHAIN');
+      IERC20Inbox sequencerInbox = IERC20Inbox(vm.envAddress('INBOX_ADDRESS'));
+      uint256 maxDataSize = vm.envUint('MAX_DATA_SIZE');
+      require(
+        ISequencerInbox(upgradeAction.newSequencerInboxImpl()).maxDataSize() ==
+          maxDataSize,
+        'MAX_DATA_SIZE mismatch with action'
+      );
+      address bridge = address(sequencerInbox.bridge());
+      try IERC20Bridge(bridge).nativeToken() returns (address feeToken) {
+        require(
+          isFeeTokenChain || feeToken == address(0),
+          'IS_FEE_TOKEN_CHAIN mismatch'
+        );
+      } catch {
+        require(!isFeeTokenChain, 'IS_FEE_TOKEN_CHAIN mismatch');
+      }
+
+      try sequencerInbox.maxDataSize() returns (uint256 _maxDataSize) {
+        require(
+          _maxDataSize == maxDataSize,
+          'MAX_DATA_SIZE mismatch with current deployment'
+        );
+      } catch {
+        require(maxDataSize == 117964);
+      }
+    }
 
     IInboxBase inbox = IInboxBase(vm.envAddress('INBOX_ADDRESS'));
 
