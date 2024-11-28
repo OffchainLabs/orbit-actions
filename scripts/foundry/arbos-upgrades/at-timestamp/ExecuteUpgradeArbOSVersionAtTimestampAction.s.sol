@@ -32,6 +32,7 @@ contract ExecuteUpgradeArbOSVersionAtTimestampActionScript is Script {
         if (ct) {
             uint256 maxFeePerGas = 10 gwei;
             uint256 gasLimit = 1_000_0000;
+            uint256 gasPrice = 10 gwei;
             uint256 tokenTotalFeeAmount = gasLimit * gasPrice;
             inboxData = abi.encodeCall(
             IERC20Inbox.createRetryableTicket,
@@ -48,9 +49,9 @@ contract ExecuteUpgradeArbOSVersionAtTimestampActionScript is Script {
                 )
             );
         } else {
-            uint256 gasLimit = 1_000_000;
-            uint256 maxFeePerGas = .1 gwei;
-            uint maxSubmissionCost = 2000000000000;
+            uint256 gasLimit = 1_000_00;
+            uint256 maxFeePerGas = 10 gwei;
+            uint maxSubmissionCost = 11371494214528;
             inboxData = abi.encodeCall(
             IInbox.createRetryableTicket,
                 (
@@ -59,8 +60,8 @@ contract ExecuteUpgradeArbOSVersionAtTimestampActionScript is Script {
                     maxSubmissionCost,
                     vm.envAddress("EXCESS_FEE_REFUND_ADDRESS"),
                     vm.envAddress("EXCESS_FEE_REFUND_ADDRESS"),
-                    gasLimit,
-                    maxFeePerGas,
+                    1_000_000, 
+                    100000,
                     onL2data
                 )
             );
@@ -95,6 +96,7 @@ contract ExecuteUpgradeArbOSVersionAtTimestampActionScript is Script {
 
         if (!multisig) {
             vm.startBroadcast();
+            //{ value: 100000 gwei } for non fee token chains
             executor.executeCall(vm.envAddress("INBOX_ADDRESS"), inboxData);
             vm.stopBroadcast();
         } else {
