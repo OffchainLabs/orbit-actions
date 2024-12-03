@@ -31,5 +31,5 @@ Here is a list of common upgrade paths that can be used to upgrade the Orbit cha
 
 ### [ArbOS 32 Bianca](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos32) Migration to Celestia DA 
 
-1. Upgrade your Nitro node(s) to [Nitro v3.1.2](https://github.com/OffchainLabs/nitro/releases/tag/v3.1.2)
-2. Upgrade `nitro-contracts` to `celestia-2.1.0` using [nitro-contract 2.1.0 upgrade action](scripts/foundry/contract-upgrades/celestia-2.1.0)
+1. Upgrade your Nitro node(s) to [Celestia Nitro v3.2.1](https://github.com/celestiaorg/nitro/releases/tag/v3.2.1-rc.2)
+2. Upgrade `nitro-contracts` to `celestia-2.1.0` using [nitro-contract celestia-2.1.0 upgrade action](scripts/foundry/contract-upgrades/celestia-2.1.0)
