@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "Instructions",
+  "sourceName": "src/state/Instructions.sol",
+  "abi": [],
+  "bytecode": "0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea2646970667358221220ff1eb642d9d3c50b0877bb9132845e74b30717f49d70b64cc855eec4996804c264736f6c63430008130033",
+  "deployedBytecode": "0x600080fdfea2646970667358221220ff1eb642d9d3c50b0877bb9132845e74b30717f49d70b64cc855eec4996804c264736f6c63430008130033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

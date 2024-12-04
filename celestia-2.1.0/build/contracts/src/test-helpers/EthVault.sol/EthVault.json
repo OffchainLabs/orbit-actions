@@ -1,0 +1,44 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "EthVault",
+  "sourceName": "src/test-helpers/EthVault.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "justRevert",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_version",
+          "type": "uint256"
+        }
+      ],
+      "name": "setVersion",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "version",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x60808060405234610019576000805560dd908161001f8239f35b600080fdfe6080806040526004361015601257600080fd5b600090813560e01c908163408def1e14609357816350b23fd214605b57506354fd4d5014603e57600080fd5b346058578060031936011260585760209054604051908152f35b80fd5b905081600319360112608f5762461bcd60e51b815260206004820152600360248201526262796560e81b6044820152606490fd5b5080fd5b826020366003190112605857600435815580f3fea26469706673582212207d45dd451f241d1c829b495fa48f115137e3a493260535d9b01d9320f396c96d64736f6c63430008130033",
+  "deployedBytecode": "0x6080806040526004361015601257600080fd5b600090813560e01c908163408def1e14609357816350b23fd214605b57506354fd4d5014603e57600080fd5b346058578060031936011260585760209054604051908152f35b80fd5b905081600319360112608f5762461bcd60e51b815260206004820152600360248201526262796560e81b6044820152606490fd5b5080fd5b826020366003190112605857600435815580f3fea26469706673582212207d45dd451f241d1c829b495fa48f115137e3a493260535d9b01d9320f396c96d64736f6c63430008130033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

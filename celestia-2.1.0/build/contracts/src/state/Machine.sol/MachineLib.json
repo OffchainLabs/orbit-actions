@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MachineLib",
+  "sourceName": "src/state/Machine.sol",
+  "abi": [],
+  "bytecode": "0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea26469706673582212204ec1d89f1a8ad4f128c8c08e3fdc1b6ea911d4f2f37afa5b3cc1b6000613344264736f6c63430008130033",
+  "deployedBytecode": "0x600080fdfea26469706673582212204ec1d89f1a8ad4f128c8c08e3fdc1b6ea911d4f2f37afa5b3cc1b6000613344264736f6c63430008130033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MultiStackLib",
+  "sourceName": "src/state/MultiStack.sol",
+  "abi": [],
+  "bytecode": "0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea26469706673582212203436b393e43a8733134ff05abe852d2bd6b7e73c03f3108f2f0f077723f1077064736f6c63430008130033",
+  "deployedBytecode": "0x600080fdfea26469706673582212203436b393e43a8733134ff05abe852d2bd6b7e73c03f3108f2f0f077723f1077064736f6c63430008130033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

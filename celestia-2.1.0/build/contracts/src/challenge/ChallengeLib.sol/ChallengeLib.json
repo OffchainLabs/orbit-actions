@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "ChallengeLib",
+  "sourceName": "src/challenge/ChallengeLib.sol",
+  "abi": [],
+  "bytecode": "0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea264697066735822122064047349117d1d39c24a53141fd96873f3302472420731bb13df9a38054d518a64736f6c63430008130033",
+  "deployedBytecode": "0x600080fdfea264697066735822122064047349117d1d39c24a53141fd96873f3302472420731bb13df9a38054d518a64736f6c63430008130033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

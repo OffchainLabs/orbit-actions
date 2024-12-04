@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MerkleLib",
+  "sourceName": "src/libraries/MerkleLib.sol",
+  "abi": [],
+  "bytecode": "0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea264697066735822122058b1a2ecdd428b1e3fedfa4982629cb1b7ddf6388b9ce9d951094546792db8d564736f6c63430008130033",
+  "deployedBytecode": "0x600080fdfea264697066735822122058b1a2ecdd428b1e3fedfa4982629cb1b7ddf6388b9ce9d951094546792db8d564736f6c63430008130033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

@@ -1,0 +1,16 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MinHeapLib",
+  "sourceName": "solady/src/utils/MinHeapLib.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "HeapIsEmpty",
+      "type": "error"
+    }
+  ],
+  "bytecode": "0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea264697066735822122019a605de5cd658d13e4af1b98c8971cc04b625cb201f41982621d07f4e23021264736f6c63430008130033",
+  "deployedBytecode": "0x600080fdfea264697066735822122019a605de5cd658d13e4af1b98c8971cc04b625cb201f41982621d07f4e23021264736f6c63430008130033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

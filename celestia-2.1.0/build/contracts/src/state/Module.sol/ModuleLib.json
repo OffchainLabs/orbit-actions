@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "ModuleLib",
+  "sourceName": "src/state/Module.sol",
+  "abi": [],
+  "bytecode": "0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea2646970667358221220811bac26019011153f3b2a064a9b7c841da4d0bba7adcaff55b216d628286bd664736f6c63430008130033",
+  "deployedBytecode": "0x600080fdfea2646970667358221220811bac26019011153f3b2a064a9b7c841da4d0bba7adcaff55b216d628286bd664736f6c63430008130033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

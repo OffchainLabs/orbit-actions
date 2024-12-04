@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "StackFrameLib",
+  "sourceName": "src/state/StackFrame.sol",
+  "abi": [],
+  "bytecode": "0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea26469706673582212202d6c5129af07645a3f6ab1deb5fbd44e7a2c9cfe843d1253240321577d922e4e64736f6c63430008130033",
+  "deployedBytecode": "0x600080fdfea26469706673582212202d6c5129af07645a3f6ab1deb5fbd44e7a2c9cfe843d1253240321577d922e4e64736f6c63430008130033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
