@@ -1,16 +1,15 @@
-# Nitro contracts 2.1.0 upgrade
+# Celestia Nitro contracts 2.1.0 migration
 
-These scripts empower `NitroContracts2Point1Point0UpgradeAction` action contract which performs upgrade to [2.1.0 release](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v2.1.0) of Nitro contracts for existing Orbit chains. Predeployed instances of the upgrade action exists on the chains listed in the following section with vanilla ArbOS32 wasm module root set. If you have a custom nitro machine, you will need to deploy the upgrade action yourself.
+These scripts empower `CelestiaNitroContracts2Point1Point0UpgradeAction` action contract which performs a migration to the Celestia [2.1.0 release](https://github.com/celestiaorg/nitro-contracts/releases/tag/v2.1.0) of Nitro contracts for existing Orbit chains. Read more to find out how to deploy the upgrade action or use a pre existing one.
 
 CelestiaNitroContracts2Point1Point0UpgradeAction will perform the following action:
 
 1. Migrate the SequencerInbox to the celestia-v2.1.0 version
-2. Migrate ChallengeManager to celestia-v2.1.0
-3. Set the wasm module root to the new version
-4. Set the conditional wasm root and one step proof needed to handle Celestia specific fraud proof logic inside of the ChallengeManager
-5. Migrate RollupAdminLogic and RollupUserLogic contracts
+3. Set the wasm module root to the new version in order to handle Celestia DA logic
+4. Set the conditional wasm root and one step proof to handle pre-stylus logic
+6. Upgrade RollupAdminLogic and RollupUserLogic contracts
 
-Note that contracts without code changes are not upgraded. It is normal to have some contracts still in the old version after the upgrade as they are equivalent to the new version. Additionally note that only the SequencerInbox and OneStepProverHostIo contracts change for Celestia DA, but changing these requires the contracts mentioned above to be migrated.
+Note that contracts without code changes are not upgraded. It is normal to have some contracts still in the old version after the upgrade as they are equivalent to the new version. Additionally note that only the SequencerInbox and OneStepProverHostIo contracts change for the 2.1.0 Celestia DA version of the nitro contracts
 
 ## Requirements
 
@@ -27,6 +26,8 @@ This upgrade only support upgrading from the following [nitro-contract release](
 
 Please refer to the top [README](../../README.md) `Check Version and Upgrade Path` on how to determine your current nitro contracts version.
 
+Additionally, note that these contracts can be used to migrate a chain thats already on ArbOS32 to use Celestia DA.
+
 ## How to use it
 
 1. Setup .env according to the example files, make sure you have everything correctly defined. The script will do some sanity checks but not everything can be checked. The .env file must be in project root for recent foundary versions.
@@ -38,7 +39,7 @@ Please refer to the top [README](../../README.md) `Check Version and Upgrade Pat
    `DeployCelestiaNitroContracts2Point1Point0UpgradeActionScript.s.sol` script deploys templates, and upgrade action itself. It can be executed in this directory like this:
 
 ```bash
-forge script --sender $DEPLOYER --rpc-url $PARENT_CHAIN_RPC --broadcast --slow DeployNitroContracts2Point1Point0UpgradeActionScript -vvv --verify --skip-simulation
+forge script --sender $DEPLOYER --rpc-url $PARENT_CHAIN_RPC --broadcast --slow DeployCelestiaNitroContracts2Point1Point0UpgradeActionScript -vvv --verify --skip-simulation
 # use --account XXX / --private-key XXX / --interactive / --ledger to set the account to send the transaction from
 ```
 
@@ -47,7 +48,7 @@ As a result, all templates and upgrade action are deployed. Note the last deploy
 3. `ExecuteCelestiaNitroContracts2Point1Point0Upgrade.s.sol` script uses previously deployed upgrade action to execute the upgrade. It makes following assumptions - L1UpgradeExecutor is the rollup owner, and there is an EOA which has executor rights on the L1UpgradeExecutor. Proceed with upgrade using the owner account (the one with executor rights on L1UpgradeExecutor):
 
 ```bash
-forge script --sender $EXECUTOR --rpc-url $PARENT_CHAIN_RPC --broadcast ExecuteNitroContracts2Point1Point0UpgradeScript -vvv
+forge script --sender $EXECUTOR --rpc-url $PARENT_CHAIN_RPC --broadcast ExecuteCelestiaNitroContracts2Point1Point0UpgradeScript -vvv
 # use --account XXX / --private-key XXX / --interactive / --ledger to set the account to send the transaction from
 ```
 
@@ -60,36 +61,6 @@ cast call --rpc-url $PARENT_CHAIN_RPC $ROLLUP "wasmModuleRoot()"
 ```
 
 ## FAQ
-
-### Q: What are the expected values in the .env
-
-A: 
-
-In order to deploy and execute the migration, you will need to fill out the following `.env`
-
-```
-## Deployment
-NEW_OSP=
-COND_OSP=
-NEW_CHALLENGE_MANAGER=
-NEW_ROLLUP_ADMIN=
-NEW_ROLLUP_USER_LOGIC=
-NEW_SEQUENCER_INBOX=
-TARGET_WASM_MODULE_ROOT=
-PARENT_CHAIN_IS_ARBITRUM=true
-IS_FEE_TOKEN_CHAIN=false
-MAX_DATA_SIZE=
-
-## Execution
-UPGRADE_ACTION_ADDRESS=
-PROXY_ADMIN_ADDRESS=
-PARENT_UPGRADE_EXECUTOR_ADDRESS=
-INBOX_ADDRESS=
-```
-
-The deployment section is the values needed to deploy the upgrade action, most can be fetched from an existing or personally deployed `RollupCreator` from the Celestia nitro contracts repo, the exceptions are `COND_OSP` which refers to the current OSP address used by the rollup being migrated, `TARGET_WASM_MODULE_ROOT` which refers to the wasm module root currently used by the rollup, `PARENT_CHAIN_IS_ARBITRUM` if the parent chain is a chain using the Arbitrum stack, `IS_FEE_TOKEN_CHAIN` if the chain uses a non native token as a gas token (an ERC20 token), and `MAX_DATA_SIZE` referring to the maximum size of a batch, which depends on the parent chain, but reference values can be found [here](https://github.com/celestiaorg/orbit-actions/tree/main/scripts/foundry/contract-upgrades/1.2.1/env-templates) for sepolia and arbitrum sepolia.
-
-Once deployed, the execution section of the `.env` can be filled out with the upgrade action address, the proxy admin and upgrade executor for the chain to be migrated, as well as the inbox address for the chain that is being migrated.
 
 ### Q: node error: unable to find validator machine directory for the on-chain WASM module root
 
