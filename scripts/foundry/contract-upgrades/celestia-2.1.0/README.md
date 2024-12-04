@@ -11,6 +11,10 @@ CelestiaNitroContracts2Point1Point0UpgradeAction will perform the following acti
 
 Note that contracts without code changes are not upgraded. It is normal to have some contracts still in the old version after the upgrade as they are equivalent to the new version. Additionally note that only the SequencerInbox and OneStepProverHostIo contracts change for the 2.1.0 Celestia DA version of the nitro contracts
 
+> [!CAUTION]
+> The scripts have logic to deploy a OneStepProverHostIo.sol with the Blobstream address for the given chaind id. However things can change and it is the deployer and script executor's responsability to check they are using a OneStepProverHostIo with the right BLOBSTREAM address set for their parent chain. Deployed instances of SP1 Blobstream can be found [here](https://docs.celestia.org/how-to-guides/blobstream#deployed-contracts).
+> A new deployment and custom logic in the script is required to properly deploy these contracts to a parent chain not listed above, proceed with caution.
+
 ## Requirements
 
 This upgrade only support upgrading from the following [nitro-contract release](https://github.com/OffchainLabs/nitro-contracts/releases):
