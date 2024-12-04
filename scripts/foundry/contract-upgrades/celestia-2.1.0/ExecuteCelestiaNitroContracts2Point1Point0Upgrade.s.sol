@@ -59,8 +59,9 @@ contract ExecuteCelestiaNitroContracts2Point1Point0UpgradeScript is Script {
     // check prerequisites
     IRollupCore rollup = IRollupCore(address(inbox.bridge().rollup()));
     require(
-      rollup.wasmModuleRoot() == upgradeAction.condRoot(),
-      'Incorrect starting wasm module root'
+      rollup.challengeManager().getOsp(upgradeAction.condRoot()) ==
+        upgradeAction.condOsp(),
+      'Incorrect starting conditional wasm module root'
     );
 
     vm.startBroadcast();

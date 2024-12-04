@@ -102,9 +102,9 @@ contract CelestiaNitroContracts2Point1Point0UpgradeAction {
       );
     }
 
-    /// check that condRoot is being used
+    /// check that the challenge manager has an osp that matches the condOsp in order to manage pre-stylus logic
     require(
-      rollup.wasmModuleRoot() == condRoot,
+      rollup.challengeManager().getOsp(condRoot) == condOsp,
       'NitroContracts2Point1Point0UpgradeAction: wasm root mismatch'
     );
 
