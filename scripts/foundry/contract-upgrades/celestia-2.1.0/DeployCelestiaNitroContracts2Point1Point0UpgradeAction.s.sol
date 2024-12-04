@@ -42,28 +42,6 @@ contract DeployCelestiaNitroContracts2Point1Point0UpgradeActionScript is
       address ospMath = deployBytecodeFromJSON(
         '/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/osp/OneStepProverMath.sol/OneStepProverMath.json'
       );
-      address ospHostIo = deployBytecodeFromJSON(
-        '/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/osp/OneStepProverHostIo.sol/OneStepProverHostIo.json'
-      );
-      newOsp = deployBytecodeWithConstructorFromJSON(
-        '/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/osp/OneStepProofEntry.sol/OneStepProofEntry.json',
-        abi.encode(osp0, ospMemory, ospMath, ospHostIo)
-      );
-    }
-
-    // deploy condOsp from v1.3.0
-    address condOsp;
-    {
-      address osp0 = deployBytecodeFromJSON(
-        '/node_modules/@arbitrum/nitro-contracts-1.3.0/build/contracts/src/osp/OneStepProver0.sol/OneStepProver0.json'
-      );
-      address ospMemory = deployBytecodeFromJSON(
-        '/node_modules/@arbitrum/nitro-contracts-1.3.0/build/contracts/src/osp/OneStepProverMemory.sol/OneStepProverMemory.json'
-      );
-      address ospMath = deployBytecodeFromJSON(
-        '/node_modules/@arbitrum/nitro-contracts-1.3.0/build/contracts/src/osp/OneStepProverMath.sol/OneStepProverMath.json'
-      );
-
       address ospHostIo;
 
       uint chainId = vm.envUint('CHAIN_ID');
@@ -97,6 +75,29 @@ contract DeployCelestiaNitroContracts2Point1Point0UpgradeActionScript is
           '/celestia-2.1.0/base-sepolia/OneStepProverHostIo.sol/OneStepProverHostIo.json'
         );
       }
+
+      newOsp = deployBytecodeWithConstructorFromJSON(
+        '/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/osp/OneStepProofEntry.sol/OneStepProofEntry.json',
+        abi.encode(osp0, ospMemory, ospMath, ospHostIo)
+      );
+    }
+
+    // deploy condOsp from v1.3.0
+    address condOsp;
+    {
+      address osp0 = deployBytecodeFromJSON(
+        '/node_modules/@arbitrum/nitro-contracts-1.3.0/build/contracts/src/osp/OneStepProver0.sol/OneStepProver0.json'
+      );
+      address ospMemory = deployBytecodeFromJSON(
+        '/node_modules/@arbitrum/nitro-contracts-1.3.0/build/contracts/src/osp/OneStepProverMemory.sol/OneStepProverMemory.json'
+      );
+      address ospMath = deployBytecodeFromJSON(
+        '/node_modules/@arbitrum/nitro-contracts-1.3.0/build/contracts/src/osp/OneStepProverMath.sol/OneStepProverMath.json'
+      );
+
+      address ospHostIo = deployBytecodeFromJSON(
+        '/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/osp/OneStepProverHostIo.sol/OneStepProverHostIo.json'
+      );
 
       condOsp = deployBytecodeWithConstructorFromJSON(
         '/node_modules/@arbitrum/nitro-contracts-1.3.0/build/contracts/src/osp/OneStepProofEntry.sol/OneStepProofEntry.json',
