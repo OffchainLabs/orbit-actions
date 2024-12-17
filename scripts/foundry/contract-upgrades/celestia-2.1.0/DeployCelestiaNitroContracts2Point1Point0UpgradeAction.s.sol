@@ -159,7 +159,7 @@ contract DeployCelestiaNitroContracts2Point1Point0UpgradeActionScript is
       abi.encode(
         vm.envUint('MAX_DATA_SIZE'),
         reader4844Address,
-        !vm.envBool('IS_FEE_TOKEN_CHAIN')
+        vm.envBool('IS_FEE_TOKEN_CHAIN')
       )
     );
 
