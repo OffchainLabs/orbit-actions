@@ -113,10 +113,10 @@
   resolved "https://registry.npmjs.org/@eigenda/eigenda-utils/-/eigenda-utils-2.0.0.tgz"
   integrity sha512-aijRWVPZWw3WA7sZHu1lmYRwQxWqK51YcZPq/QkyyfVsVqHJQdW3zUpuyKLesH1jVkfcQ3f1LdFPZTonvj8oIg==
 
-"@eigenda/nitro-contracts-2.1.0@npm:@eigenda/nitro-contracts@2.1.0-pr-1":
-  version "2.1.0-pr-1"
-  resolved "https://registry.yarnpkg.com/@eigenda/nitro-contracts/-/nitro-contracts-2.1.0-pr-1.tgz#b62b2dbb0d5da5baab26b5b495e667c42174d5c6"
-  integrity sha512-pdVB8YhYDiBzLrXkR21xbURrFfTCu+k53iBiLATCcW91ejOQxSxziJWaivFGHlICuQYamKOwY5gedAVxgEwq2Q==
+"@eigenda/nitro-contracts-2.1.0@npm:@eigenda/nitro-contracts@2.1.0-production":
+  version "2.1.0-production"
+  resolved "https://registry.yarnpkg.com/@eigenda/nitro-contracts/-/nitro-contracts-2.1.0-production.tgz#581d3ab036cfeb9e4d11ff8d7b73499992c00df5"
+  integrity sha512-Bsfx+Mz11qoFinqgbEGbo+iBCajw417iwX0mC5PXQMqTFbbXwe5CggvNo8/PMF96R8F9z/3XZiEv85ICkIlqNg==
   dependencies:
     "@offchainlabs/upgrade-executor" "1.1.0-beta.0"
     "@openzeppelin-upgrades/contracts" "npm:@openzeppelin/contracts-upgradeable@4.7"
