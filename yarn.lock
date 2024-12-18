@@ -125,10 +125,10 @@
     patch-package "^6.4.7"
     solady "0.0.182"
 
-"@eigenda/nitro-contracts@2.1.0-rc":
-  version "2.1.0-rc"
-  resolved "https://registry.yarnpkg.com/@eigenda/nitro-contracts/-/nitro-contracts-2.1.0-rc.tgz#1afc1a43cedfc7dbe004dc4b219c122f8fdd4404"
-  integrity sha512-A2GHI7wdU+CvUS/k4TgetQTF4Nuzx6FCSiysGIECaS0cYHw4odT1KtL74bIKRsPMpHf2oXWUi2IOmWgcQg1Pdg==
+"@eigenda/nitro-contracts@2.1.0-production":
+  version "2.1.0-production"
+  resolved "https://registry.yarnpkg.com/@eigenda/nitro-contracts/-/nitro-contracts-2.1.0-production.tgz#581d3ab036cfeb9e4d11ff8d7b73499992c00df5"
+  integrity sha512-Bsfx+Mz11qoFinqgbEGbo+iBCajw417iwX0mC5PXQMqTFbbXwe5CggvNo8/PMF96R8F9z/3XZiEv85ICkIlqNg==
   dependencies:
     "@offchainlabs/upgrade-executor" "1.1.0-beta.0"
     "@openzeppelin-upgrades/contracts" "npm:@openzeppelin/contracts-upgradeable@4.7"

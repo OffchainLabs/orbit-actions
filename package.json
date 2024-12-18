@@ -63,6 +63,6 @@
   },
   "dependencies": {
     "@eigenda/eigenda-utils": "^2.0.0",
-    "@eigenda/nitro-contracts": "2.1.0-prod"
+    "@eigenda/nitro-contracts": "2.1.0-production"
   }
 }

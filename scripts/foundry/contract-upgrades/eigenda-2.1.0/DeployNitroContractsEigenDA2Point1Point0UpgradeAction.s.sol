@@ -14,8 +14,8 @@ import {console} from "forge-std/console.sol";
  * @notice This script deploys OSPs, ChallengeManager and Rollup templates, and the upgrade action.
  */
 contract DeployNitroContractsEigenDA2Point1Point0UpgradeActionScript is DeploymentHelpersScript {
-    // ArbOS x EigenDA v32 {LINK OFFICIAL RELEASE HERE WHEN READY}
-    bytes32 public constant WASM_MODULE_ROOT = 0xfabd74983c0f747eeff0872f38d8cd982e750efb5148572c0f194b6a228ccd73;
+    // ArbOS x EigenDA v32 https://github.com/Layr-Labs/nitro/releases/tag/consensus-eigenda-v32
+    bytes32 public constant WASM_MODULE_ROOT = 0x951009942c00b5bd0abec233174fe33fadf7cd5013d17b042f9b28b3b00b469c;
     // ArbOS v32 https://github.com/OffchainLabs/nitro/releases/tag/consensus-v32
     bytes32 public constant COND_WASM_MODULE_ROOT = 0x184884e1eb9fefdc158f6c8ac912bb183bf3cf83f0090317e0bc4ac5860baa39;
 
