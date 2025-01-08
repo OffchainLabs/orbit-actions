@@ -144,7 +144,7 @@ function _checkForPossibleUpgrades(
   const targetVersionsDescending = [
     {
       version: 'v3.0.0',
-      actionName: 'XXX',
+      actionName: 'BOLD UpgradeAction',
     },
     {
       version: 'v2.1.0',
@@ -184,7 +184,40 @@ function _canBeUpgradedToTargetVersion(
   console.log('\nChecking if deployment can be upgraded to', targetVersion)
 
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
-  if (targetVersion === 'v2.1.0') {
+  if (targetVersion === 'v3.0.0') {
+    // v3.0.0 will upgrade bridge, inbox, rollupEventInbox, outbox, sequencerInbox, rollup logics, challengeManager
+    supportedSourceVersionsPerContract = {
+      Inbox: [
+        'v1.1.0',
+        'v1.1.1',
+        'v1.2.0',
+        'v1.2.1',
+        'v1.3.0',
+        'v2.0.0',
+        'v2.1.0',
+      ],
+      Outbox: ['any'],
+      Bridge: [
+        'v1.1.0',
+        'v1.1.1',
+        'v1.2.0',
+        'v1.2.1',
+        'v1.3.0',
+        'v2.0.0',
+        'v2.1.0',
+      ],
+      RollupEventInbox: ['any'],
+      RollupProxy: ['any'],
+      RollupAdminLogic: ['v2.0.0', 'v2.1.0'],
+      RollupUserLogic: ['v2.0.0', 'v2.1.0'],
+      ChallengeManager: ['v2.0.0', 'v2.1.0'],
+      SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0'],
+    }
+    if (isFeeTokenChain) {
+      // cannot upgrade erc20 orbit chains from v1 to v3 right now due to a storage diff
+      supportedSourceVersionsPerContract.Bridge = ['v2.0.0', 'v2.1.0']
+    }
+  } else if (targetVersion === 'v2.1.0') {
     // v2.1.0 will upgrade rollup logics and challenge manager
     supportedSourceVersionsPerContract = {
       Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
