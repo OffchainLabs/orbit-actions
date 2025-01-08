@@ -167,25 +167,9 @@ function _canBeUpgradedToTargetVersion(
   if (targetVersion === 'v2.1.0') {
     supportedSourceVersionsPerContract = {
       Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
-      Outbox: [
-        'v1.1.0',
-        'v1.1.1',
-        'v1.2.0',
-        'v1.2.1',
-        'v1.3.0',
-        'v2.0.0',
-        'v2.1.0',
-      ],
+      Outbox: ['any'],
       Bridge: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
-      RollupProxy: [
-        'v1.1.0',
-        'v1.1.1',
-        'v1.2.0',
-        'v1.2.1',
-        'v1.3.0',
-        'v2.0.0',
-        'v2.1.0',
-      ],
+      RollupProxy: ['any'],
       RollupAdminLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
       RollupUserLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
       ChallengeManager: ['v1.2.1', 'v1.3.0'],
@@ -194,9 +178,9 @@ function _canBeUpgradedToTargetVersion(
   } else if (targetVersion === 'v1.2.1') {
     supportedSourceVersionsPerContract = {
       Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
-      Outbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
+      Outbox: ['any'],
       Bridge: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
-      RollupProxy: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
+      RollupProxy: ['any'],
       RollupAdminLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
       RollupUserLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
       ChallengeManager: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
@@ -211,6 +195,9 @@ function _canBeUpgradedToTargetVersion(
   for (const [contract, supportedSourceVersions] of Object.entries(
     supportedSourceVersionsPerContract
   )) {
+    if (supportedSourceVersions.includes('any')) {
+      continue
+    }
     if (!supportedSourceVersions.includes(currentVersions[contract]!)) {
       // found contract that can't be upgraded to target version
       console.log('Cannot upgrade', contract, 'to', targetVersion)
