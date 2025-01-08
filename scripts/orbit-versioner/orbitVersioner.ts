@@ -21,6 +21,7 @@ interface BridgeHashes {
   Outbox: string[]
   SequencerInbox: string[]
   Bridge: string[]
+  RollupEventInbox: string[]
 }
 interface MetadataHashesByNativeToken {
   eth: BridgeHashes
@@ -31,7 +32,6 @@ interface RollupHashes {
   RollupAdminLogic: string[]
   RollupUserLogic: string[]
   ChallengeManager: string[]
-  RollupEventInbox: string[]
 }
 interface MetadataHashesByVersion {
   [version: string]: MetadataHashesByNativeToken & RollupHashes
