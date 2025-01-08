@@ -116,10 +116,15 @@ async function main() {
     console.log('\nMetadataHashes of deployed contracts:', metadataHashes, '\n')
   }
 
+  let isFeeTokenChain = false
   const versions: { [key: string]: string | null } = {}
   // get and print version per bridge contract
   Object.keys(metadataHashes).forEach(key => {
-    versions[key] = _getVersionOfDeployedContract(metadataHashes[key])
+    const { version, isErc20 } = _getVersionOfDeployedContract(
+      metadataHashes[key]
+    )
+    versions[key] = version
+    if (isErc20) isFeeTokenChain = true
     console.log(
       `Version of deployed ${key}: ${versions[key] ? versions[key] : 'unknown'}`
     )
@@ -127,12 +132,15 @@ async function main() {
 
   // TODO: make this more generic to support other other upgrade paths in the future
   // TODO: also check  osp
-  _checkForPossibleUpgrades(versions)
+  _checkForPossibleUpgrades(versions, isFeeTokenChain)
 }
 
-function _checkForPossibleUpgrades(currentVersions: {
-  [key: string]: string | null
-}) {
+function _checkForPossibleUpgrades(
+  currentVersions: {
+    [key: string]: string | null
+  },
+  isFeeTokenChain: boolean
+) {
   const targetVersionsDescending = [
     {
       version: 'v3.0.0',
@@ -149,7 +157,13 @@ function _checkForPossibleUpgrades(currentVersions: {
   ]
 
   for (const target of targetVersionsDescending) {
-    if (_canBeUpgradedToTargetVersion(target.version, currentVersions)) {
+    if (
+      _canBeUpgradedToTargetVersion(
+        target.version,
+        currentVersions,
+        isFeeTokenChain
+      )
+    ) {
       console.log(
         `This deployment can be upgraded to ${target.version} using ${target.actionName}`
       )
@@ -164,7 +178,8 @@ function _canBeUpgradedToTargetVersion(
   targetVersion: string,
   currentVersions: {
     [key: string]: string | null
-  }
+  },
+  isFeeTokenChain: boolean
 ): boolean {
   console.log('\nChecking if deployment can be upgraded to', targetVersion)
 
@@ -217,7 +232,10 @@ function _canBeUpgradedToTargetVersion(
   return true
 }
 
-function _getVersionOfDeployedContract(metadataHash: string): string | null {
+function _getVersionOfDeployedContract(metadataHash: string): {
+  version: string | null
+  isErc20: boolean
+} {
   for (const [version] of Object.entries(referentMetadataHashes)) {
     // check if given hash matches any of the referent hashes for specific version
     const versionHashes = referentMetadataHashes[version]
@@ -230,11 +248,16 @@ function _getVersionOfDeployedContract(metadataHash: string): string | null {
       ...versionHashes.ChallengeManager,
     ]
 
+    const erc20Hashes = [...Object.values(versionHashes.erc20).flat()]
+
     if (allHashes.includes(metadataHash)) {
-      return version
+      if (erc20Hashes.includes(metadataHash)) {
+        return { version, isErc20: true }
+      }
+      return { version, isErc20: false }
     }
   }
-  return null
+  return { version: null, isErc20: false }
 }
 
 async function _getMetadataHash(
