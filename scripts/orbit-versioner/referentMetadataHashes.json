@@ -1,5 +1,5 @@
 {
-  "v3.0.0":{
+  "v3.0.0": {
     "eth": {
       "Inbox": [
         "1220a8e6c35fe4090e6f290c91615dff206bf292ff3ef98713aa72da6ba65f48",
@@ -16,6 +16,10 @@
       "Bridge": [
         "1220bae7eaf18c61f7d8559a1edc92b1ee8dea4400c55ec0b1b0c4df659b4984",
         "1220a21db9d1c105cea300448647867f48dc194bd84b4ac5452c7532acb850e4"
+      ],
+      "RollupEventInbox": [
+        "12202e329e1a0c9bb43dce08dd86f50a25f359bac1bbd58289ad7319cb11e151",
+        "1220a4508e3924bc48413d05ae71f986fa09f67b9edf853b56ea3e6ed4a5b847"
       ]
     },
     "erc20": {
@@ -34,6 +38,10 @@
       "Bridge": [
         "12208618f0361aadde6e5ed67aec672032b5d03593fc75ed8adf89145ee93fc3",
         "12200ffc0009dbe213082c30b6db421b75a0f6bf2f69011875f2b1c3d0423afb"
+      ],
+      "RollupEventInbox": [
+        "1220ee8677b4eafaaeb1fc21515e42f0fecb06859156ef43489514be59e3d4bd",
+        "1220bea5022b33ad40c8720af015ab790b465b5e2f8ad9ff7dae140292f60448"
       ]
     },
     "RollupProxy": [

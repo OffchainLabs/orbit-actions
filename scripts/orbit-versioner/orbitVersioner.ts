@@ -31,6 +31,7 @@ interface RollupHashes {
   RollupAdminLogic: string[]
   RollupUserLogic: string[]
   ChallengeManager: string[]
+  RollupEventInbox: string[]
 }
 interface MetadataHashesByVersion {
   [version: string]: MetadataHashesByNativeToken & RollupHashes
@@ -65,14 +66,10 @@ async function main() {
   const bridge = IBridge__factory.connect(bridgeAddress, provider)
   const seqInboxAddress = await bridge.sequencerInbox()
   const rollupAddress = await bridge.rollup()
-  const outboxAddress = await IRollupCore__factory.connect(
-    rollupAddress,
-    provider
-  ).outbox()
-  const challengeManagerAddress = await IRollupCore__factory.connect(
-    rollupAddress,
-    provider
-  ).challengeManager()
+  const rollup = IRollupCore__factory.connect(rollupAddress, provider)
+  const outboxAddress = await rollup.outbox()
+  const challengeManagerAddress = await rollup.challengeManager()
+  const rollupEventInboxAddress = await rollup.rollupEventInbox()
 
   // get metadata hashes
   const metadataHashes: { [key: string]: string } = {
@@ -90,6 +87,10 @@ async function main() {
     ),
     Bridge: await _getMetadataHash(
       await _getLogicAddress(bridgeAddress, provider),
+      provider
+    ),
+    RollupEventInbox: await _getMetadataHash(
+      await _getLogicAddress(rollupEventInboxAddress, provider),
       provider
     ),
     RollupProxy: await _getMetadataHash(rollupAddress, provider),
@@ -134,6 +135,10 @@ function _checkForPossibleUpgrades(currentVersions: {
 }) {
   const targetVersionsDescending = [
     {
+      version: 'v3.0.0',
+      actionName: 'XXX',
+    },
+    {
       version: 'v2.1.0',
       actionName: 'NitroContracts2Point1Point0UpgradeAction',
     },
@@ -170,6 +175,7 @@ function _canBeUpgradedToTargetVersion(
       Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
       Outbox: ['any'],
       Bridge: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
+      RollupEventInbox: ['any'],
       RollupProxy: ['any'],
       RollupAdminLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
       RollupUserLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
@@ -182,6 +188,7 @@ function _canBeUpgradedToTargetVersion(
       Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
       Outbox: ['any'],
       Bridge: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
+      RollupEventInbox: ['any'],
       RollupProxy: ['any'],
       RollupAdminLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
       RollupUserLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
