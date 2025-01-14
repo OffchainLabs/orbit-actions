@@ -238,8 +238,7 @@ function _canBeUpgradedToTargetVersion(
         ChallengeManager: [],
         SequencerInbox: [],
       }
-    }
-    else {
+    } else {
       supportedSourceVersionsPerContract = {
         Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
         Outbox: ['any'],
@@ -252,8 +251,7 @@ function _canBeUpgradedToTargetVersion(
         SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0'],
       }
     }
-  }
-  else if (targetVersion === 'v2.1.0') {
+  } else if (targetVersion === 'v2.1.0') {
     // v2.1.0 will upgrade rollup logics and challenge manager
     supportedSourceVersionsPerContract = {
       Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
