@@ -84,3 +84,16 @@ jobs:
         
       - run: yarn minimal-install
       - run: yarn test:storage
+  
+  test-unused-errors:
+    name: Test Unused Errors
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Execute check
+        uses: OffchainLabs/actions/check-unused-errors@main
+        with:
+          directory: './contracts'
+          exceptions_file: './test/unused-errors/exceptions.txt'

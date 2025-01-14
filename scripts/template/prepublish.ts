@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-import hardhatConfig from '../hardhat.config'
+import hardhatConfig from '../../hardhat.config'
 
 /*
 Generates a minimal package.json and hardhat.config.js for publishing to npm

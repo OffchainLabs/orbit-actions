@@ -8,7 +8,7 @@
 
 # prepublish
 # must run with hardhat to generate hardhat.config.js
-yarn hardhat run scripts/prepublish.ts
+yarn hardhat run scripts/template/prepublish.ts
 
 if [ $? -ne 0 ]; then
     echo "Prepublish failed"
