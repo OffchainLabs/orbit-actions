@@ -1,21 +1,10 @@
 #!/bin/bash
 
-shopt -s globstar
+# early exit on failure
+set -e
 
-code=0
+# run hardhat tests if there are any
+test $(find test/unit -name '*.test.ts' | wc -l) -eq 0 || yarn hardhat test $(find test/unit -name '*.test.ts')
 
-hardhatFiles=$(ls ./test/unit/**/*.test.ts 2>/dev/null)
-if [ -n "$hardhatFiles" ]; then
-    yarn run hardhat test $hardhatFiles
-    code=$?
-fi
-
-[ "$code" -ne 0 ] && exit $code
-
-foundryFiles=$(ls ./test/unit/**/*.t.sol 2>/dev/null)
-if [ -n "$foundryFiles" ]; then
-    forge test --match-path "test/unit/*.t.sol"
-    code=$?
-fi
-
-exit $code
+# run foundry tests if there are any
+test $(find test/unit -name '*.t.sol' | wc -l) -eq 0 || forge test --match-path 'test/unit/**/*.t.sol'

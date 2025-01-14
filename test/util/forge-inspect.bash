@@ -2,7 +2,7 @@
 
 # usage: ./test/util/forge-inspect.bash <outputDir> <inspectType>
 
-contracts=$(./scripts/print-contracts.bash)
+contracts=$(./scripts/template/print-contracts.bash)
 if [[ $? != "0" ]]; then
     echo "Failed to get contracts"
     exit 1
