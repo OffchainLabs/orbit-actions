@@ -23,8 +23,6 @@ contract ExecuteNitroContracts2Point1Point2UpgradeScript is Script {
 
         address bridge = address(inbox.bridge());
 
-        vm.startBroadcast();
-
         // prepare upgrade calldata
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
         bytes memory upgradeCalldata =
@@ -33,11 +31,11 @@ contract ExecuteNitroContracts2Point1Point2UpgradeScript is Script {
         // execute the upgrade
         // action checks prerequisites, and script will fail if the action reverts
         IUpgradeExecutor executor = IUpgradeExecutor(vm.envAddress("PARENT_UPGRADE_EXECUTOR_ADDRESS"));
+        vm.startBroadcast();
         executor.execute(address(upgradeAction), upgradeCalldata);
+        vm.stopBroadcast();
 
         // sanity check, full checks are done on-chain by the upgrade action
         require(IERC20Bridge(bridge).nativeTokenDecimals() == 18, "Unexpected native token decimals");
-
-        vm.stopBroadcast();
     }
 }
