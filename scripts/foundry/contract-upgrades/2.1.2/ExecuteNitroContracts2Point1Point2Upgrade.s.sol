@@ -16,6 +16,7 @@ import {IUpgradeExecutor} from "@offchainlabs/upgrade-executor/src/IUpgradeExecu
  */
 contract ExecuteNitroContracts2Point1Point2UpgradeScript is Script {
     function run() public {
+
         NitroContracts2Point1Point2UpgradeAction upgradeAction =
             NitroContracts2Point1Point2UpgradeAction(vm.envAddress("UPGRADE_ACTION_ADDRESS"));
 
