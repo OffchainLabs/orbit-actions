@@ -2,14 +2,16 @@
 
 > [!CAUTION]
 > This upgrade is only necessary for custom fee token chains with an `ERC20Bridge` contract below version `< v2.0.0`.
+> 
 > If your chain uses the parent chain's native asset for fees, or your `ERC20Bridge` is already at `v2.0.0` or above, do not perform this upgrade.
+>
 > The rest of this document assumes the chain satisfies the above.
 
-These scripts empower `NitroContracts2Point1Point2UpgradeAction` action contract which performs upgrade to [2.1.2 release](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v2.1.2) of Nitro contracts for existing Orbit chains. Predeployed instances of the upgrade action exists on the chains listed in the following section.
+These scripts deploy and execute the `NitroContracts2Point1Point2UpgradeAction` contract which allows Orbit chains to upgrade to [2.1.2 release](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v2.1.2). Predeployed instances of the upgrade action exist on the chains listed in the following section.
 
-Upgrading to `v2.1.2` is REQUIRED before upgrading to `v3.0.0`. Upgrading to `v2.1.0` is REQUIRED before upgrading to `v2.1.0`.
+Upgrading to `v2.1.2` is REQUIRED before upgrading to `v3.0.0`. Upgrading to `v2.1.0` is REQUIRED before upgrading to `v2.1.2`.
 
-NitroContracts2Point1Point2UpgradeAction will perform the following action:
+`NitroContracts2Point1Point2UpgradeAction` will perform the following action:
 
 1. Upgrade the `ERC20Bridge` contract to `v2.1.2`
 1. Force `nativeTokenDecimals` to 18
@@ -47,7 +49,7 @@ Please refer to the top [README](../../README.md) `Check Version and Upgrade Pat
 
 ## How to use it
 
-1. Setup .env according to the example files, make sure you have everything correctly defined. The script will do some sanity checks but not everything can be checked. The .env file must be in project root for recent foundry versions.
+1. Setup .env according to the example files, make sure you have everything correctly defined. The .env file must be in project root for recent foundry versions.
 
 > [!CAUTION]
 > The .env file must be in project root.
