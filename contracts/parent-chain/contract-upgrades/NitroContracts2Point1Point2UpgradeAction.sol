@@ -14,7 +14,7 @@ interface IERC20Bridge_v2 {
 }
 
 interface IERC20Bridge_v2_patch {
-    function forceEighteenDecimalsPatch() external;
+    function postUpgradeInit() external;
 }
 
 /**
@@ -53,7 +53,7 @@ contract NitroContracts2Point1Point2UpgradeAction {
         proxyAdmin.upgradeAndCall({
             proxy: TransparentUpgradeableProxy(payable((bridge))),
             implementation: newBridgeImpl,
-            data: abi.encodeCall(IERC20Bridge_v2_patch.forceEighteenDecimalsPatch, ())
+            data: abi.encodeCall(IERC20Bridge_v2_patch.postUpgradeInit, ())
         });
 
         // ensure decimals were set to 18

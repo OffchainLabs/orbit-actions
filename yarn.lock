@@ -43,10 +43,10 @@
     patch-package "^6.4.7"
     solady "0.0.182"
 
-"@arbitrum/nitro-contracts-2.1.2@npm:godzillaba-nitro-contracts-2-1-2":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/godzillaba-nitro-contracts-2-1-2/-/godzillaba-nitro-contracts-2-1-2-2.1.2.tgz#0d53830b7a150c2cd5f41e7356fd75d45ca45037"
-  integrity sha512-prHc/FsXoqgLULV1QdmRp6TB01TI0W0hszItvrMUUJ3PqCGmqQNbQHrImJdsTKaFygM0LS1GwyHbPGEToX4Rgg==
+"@arbitrum/nitro-contracts-2.1.2@npm:godzillaba-nitro-contracts@2.1.2-0":
+  version "2.1.2-0"
+  resolved "https://registry.yarnpkg.com/godzillaba-nitro-contracts/-/godzillaba-nitro-contracts-2.1.2-0.tgz#ad1cdc81bc4b8ddf047c17a5aad87399427fb55d"
+  integrity sha512-NgIaiNCyFLHci/KNfjo9cODpBTQMgMz97aNqyMhuxLe2EQu1QxIIKB55Y+tnqzs7GRIMUC1cL8MZrevmQuNlgA==
   dependencies:
     "@offchainlabs/upgrade-executor" "1.1.0-beta.0"
     "@openzeppelin/contracts" "4.5.0"
