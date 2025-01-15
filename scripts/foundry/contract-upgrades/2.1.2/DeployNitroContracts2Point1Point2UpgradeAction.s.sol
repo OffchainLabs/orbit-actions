@@ -13,7 +13,7 @@ contract DeployNitroContracts2Point1Point2UpgradeActionScript is DeploymentHelpe
     function run() public {
         vm.startBroadcast();
 
-        // deploy new RollupUserLogic contract from v2.1.0
+        // deploy new ERC20Bridge contract from v2.1.2
         address newBridgeImpl = deployBytecodeFromJSON(
             "/node_modules/@arbitrum/nitro-contracts-2.1.2/build/contracts/src/bridge/ERC20Bridge.sol/ERC20Bridge.json"
         );

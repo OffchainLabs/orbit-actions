@@ -18,8 +18,8 @@ interface IERC20Bridge_v2_patch {
 }
 
 /**
- * @title   DeployNitroContracts2Point1Point2UpgradeActionScript
- * @notice  Force the ERC20Bridge contract to set nativeTokenDecimals to 18.
+ * @title   NitroContracts2Point1Point2UpgradeAction
+ * @notice  Upgrade the bridge to ERC20Bridge v2.1.2 and force it to set nativeTokenDecimals to 18.
  *          Will revert if the bridge is not an ERC20Bridge.
  *          Will revert if ERC20Bridge is not v1.x.x
  */
@@ -39,20 +39,22 @@ contract NitroContracts2Point1Point2UpgradeAction {
         // ensure the bridge is an ERC20Bridge
         try IERC20Bridge(bridge).nativeToken() returns (address) {}
         catch {
+            // nativeToken() reverted, so it's not an ERC20Bridge
             revert("NitroContracts2Point1Point2UpgradeAction: bridge is not an ERC20Bridge");
         }
 
         // ensure the bridge is v1.x.x
         try IERC20Bridge_v2(address(bridge)).nativeTokenDecimals() returns (uint8) {
+            // nativeTokenDecimals() didn't revert, so it must be v2.x.x
             revert("NitroContracts2Point1Point2UpgradeAction: bridge is not v1.x.x");
         } catch {}
 
         // upgrade to the new implementation and call forceEighteenDecimalsPatch
-        proxyAdmin.upgradeAndCall(
-            TransparentUpgradeableProxy(payable((bridge))),
-            newBridgeImpl,
-            abi.encodeCall(IERC20Bridge_v2_patch.forceEighteenDecimalsPatch, ())
-        );
+        proxyAdmin.upgradeAndCall({
+            proxy: TransparentUpgradeableProxy(payable((bridge))),
+            implementation: newBridgeImpl,
+            data: abi.encodeCall(IERC20Bridge_v2_patch.forceEighteenDecimalsPatch, ())
+        });
 
         // ensure decimals were set to 18
         require(IERC20Bridge_v2((bridge)).nativeTokenDecimals() == 18, "decimals not set to 18");
