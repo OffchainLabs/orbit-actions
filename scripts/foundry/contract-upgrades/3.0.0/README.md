@@ -41,7 +41,7 @@ $ cd nitro-contracts
 $ git checkout v3.0.0
 ```
 
-3. Install yarn dependencies
+3. Install dependencies and build contracts
 ```
 $ yarn install
 $ yarn build:all
