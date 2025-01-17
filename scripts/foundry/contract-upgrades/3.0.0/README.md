@@ -44,6 +44,7 @@ $ git checkout v3.0.0
 3. Install yarn dependencies
 ```
 $ yarn install
+$ yarn build:all
 ```
 
 4. In `scripts/files/configs`, create a new config file
