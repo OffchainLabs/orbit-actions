@@ -41,9 +41,10 @@ $ cd nitro-contracts
 $ git checkout v3.0.0
 ```
 
-3. Install yarn dependencies
+3. Install dependencies and build contracts
 ```
 $ yarn install
+$ yarn build:all
 ```
 
 4. In `scripts/files/configs`, create a new config file
@@ -71,7 +72,7 @@ Done.
 
 9. Run the populate lookup script, this will store the last confirmed assertion on-chain for the next step.
 ```
-$ L1_PRIV_KEY=$(cast wallet private-key --account arbl1) yarn script:bold-populate-lookup
+$ L1_PRIV_KEY=xxx yarn script:bold-populate-lookup
 ...
 Done.
 ```
