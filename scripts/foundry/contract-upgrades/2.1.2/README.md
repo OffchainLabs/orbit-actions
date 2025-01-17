@@ -1,7 +1,7 @@
 # Nitro contracts 2.1.2 upgrade
 
 > [!CAUTION]
-> This upgrade is only necessary for custom fee token chains with an `ERC20Bridge` contract below version `< v2.0.0`.
+> This is a patch version and is only necessary for custom fee token chains with an `ERC20Bridge` contract below version `< v2.0.0`.
 > 
 > If your chain uses the parent chain's native asset for fees, or your `ERC20Bridge` is already at `v2.0.0` or above, do not perform this upgrade.
 >
