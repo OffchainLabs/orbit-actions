@@ -31,7 +31,7 @@ This upgrade only support upgrading from the following [nitro-contract release](
 - RollupUserLogic: v2.1.0
 - ChallengeManager: v2.1.0
 
-Please refer to the top [README](../../README.md) `Check Version and Upgrade Path` on how to determine your current nitro contracts version.
+Please refer to the top [README](/README.md#check-version-and-upgrade-path) `Check Version and Upgrade Path` on how to determine your current nitro contracts version.
 
 ## Deployed instances
 
