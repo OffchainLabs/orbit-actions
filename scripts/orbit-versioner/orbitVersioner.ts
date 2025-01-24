@@ -147,6 +147,10 @@ function _checkForPossibleUpgrades(
       actionName: 'BOLD UpgradeAction',
     },
     {
+      version: 'v2.1.3',
+      actionName: 'NitroContracts2Point1Point3UpgradeAction',
+    },
+    {
       version: 'v2.1.2',
       actionName: 'NitroContracts2Point1Point2UpgradeAction',
     },
@@ -219,6 +223,40 @@ function _canBeUpgradedToTargetVersion(
     }
     if (isFeeTokenChain) {
       // cannot upgrade erc20 orbit chains from v1 to v3 right now due to a storage diff
+      supportedSourceVersionsPerContract.Bridge = ['v2.0.0', 'v2.1.0', 'v2.1.2']
+    }
+  } else if (targetVersion === 'v2.1.3') {
+    // v2.1.3 will upgrade the SequencerInbox and Inbox contracts to prevent 7702 accounts from calling certain functions
+    // v2.1.3 or v3.0.0 must be performed before the parent chain upgrades with 7702
+    // has the same prerequisites as v3.0.0
+    supportedSourceVersionsPerContract = {
+      Inbox: [
+        'v1.1.0',
+        'v1.1.1',
+        'v1.2.0',
+        'v1.2.1',
+        'v1.3.0',
+        'v2.0.0',
+        'v2.1.0',
+      ],
+      Outbox: ['any'],
+      Bridge: [
+        'v1.1.0',
+        'v1.1.1',
+        'v1.2.0',
+        'v1.2.1',
+        'v1.3.0',
+        'v2.0.0',
+        'v2.1.0',
+      ],
+      RollupEventInbox: ['any'],
+      RollupProxy: ['any'],
+      RollupAdminLogic: ['v2.0.0', 'v2.1.0'],
+      RollupUserLogic: ['v2.0.0', 'v2.1.0'],
+      ChallengeManager: ['v2.0.0', 'v2.1.0'],
+      SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0'],
+    }
+    if (isFeeTokenChain) {
       supportedSourceVersionsPerContract.Bridge = ['v2.0.0', 'v2.1.0', 'v2.1.2']
     }
   } else if (targetVersion === 'v2.1.2') {
