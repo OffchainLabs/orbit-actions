@@ -12,7 +12,7 @@ import {IUpgradeExecutor} from "@offchainlabs/upgrade-executor/src/IUpgradeExecu
 
 /**
  * @title ExecuteNitroContracts1Point2Point1UpgradeScript
- * @notice This script executes nitro contracts 2.1.0 upgrade through UpgradeExecutor
+ * @notice This script executes nitro contracts 2.1.2 upgrade through UpgradeExecutor
  */
 contract ExecuteNitroContracts2Point1Point2UpgradeScript is Script {
     function run() public {
