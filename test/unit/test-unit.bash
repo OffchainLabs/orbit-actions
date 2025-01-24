@@ -14,7 +14,7 @@ fi
 
 foundryFiles=$(ls ./test/unit/**/*.t.sol 2>/dev/null)
 if [ -n "$foundryFiles" ]; then
-    forge test --match-path "test/unit/*.t.sol"
+    forge test --match-path "test/unit/*.t.sol" -vvv
     code=$?
 fi
 

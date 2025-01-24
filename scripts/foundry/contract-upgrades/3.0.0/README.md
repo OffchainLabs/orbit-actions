@@ -20,13 +20,13 @@ This upgrade only support upgrading from the following [nitro-contract release](
 - SequencerInbox: v1.2.1 - v2.1.0 inclusive
 - Bridge
   - eth chain: v1.1.0 - v2.1.0 inclusive
-  - custom-fee token chain: v2.0.0 - v2.1.0 inclusive
+  - custom-fee token chain: v2.0.0 - v2.1.2 inclusive
 - RollupProxy: v1.1.0 - v2.1.0 inclusive
 - RollupAdminLogic: v2.0.0 - v2.1.0 inclusive
 - RollupUserLogic: v2.0.0 - v2.1.0 inclusive
 - ChallengeManager: v2.0.0 - v2.1.0 inclusive
 
-Please refer to the top [README](../../README.md) `Check Version and Upgrade Path` on how to determine your current nitro contracts version.
+Please refer to the top [README](/README.md#check-version-and-upgrade-path) `Check Version and Upgrade Path` on how to determine your current nitro contracts version.
 
 ## How to use it
 

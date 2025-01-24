@@ -44,7 +44,7 @@ Also, expectation is that rollup being upgraded currently uses official ArbOS20 
 
 ## How to use it
 
-1. Setup .env according to the example files, make sure you have everything correctly defined. The script will do some sanity checks but not everything can be checked. The .env file must be in project root for recent foundary versions.
+1. Setup .env according to the example files, make sure you have everything correctly defined. The script will do some sanity checks but not everything can be checked. The .env file must be in project root for recent foundry versions.
 
 > [!CAUTION]
 > The .env file must be in project root.
