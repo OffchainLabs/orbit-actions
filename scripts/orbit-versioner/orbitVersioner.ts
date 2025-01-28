@@ -223,7 +223,12 @@ function _canBeUpgradedToTargetVersion(
     }
     if (isFeeTokenChain) {
       // cannot upgrade erc20 orbit chains from v1 to v3 right now due to a storage diff
-      supportedSourceVersionsPerContract.Bridge = ['v2.0.0', 'v2.1.0', 'v2.1.2', '2.1.3']
+      supportedSourceVersionsPerContract.Bridge = [
+        'v2.0.0',
+        'v2.1.0',
+        'v2.1.2',
+        '2.1.3',
+      ]
     }
   } else if (targetVersion === 'v2.1.3') {
     // v2.1.3 will upgrade the SequencerInbox and Inbox contracts to prevent 7702 accounts from calling certain functions
