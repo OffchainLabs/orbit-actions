@@ -1,5 +1,3 @@
-# TODO: FIX, THIS IS COPIED FROM 2.1.2
-
 # Nitro contracts 2.1.3 upgrade
 
 > [!CAUTION]
