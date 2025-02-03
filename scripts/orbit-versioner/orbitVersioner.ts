@@ -216,6 +216,8 @@ function _canBeUpgradedToTargetVersion(
     if (isFeeTokenChain) {
       // cannot upgrade erc20 orbit chains from v1 to v3 right now due to a storage diff
       supportedSourceVersionsPerContract.Bridge = ['v2.0.0', 'v2.1.0']
+      // TODO: remove this later, but the script does not custom fee token chain yet
+      supportedSourceVersionsPerContract.Bridge = []
     }
   } else if (targetVersion === 'v2.1.0') {
     // v2.1.0 will upgrade rollup logics and challenge manager
