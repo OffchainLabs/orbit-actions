@@ -47,19 +47,14 @@ $ yarn install
 $ yarn build:all
 ```
 
-4. In `scripts/files/configs`, create a new config file
-```
-$ cp scripts/files/configs/arb1.ts scripts/files/configs/yourchain.ts
-```
+4. Edit `scripts/files/configs/custom.ts`, be very careful as they will override existing configs
 
-5. Edit `scripts/files/configs/yourchain.ts`, be very careful as they will override existing configs
-
-6. Setup .env in project root, make sure CONFIG_NETWORK_NAME is same as the config name (e.g. yourchain)
+5. Setup .env in project root, make sure `CONFIG_NETWORK_NAME=custom`.
 ```
 $ cp .env-sample .env
 ```
 
-7. Run the prepare script, this will deploy the actions. L1_PRIV_KEY does not need to be the chain owner.
+7. Run the prepare script, this will deploy the actions. L1_PRIV_KEY does not need to be the chain owner. Pass in the parent chain for `--network`
 ```
 $ L1_PRIV_KEY=xxx INFURA_KEY=xxx ETHERSCAN_API_KEY=xxx yarn script:bold-prepare --network {mainnet|arb1|base|arbSepolia}
 ...
@@ -77,10 +72,13 @@ $ L1_PRIV_KEY=xxx yarn script:bold-populate-lookup
 Done.
 ```
 
-10. Run the upgrade script. If the L1_PRIV_KEY is not the chain owner, it will print the upgrade payload. Execute the payload with the chain owner.
+10. Run the upgrade script. If the L1_PRIV_KEY is not the chain owner, it will print the upgrade payload. Execute the payload with the chain owner. 
+
+> [!CAUTION]
+> This script will not ask for confirmation before sending the transaction!
+
 ```
 $ L1_PRIV_KEY=xxx yarn script:bold-local-execute
-eoa with executor role: 0x6EC62D826aDc24AeA360be9cF2647c42b9Cdb19b
 upgrade executor: 0x5FEe78FE9AD96c1d8557C6D6BB22Eb5A61eeD315
 execute(...) call to upgrade executor: 0x1cff79cd000000000000000000000000f8199ca3702c09c78b957d4d820311125753c6d2000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ebe03a93000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000030000000000000000000000008a8f0a24d7e58a76fc8f77bb68c7c902b91e182e00000000000000000000000087630025e63a30ecf9ca9d580d9d95922fea6af0000000000000000000000000c32b93e581db6ebc50c08ce381143a259b92f1ed00000000000000000000000000000000000000000000000000000000
 ```
