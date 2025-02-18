@@ -39,7 +39,8 @@ Please refer to the top [README](/README.md#check-version-and-upgrade-path) `Che
 - L2 Base: TODO
 
 ### Testnets
-- L1 Sepolia: TODO
+- L1 Sepolia (eth fee token): 0xF555f49109FACc011ca189814BF5a4293E23034e
+- L1 Sepolia (custom fee token): 0xD9472D18Deab09b2E3775c7CDBAf0C63d89Bffa6
 - L1 Holesky: TODO
 - L2 ArbSepolia: TODO
 - L2 BaseSepolia: TODO
