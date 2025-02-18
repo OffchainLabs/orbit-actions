@@ -40,28 +40,20 @@ contract DeployNitroContracts2Point1Point3UpgradeActionScript is DeploymentHelpe
             abi.encode(vm.envUint("MAX_DATA_SIZE"))
         );
 
-        if (vm.envOr("DEPLOY_BOTH", false)) {
-            // if true, also deploy the !IS_FEE_TOKEN_CHAIN action
-            // only used to save gas cost when deploying both native and custom fee version
-
-            // deploy sequencer inbox template
-            address newSeqInboxImpl2 = deployBytecodeWithConstructorFromJSON(
-                "/node_modules/@arbitrum/nitro-contracts-2.1.3/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json",
-                abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, !vm.envBool("IS_FEE_TOKEN_CHAIN"))
-            );
-
-            // finally deploy upgrade action
-            new NitroContracts2Point1Point3UpgradeAction(newEthInboxImpl, newERC20InboxImpl, newSeqInboxImpl2);
-        }
-
-        // deploy new SequencerInbox contract from v2.1.3
-        address newSeqInboxImpl = deployBytecodeWithConstructorFromJSON(
+        // deploy new EthSequencerInbox contract from v2.1.3
+        address newEthSeqInboxImpl = deployBytecodeWithConstructorFromJSON(
             "/node_modules/@arbitrum/nitro-contracts-2.1.3/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json",
-            abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, vm.envBool("IS_FEE_TOKEN_CHAIN"))
+            abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, false)
+        );
+
+        // deploy new Erc20SequencerInbox contract from v2.1.3
+        address newErc20SeqInboxImpl = deployBytecodeWithConstructorFromJSON(
+            "/node_modules/@arbitrum/nitro-contracts-2.1.3/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json",
+            abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, true)
         );
 
         // deploy upgrade action
-        new NitroContracts2Point1Point3UpgradeAction(newEthInboxImpl, newERC20InboxImpl, newSeqInboxImpl);
+        new NitroContracts2Point1Point3UpgradeAction(newEthInboxImpl, newERC20InboxImpl, newEthSeqInboxImpl, newErc20SeqInboxImpl);
 
         vm.stopBroadcast();
     }
