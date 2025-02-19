@@ -39,7 +39,7 @@ Please refer to the top [README](/README.md#check-version-and-upgrade-path) `Che
 - L2 Base: TODO
 
 ### Testnets
-- L1 Sepolia: 0xFA3B2dB40e5230552860784424c92B9Dde092197
+- L1 Sepolia: TODO
 - L1 Holesky: TODO
 - L2 ArbSepolia: TODO
 - L2 BaseSepolia: TODO
