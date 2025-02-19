@@ -26,9 +26,15 @@ interface IERC20Bridge_v2 {
 contract NitroContracts2Point1Point3UpgradeAction {
     address public immutable newEthInboxImpl;
     address public immutable newERC20InboxImpl;
-    address public immutable newSequencerInboxImpl;
+    address public immutable newEthSequencerInboxImpl;
+    address public immutable newERC20SequencerInboxImpl;
 
-    constructor(address _newEthInboxImpl, address _newERC20InboxImpl, address _newSequencerInboxImpl) {
+    constructor(
+        address _newEthInboxImpl,
+        address _newERC20InboxImpl,
+        address _newEthSequencerInboxImpl,
+        address _newERC20SequencerInboxImpl
+    ) {
         require(
             Address.isContract(_newEthInboxImpl),
             "NitroContracts2Point1Point3UpgradeAction: _newEthInboxImpl is not a contract"
@@ -38,13 +44,18 @@ contract NitroContracts2Point1Point3UpgradeAction {
             "NitroContracts2Point1Point3UpgradeAction: _newERC20InboxImpl is not a contract"
         );
         require(
-            Address.isContract(_newSequencerInboxImpl),
-            "NitroContracts2Point1Point3UpgradeAction: _newSequencerInboxImpl is not a contract"
+            Address.isContract(_newEthSequencerInboxImpl),
+            "NitroContracts2Point1Point3UpgradeAction: _newEthSequencerInboxImpl is not a contract"
+        );
+        require(
+            Address.isContract(_newERC20SequencerInboxImpl),
+            "NitroContracts2Point1Point3UpgradeAction: _newERC20SequencerInboxImpl is not a contract"
         );
 
         newEthInboxImpl = _newEthInboxImpl;
         newERC20InboxImpl = _newERC20InboxImpl;
-        newSequencerInboxImpl = _newSequencerInboxImpl;
+        newEthSequencerInboxImpl = _newEthSequencerInboxImpl;
+        newERC20SequencerInboxImpl = _newERC20SequencerInboxImpl;
     }
 
     function perform(address inbox, ProxyAdmin proxyAdmin) external {
@@ -54,8 +65,7 @@ contract NitroContracts2Point1Point3UpgradeAction {
         bool isERC20 = false;
 
         // if the bridge is an ERC20Bridge below v2.x.x, revert
-        try IERC20Bridge(bridge).nativeToken() returns (address) {}
-        catch {
+        try IERC20Bridge(bridge).nativeToken() returns (address) {
             isERC20 = true;
             // it is an ERC20Bridge, check if it is on v2.x.x
             try IERC20Bridge_v2(address(bridge)).nativeTokenDecimals() returns (uint8) {}
@@ -63,12 +73,12 @@ contract NitroContracts2Point1Point3UpgradeAction {
                 // it is not on v2.x.x, revert
                 revert("NitroContracts2Point1Point3UpgradeAction: bridge is an ERC20Bridge below v2.x.x");
             }
-        }
+        } catch {}
 
         // upgrade the sequencer inbox
         proxyAdmin.upgrade({
             proxy: TransparentUpgradeableProxy(payable((sequencerInbox))),
-            implementation: newSequencerInboxImpl
+            implementation: isERC20 ? newERC20SequencerInboxImpl : newEthSequencerInboxImpl
         });
 
         // upgrade the inbox
