@@ -53,7 +53,9 @@ contract DeployNitroContracts2Point1Point3UpgradeActionScript is DeploymentHelpe
         );
 
         // deploy upgrade action
-        new NitroContracts2Point1Point3UpgradeAction(newEthInboxImpl, newERC20InboxImpl, newEthSeqInboxImpl, newErc20SeqInboxImpl);
+        new NitroContracts2Point1Point3UpgradeAction(
+            newEthInboxImpl, newERC20InboxImpl, newEthSeqInboxImpl, newErc20SeqInboxImpl
+        );
 
         vm.stopBroadcast();
     }

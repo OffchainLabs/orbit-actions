@@ -29,7 +29,12 @@ contract NitroContracts2Point1Point3UpgradeAction {
     address public immutable newEthSequencerInboxImpl;
     address public immutable newERC20SequencerInboxImpl;
 
-    constructor(address _newEthInboxImpl, address _newERC20InboxImpl, address _newEthSequencerInboxImpl, address _newERC20SequencerInboxImpl) {
+    constructor(
+        address _newEthInboxImpl,
+        address _newERC20InboxImpl,
+        address _newEthSequencerInboxImpl,
+        address _newERC20SequencerInboxImpl
+    ) {
         require(
             Address.isContract(_newEthInboxImpl),
             "NitroContracts2Point1Point3UpgradeAction: _newEthInboxImpl is not a contract"
@@ -68,8 +73,7 @@ contract NitroContracts2Point1Point3UpgradeAction {
                 // it is not on v2.x.x, revert
                 revert("NitroContracts2Point1Point3UpgradeAction: bridge is an ERC20Bridge below v2.x.x");
             }
-        }
-        catch {}
+        } catch {}
 
         // upgrade the sequencer inbox
         proxyAdmin.upgrade({
