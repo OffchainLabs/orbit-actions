@@ -14,6 +14,8 @@ import {Inbox as Inbox_2_1_0} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/I
 import {SequencerInbox as SequencerInbox_2_1_0, ISequencerInbox as ISequencerInbox_2_1_0} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/SequencerInbox.sol";
 import {IReader4844 as IReader4844_2_1_0} from "@arbitrum/nitro-contracts-2.1.0/src/libraries/IReader4844.sol";
 
+import {ERC20Bridge as ERC20Bridge_1_3_0} from "@arbitrum/nitro-contracts-1.3.0/src/bridge/ERC20Bridge.sol";
+
 import {NitroContracts2Point1Point3UpgradeAction} from "contracts/parent-chain/contract-upgrades/NitroContracts2Point1Point3UpgradeAction.sol";
 
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
@@ -175,7 +177,15 @@ contract NitroContracts2Point1Point3UpgradeActionTest is Test, DeploymentHelpers
         assertEq(proxyAdmin.getProxyImplementation(TransparentUpgradeableProxy(payable(erc20SequencerInbox_2_1_0))), newErc20SeqInboxImpl);
     }
 
-    function testBelowV2() public {
-        revert("TODO");
+    function testERC20BelowV2() public {
+        // just downgrade the bridge to v1.3.0 to simulate a v1.3.0 chain
+        address newImpl = address(new ERC20Bridge_1_3_0());
+        vm.prank(address(upgradeExecutor));
+        proxyAdmin.upgrade(TransparentUpgradeableProxy(payable(erc20Bridge_2_1_0)), newImpl);
+
+        NitroContracts2Point1Point3UpgradeAction action = _deployActionScript();
+
+        vm.expectRevert("NitroContracts2Point1Point3UpgradeAction: bridge is an ERC20Bridge below v2.x.x");
+        upgradeExecutor.execute(address(action), abi.encodeCall(action.perform, (erc20Inbox_2_1_0, proxyAdmin)));
     }
 }
