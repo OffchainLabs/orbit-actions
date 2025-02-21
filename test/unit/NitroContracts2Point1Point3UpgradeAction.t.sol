@@ -11,18 +11,21 @@ import {
 import {Bridge as Bridge_2_1_0} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/Bridge.sol";
 import {ERC20Inbox as ERC20Inbox_2_1_0} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/ERC20Inbox.sol";
 import {Inbox as Inbox_2_1_0} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/Inbox.sol";
-import {SequencerInbox as SequencerInbox_2_1_0, ISequencerInbox as ISequencerInbox_2_1_0} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/SequencerInbox.sol";
+import {
+    SequencerInbox as SequencerInbox_2_1_0,
+    ISequencerInbox as ISequencerInbox_2_1_0
+} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/SequencerInbox.sol";
 import {IReader4844 as IReader4844_2_1_0} from "@arbitrum/nitro-contracts-2.1.0/src/libraries/IReader4844.sol";
 
 import {ERC20Bridge as ERC20Bridge_1_3_0} from "@arbitrum/nitro-contracts-1.3.0/src/bridge/ERC20Bridge.sol";
 
-import {NitroContracts2Point1Point3UpgradeAction} from "contracts/parent-chain/contract-upgrades/NitroContracts2Point1Point3UpgradeAction.sol";
+import {NitroContracts2Point1Point3UpgradeAction} from
+    "contracts/parent-chain/contract-upgrades/NitroContracts2Point1Point3UpgradeAction.sol";
 
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import {IUpgradeExecutor} from "@offchainlabs/upgrade-executor/src/IUpgradeExecutor.sol";
 import {DeploymentHelpersScript} from "../../scripts/foundry/helper/DeploymentHelpers.s.sol";
-
 
 interface IUpgradeExecutorExtended is IUpgradeExecutor {
     function initialize(address admin, address[] memory executors) external;
@@ -30,10 +33,12 @@ interface IUpgradeExecutorExtended is IUpgradeExecutor {
 
 contract FakeToken {
     uint256 public decimals = 18;
-    function allowance(address,address) external pure returns (uint) {
+
+    function allowance(address, address) external pure returns (uint256) {
         return 0;
     }
-    function approve(address,uint) external pure returns (bool) {
+
+    function approve(address, uint256) external pure returns (bool) {
         return true;
     }
 }
@@ -95,17 +100,28 @@ contract NitroContracts2Point1Point3UpgradeActionTest is Test, DeploymentHelpers
         bridge_2_1_0 = address(new TransparentUpgradeableProxy(address(new Bridge_2_1_0()), address(proxyAdmin), ""));
 
         // deploy an ERC20 SequencerInbox on v2.1.0
-        erc20SequencerInbox_2_1_0 =
-            address(new TransparentUpgradeableProxy(address(new SequencerInbox_2_1_0(maxDataSize, IReader4844_2_1_0(fakeReader), true)), address(proxyAdmin), ""));
+        erc20SequencerInbox_2_1_0 = address(
+            new TransparentUpgradeableProxy(
+                address(new SequencerInbox_2_1_0(maxDataSize, IReader4844_2_1_0(fakeReader), true)),
+                address(proxyAdmin),
+                ""
+            )
+        );
 
         // deploy an ETH SequencerInbox on v2.1.0
-        sequencerInbox_2_1_0 =
-            address(new TransparentUpgradeableProxy(address(new SequencerInbox_2_1_0(maxDataSize, IReader4844_2_1_0(fakeReader), false)), address(proxyAdmin), ""));
+        sequencerInbox_2_1_0 = address(
+            new TransparentUpgradeableProxy(
+                address(new SequencerInbox_2_1_0(maxDataSize, IReader4844_2_1_0(fakeReader), false)),
+                address(proxyAdmin),
+                ""
+            )
+        );
 
         // deploy an ERC20Inbox on v2.1.0
-        erc20Inbox_2_1_0 =
-            address(new TransparentUpgradeableProxy(address(new ERC20Inbox_2_1_0(maxDataSize)), address(proxyAdmin), ""));
-        
+        erc20Inbox_2_1_0 = address(
+            new TransparentUpgradeableProxy(address(new ERC20Inbox_2_1_0(maxDataSize)), address(proxyAdmin), "")
+        );
+
         // deploy an ETH Inbox on v2.1.0
         inbox_2_1_0 =
             address(new TransparentUpgradeableProxy(address(new Inbox_2_1_0(maxDataSize)), address(proxyAdmin), ""));
@@ -113,10 +129,16 @@ contract NitroContracts2Point1Point3UpgradeActionTest is Test, DeploymentHelpers
         // initialize everything
         Bridge_2_1_0(bridge_2_1_0).initialize(IOwnable_2_1_0(fakeRollup));
         ERC20Bridge_2_1_0(erc20Bridge_2_1_0).initialize(IOwnable_2_1_0(fakeRollup), fakeToken);
-        SequencerInbox_2_1_0(sequencerInbox_2_1_0).initialize(Bridge_2_1_0(bridge_2_1_0), ISequencerInbox_2_1_0.MaxTimeVariation(10, 10, 10, 10));
-        SequencerInbox_2_1_0(erc20SequencerInbox_2_1_0).initialize(Bridge_2_1_0(erc20Bridge_2_1_0), ISequencerInbox_2_1_0.MaxTimeVariation(10, 10, 10, 10));
+        SequencerInbox_2_1_0(sequencerInbox_2_1_0).initialize(
+            Bridge_2_1_0(bridge_2_1_0), ISequencerInbox_2_1_0.MaxTimeVariation(10, 10, 10, 10)
+        );
+        SequencerInbox_2_1_0(erc20SequencerInbox_2_1_0).initialize(
+            Bridge_2_1_0(erc20Bridge_2_1_0), ISequencerInbox_2_1_0.MaxTimeVariation(10, 10, 10, 10)
+        );
         Inbox_2_1_0(inbox_2_1_0).initialize(Bridge_2_1_0(bridge_2_1_0), SequencerInbox_2_1_0(sequencerInbox_2_1_0));
-        ERC20Inbox_2_1_0(erc20Inbox_2_1_0).initialize(Bridge_2_1_0(erc20Bridge_2_1_0), SequencerInbox_2_1_0(erc20SequencerInbox_2_1_0));
+        ERC20Inbox_2_1_0(erc20Inbox_2_1_0).initialize(
+            Bridge_2_1_0(erc20Bridge_2_1_0), SequencerInbox_2_1_0(erc20SequencerInbox_2_1_0)
+        );
     }
 
     // copied from deployment script
@@ -165,7 +187,10 @@ contract NitroContracts2Point1Point3UpgradeActionTest is Test, DeploymentHelpers
 
         // check correctly upgraded
         assertEq(proxyAdmin.getProxyImplementation(TransparentUpgradeableProxy(payable(inbox_2_1_0))), newEthInboxImpl);
-        assertEq(proxyAdmin.getProxyImplementation(TransparentUpgradeableProxy(payable(sequencerInbox_2_1_0))), newEthSeqInboxImpl);
+        assertEq(
+            proxyAdmin.getProxyImplementation(TransparentUpgradeableProxy(payable(sequencerInbox_2_1_0))),
+            newEthSeqInboxImpl
+        );
     }
 
     function testERC20() public {
@@ -173,8 +198,13 @@ contract NitroContracts2Point1Point3UpgradeActionTest is Test, DeploymentHelpers
         upgradeExecutor.execute(address(action), abi.encodeCall(action.perform, (erc20Inbox_2_1_0, proxyAdmin)));
 
         // check correctly upgraded
-        assertEq(proxyAdmin.getProxyImplementation(TransparentUpgradeableProxy(payable(erc20Inbox_2_1_0))), newERC20InboxImpl);
-        assertEq(proxyAdmin.getProxyImplementation(TransparentUpgradeableProxy(payable(erc20SequencerInbox_2_1_0))), newErc20SeqInboxImpl);
+        assertEq(
+            proxyAdmin.getProxyImplementation(TransparentUpgradeableProxy(payable(erc20Inbox_2_1_0))), newERC20InboxImpl
+        );
+        assertEq(
+            proxyAdmin.getProxyImplementation(TransparentUpgradeableProxy(payable(erc20SequencerInbox_2_1_0))),
+            newErc20SeqInboxImpl
+        );
     }
 
     function testERC20BelowV2() public {
