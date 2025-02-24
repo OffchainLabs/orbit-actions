@@ -8,6 +8,7 @@ import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 interface IInbox {
     function bridge() external view returns (address);
     function sequencerInbox() external view returns (address);
+    function allowListEnabled() external view returns (bool);
 }
 
 interface IERC20Bridge {
@@ -59,6 +60,15 @@ contract NitroContracts2Point1Point3UpgradeAction {
     }
 
     function perform(address inbox, ProxyAdmin proxyAdmin) external {
+        // older upgrade action used to use the "rollup" address as the argument
+        // for 2.1.3 we cannot discover the inbox from the rollup, so instead we have to supply the inbox address
+        // this can be dangerous because both `bridge()` and `sequencerInbox()` also exists in the rollup contract
+        // the following check makes sure inbox is inbox as `allowListEnabled()` only exists in the inbox contract
+        try IInbox(inbox).allowListEnabled() returns (bool) {}
+        catch {
+            revert("NitroContracts2Point1Point3UpgradeAction: inbox is not an inbox");
+        }
+
         address bridge = IInbox(inbox).bridge();
         address sequencerInbox = IInbox(inbox).sequencerInbox();
 

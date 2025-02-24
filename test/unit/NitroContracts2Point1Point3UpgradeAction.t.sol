@@ -10,7 +10,9 @@ import {
 } from "@arbitrum/nitro-contracts-2.1.0/src/bridge/ERC20Bridge.sol";
 import {Bridge as Bridge_2_1_0} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/Bridge.sol";
 import {ERC20Inbox as ERC20Inbox_2_1_0} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/ERC20Inbox.sol";
-import {Inbox as Inbox_2_1_0} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/Inbox.sol";
+import {
+    Inbox as Inbox_2_1_0, IInboxBase as IInboxBase_2_1_0
+} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/Inbox.sol";
 import {
     SequencerInbox as SequencerInbox_2_1_0,
     ISequencerInbox as ISequencerInbox_2_1_0
@@ -217,5 +219,12 @@ contract NitroContracts2Point1Point3UpgradeActionTest is Test, DeploymentHelpers
 
         vm.expectRevert("NitroContracts2Point1Point3UpgradeAction: bridge is an ERC20Bridge below v2.x.x");
         upgradeExecutor.execute(address(action), abi.encodeCall(action.perform, (erc20Inbox_2_1_0, proxyAdmin)));
+    }
+
+    function testNotInbox() public {
+        NitroContracts2Point1Point3UpgradeAction action = _deployActionScript();
+        vm.mockCallRevert(address(inbox_2_1_0), abi.encodeWithSelector(IInboxBase_2_1_0.allowListEnabled.selector), "");
+        vm.expectRevert("NitroContracts2Point1Point3UpgradeAction: inbox is not an inbox");
+        upgradeExecutor.execute(address(action), abi.encodeCall(action.perform, (inbox_2_1_0, proxyAdmin)));
     }
 }
