@@ -225,7 +225,7 @@ function _canBeUpgradedToTargetVersion(
   //     // TODO: remove this later, but the script does not custom fee token chain yet
   //     supportedSourceVersionsPerContract.Bridge = []
   //   }
-  // } else 
+  // } else
   if (targetVersion === 'v2.1.2') {
     // v2.1.2 will upgrade the ERC20Bridge contract to set decimals in storage
     // v2.1.2 is only required for custom fee token chains
