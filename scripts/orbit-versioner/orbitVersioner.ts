@@ -21,6 +21,7 @@ interface BridgeHashes {
   Outbox: string[]
   SequencerInbox: string[]
   Bridge: string[]
+  RollupEventInbox: string[]
 }
 interface MetadataHashesByNativeToken {
   eth: BridgeHashes
@@ -65,14 +66,10 @@ async function main() {
   const bridge = IBridge__factory.connect(bridgeAddress, provider)
   const seqInboxAddress = await bridge.sequencerInbox()
   const rollupAddress = await bridge.rollup()
-  const outboxAddress = await IRollupCore__factory.connect(
-    rollupAddress,
-    provider
-  ).outbox()
-  const challengeManagerAddress = await IRollupCore__factory.connect(
-    rollupAddress,
-    provider
-  ).challengeManager()
+  const rollup = IRollupCore__factory.connect(rollupAddress, provider)
+  const outboxAddress = await rollup.outbox()
+  const challengeManagerAddress = await rollup.challengeManager()
+  const rollupEventInboxAddress = await rollup.rollupEventInbox()
 
   // get metadata hashes
   const metadataHashes: { [key: string]: string } = {
@@ -90,6 +87,10 @@ async function main() {
     ),
     Bridge: await _getMetadataHash(
       await _getLogicAddress(bridgeAddress, provider),
+      provider
+    ),
+    RollupEventInbox: await _getMetadataHash(
+      await _getLogicAddress(rollupEventInboxAddress, provider),
       provider
     ),
     RollupProxy: await _getMetadataHash(rollupAddress, provider),
@@ -115,10 +116,15 @@ async function main() {
     console.log('\nMetadataHashes of deployed contracts:', metadataHashes, '\n')
   }
 
+  let isFeeTokenChain = false
   const versions: { [key: string]: string | null } = {}
   // get and print version per bridge contract
   Object.keys(metadataHashes).forEach(key => {
-    versions[key] = _getVersionOfDeployedContract(metadataHashes[key])
+    const { version, isErc20 } = _getVersionOfDeployedContract(
+      metadataHashes[key]
+    )
+    versions[key] = version
+    if (isErc20) isFeeTokenChain = true
     console.log(
       `Version of deployed ${key}: ${versions[key] ? versions[key] : 'unknown'}`
     )
@@ -126,13 +132,25 @@ async function main() {
 
   // TODO: make this more generic to support other other upgrade paths in the future
   // TODO: also check  osp
-  _checkForPossibleUpgrades(versions)
+  _checkForPossibleUpgrades(versions, isFeeTokenChain)
 }
 
-function _checkForPossibleUpgrades(currentVersions: {
-  [key: string]: string | null
-}) {
+function _checkForPossibleUpgrades(
+  currentVersions: {
+    [key: string]: string | null
+  },
+  isFeeTokenChain: boolean
+) {
   const targetVersionsDescending = [
+    // DISABLING BOLD UPGRADE FOR NOW
+    // {
+    //   version: 'v3.0.0',
+    //   actionName: 'BOLD UpgradeAction',
+    // },
+    {
+      version: 'v2.1.2',
+      actionName: 'NitroContracts2Point1Point2UpgradeAction',
+    },
     {
       version: 'v2.1.0',
       actionName: 'NitroContracts2Point1Point0UpgradeAction',
@@ -144,7 +162,13 @@ function _checkForPossibleUpgrades(currentVersions: {
   ]
 
   for (const target of targetVersionsDescending) {
-    if (_canBeUpgradedToTargetVersion(target.version, currentVersions)) {
+    if (
+      _canBeUpgradedToTargetVersion(
+        target.version,
+        currentVersions,
+        isFeeTokenChain
+      )
+    ) {
       console.log(
         `This deployment can be upgraded to ${target.version} using ${target.actionName}`
       )
@@ -159,44 +183,100 @@ function _canBeUpgradedToTargetVersion(
   targetVersion: string,
   currentVersions: {
     [key: string]: string | null
-  }
+  },
+  isFeeTokenChain: boolean
 ): boolean {
   console.log('\nChecking if deployment can be upgraded to', targetVersion)
 
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
-  if (targetVersion === 'v2.1.0') {
+  // DISABLING BOLD UPGRADE FOR NOW
+  // if (targetVersion === 'v3.0.0') {
+  //   // v3.0.0 will upgrade bridge, inbox, rollupEventInbox, outbox, sequencerInbox, rollup logics, challengeManager
+  //   supportedSourceVersionsPerContract = {
+  //     Inbox: [
+  //       'v1.1.0',
+  //       'v1.1.1',
+  //       'v1.2.0',
+  //       'v1.2.1',
+  //       'v1.3.0',
+  //       'v2.0.0',
+  //       'v2.1.0',
+  //     ],
+  //     Outbox: ['any'],
+  //     Bridge: [
+  //       'v1.1.0',
+  //       'v1.1.1',
+  //       'v1.2.0',
+  //       'v1.2.1',
+  //       'v1.3.0',
+  //       'v2.0.0',
+  //       'v2.1.0',
+  //     ],
+  //     RollupEventInbox: ['any'],
+  //     RollupProxy: ['any'],
+  //     RollupAdminLogic: ['v2.0.0', 'v2.1.0'],
+  //     RollupUserLogic: ['v2.0.0', 'v2.1.0'],
+  //     ChallengeManager: ['v2.0.0', 'v2.1.0'],
+  //     SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0'],
+  //   }
+  //   if (isFeeTokenChain) {
+  //     // cannot upgrade erc20 orbit chains from v1 to v3 right now due to a storage diff
+  //     supportedSourceVersionsPerContract.Bridge = ['v2.0.0', 'v2.1.0', 'v2.1.2']
+  //     // TODO: remove this later, but the script does not custom fee token chain yet
+  //     supportedSourceVersionsPerContract.Bridge = []
+  //   }
+  // } else
+  if (targetVersion === 'v2.1.2') {
+    // v2.1.2 will upgrade the ERC20Bridge contract to set decimals in storage
+    // v2.1.2 is only required for custom fee token chains
+    // only necessary if ERC20Bridge is < v2.0.0
+    // must have performed v2.1.0 upgrade first
+    if (!isFeeTokenChain) {
+      supportedSourceVersionsPerContract = {
+        Inbox: [],
+        Outbox: [],
+        Bridge: [],
+        RollupEventInbox: [],
+        RollupProxy: [],
+        RollupAdminLogic: [],
+        RollupUserLogic: [],
+        ChallengeManager: [],
+        SequencerInbox: [],
+      }
+    } else {
+      supportedSourceVersionsPerContract = {
+        Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
+        Outbox: ['any'],
+        Bridge: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
+        RollupEventInbox: ['any'],
+        RollupProxy: ['any'],
+        RollupAdminLogic: ['v2.1.0'],
+        RollupUserLogic: ['v2.1.0'],
+        ChallengeManager: ['v2.1.0'],
+        SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0'],
+      }
+    }
+  } else if (targetVersion === 'v2.1.0') {
+    // v2.1.0 will upgrade rollup logics and challenge manager
     supportedSourceVersionsPerContract = {
       Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
-      Outbox: [
-        'v1.1.0',
-        'v1.1.1',
-        'v1.2.0',
-        'v1.2.1',
-        'v1.3.0',
-        'v2.0.0',
-        'v2.1.0',
-      ],
+      Outbox: ['any'],
       Bridge: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
-      RollupProxy: [
-        'v1.1.0',
-        'v1.1.1',
-        'v1.2.0',
-        'v1.2.1',
-        'v1.3.0',
-        'v2.0.0',
-        'v2.1.0',
-      ],
+      RollupEventInbox: ['any'],
+      RollupProxy: ['any'],
       RollupAdminLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
       RollupUserLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
       ChallengeManager: ['v1.2.1', 'v1.3.0'],
       SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0'],
     }
   } else if (targetVersion === 'v1.2.1') {
+    // v1.2.1 will upgrade sequencer inbox and challenge manager
     supportedSourceVersionsPerContract = {
       Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
-      Outbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
+      Outbox: ['any'],
       Bridge: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
-      RollupProxy: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
+      RollupEventInbox: ['any'],
+      RollupProxy: ['any'],
       RollupAdminLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
       RollupUserLogic: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
       ChallengeManager: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1'],
@@ -211,6 +291,9 @@ function _canBeUpgradedToTargetVersion(
   for (const [contract, supportedSourceVersions] of Object.entries(
     supportedSourceVersionsPerContract
   )) {
+    if (supportedSourceVersions.includes('any')) {
+      continue
+    }
     if (!supportedSourceVersions.includes(currentVersions[contract]!)) {
       // found contract that can't be upgraded to target version
       console.log('Cannot upgrade', contract, 'to', targetVersion)
@@ -221,7 +304,10 @@ function _canBeUpgradedToTargetVersion(
   return true
 }
 
-function _getVersionOfDeployedContract(metadataHash: string): string | null {
+function _getVersionOfDeployedContract(metadataHash: string): {
+  version: string | null
+  isErc20: boolean
+} {
   for (const [version] of Object.entries(referentMetadataHashes)) {
     // check if given hash matches any of the referent hashes for specific version
     const versionHashes = referentMetadataHashes[version]
@@ -234,11 +320,16 @@ function _getVersionOfDeployedContract(metadataHash: string): string | null {
       ...versionHashes.ChallengeManager,
     ]
 
+    const erc20Hashes = [...Object.values(versionHashes.erc20).flat()]
+
     if (allHashes.includes(metadataHash)) {
-      return version
+      if (erc20Hashes.includes(metadataHash)) {
+        return { version, isErc20: true }
+      }
+      return { version, isErc20: false }
     }
   }
-  return null
+  return { version: null, isErc20: false }
 }
 
 async function _getMetadataHash(

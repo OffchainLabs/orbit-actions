@@ -1,10 +1,21 @@
-{
-  "condOsp()": "acdf78b9",
-  "condRoot()": "828545a7",
-  "newChallengeManagerImpl()": "924ef096",
-  "newRollupAdminLogic()": "719c1d83",
-  "newRollupUserLogic()": "98ab2129",
-  "newWasmModuleRoot()": "6741148c",
-  "osp()": "f26a62c6",
-  "perform(address,address)": "857d1ab7"
-}
+
+╭---------------------------+------------╮
+| Method                    | Identifier |
++========================================+
+| condOsp()                 | acdf78b9   |
+|---------------------------+------------|
+| condRoot()                | 828545a7   |
+|---------------------------+------------|
+| newChallengeManagerImpl() | 924ef096   |
+|---------------------------+------------|
+| newRollupAdminLogic()     | 719c1d83   |
+|---------------------------+------------|
+| newRollupUserLogic()      | 98ab2129   |
+|---------------------------+------------|
+| newWasmModuleRoot()       | 6741148c   |
+|---------------------------+------------|
+| osp()                     | f26a62c6   |
+|---------------------------+------------|
+| perform(address,address)  | 857d1ab7   |
+╰---------------------------+------------╯
+

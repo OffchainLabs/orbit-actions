@@ -50,6 +50,18 @@ _This section is also referenced in the documentation on ["How to upgrade ArbOS 
 
 For ArbOS upgrades, a common pre-requisite is to deploy new Nitro contracts to the parent chain of your Orbit chain before scheduling the ArbOS upgrade. These contracts include the rollup logic, fraud proof contracts, and interfaces for interacting with Nitro precompiles. The scripts and instructions in this repository are meant for Orbit chain owners to upgrade the aforementioned contracts, set the new WASM module root, and then schedule the ArbOS upgrade.
 
+### Nitro contracts 2.1.2
+
+The [`nitro-contracts 2.1.2` upgrade guide](scripts/foundry/contract-upgrades/2.1.2) will patch the `ERC20Bridge` with a storage layout fix.
+
+This upgrade is only required if:
+
+1. The chain has a custom native token; AND
+1. The chain was originally deployed before `v2.0.0`; AND
+1. The chain wishes to upgrade to `v3.0.0`
+
+Do not perform this upgrade if the above requirements aren't met.
+
 ### Nitro contracts 2.1.0 (for [ArbOS 32 Bianca](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos32))
 
 The [`nitro-contracts 2.1.0` upgrade action](scripts/foundry/contract-upgrades/2.1.0) will deploy `nitro-contracts v2.1.0` contracts to your Orbit's parent chain. Note that this action will only work for chains with `nitro-contracts v1.2.1` or `nitro-contracts v1.3.0`.
