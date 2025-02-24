@@ -7,6 +7,7 @@ import {
     ProxyAdmin
 } from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts2Point1Point3UpgradeAction.sol";
 import {IInboxBase} from "@arbitrum/nitro-contracts-1.2.1/src/bridge/IInboxBase.sol";
+import {ISequencerInbox} from "@arbitrum/nitro-contracts-2.1.2/src/bridge/ISequencerInbox.sol";
 import {IERC20Bridge} from "@arbitrum/nitro-contracts-2.1.2/src/bridge/IERC20Bridge.sol";
 import {IUpgradeExecutor} from "@offchainlabs/upgrade-executor/src/IUpgradeExecutor.sol";
 
@@ -30,7 +31,7 @@ contract ExecuteNitroContracts2Point1Point3UpgradeScript is Script {
                 || ISequencerInbox(upgradeAction.newERC20SequencerInboxImpl()).maxDataSize() == maxDataSize,
             "MAX_DATA_SIZE mismatch with action"
         );
-        require(inbox.maxDataSize() == maxDataSize, "MAX_DATA_SIZE mismatch with current deployment");
+        require(IInboxBase(inbox).maxDataSize() == maxDataSize, "MAX_DATA_SIZE mismatch with current deployment");
 
         // prepare upgrade calldata
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
