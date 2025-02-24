@@ -21,6 +21,17 @@ contract ExecuteNitroContracts2Point1Point3UpgradeScript is Script {
 
         address inbox = (vm.envAddress("INBOX_ADDRESS"));
 
+        // validate MAX_DATA_SIZE
+        uint256 maxDataSize = vm.envUint("MAX_DATA_SIZE");
+        require(
+            ISequencerInbox(upgradeAction.newEthInboxImpl()).maxDataSize() == maxDataSize
+                || ISequencerInbox(upgradeAction.newERC20InboxImpl()).maxDataSize() == maxDataSize
+                || ISequencerInbox(upgradeAction.newEthSequencerInboxImpl()).maxDataSize() == maxDataSize
+                || ISequencerInbox(upgradeAction.newERC20SequencerInboxImpl()).maxDataSize() == maxDataSize,
+            "MAX_DATA_SIZE mismatch with action"
+        );
+        require(inbox.maxDataSize() == maxDataSize, "MAX_DATA_SIZE mismatch with current deployment");
+
         // prepare upgrade calldata
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
         bytes memory upgradeCalldata =
