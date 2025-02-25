@@ -148,6 +148,10 @@ function _checkForPossibleUpgrades(
     //   actionName: 'BOLD UpgradeAction',
     // },
     {
+      version: 'v2.1.3',
+      actionName: 'NitroContracts2Point1Point3UpgradeAction',
+    },
+    {
       version: 'v2.1.2',
       actionName: 'NitroContracts2Point1Point2UpgradeAction',
     },
@@ -189,6 +193,7 @@ function _canBeUpgradedToTargetVersion(
   console.log('\nChecking if deployment can be upgraded to', targetVersion)
 
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
+
   // DISABLING BOLD UPGRADE FOR NOW
   // if (targetVersion === 'v3.0.0') {
   //   // v3.0.0 will upgrade bridge, inbox, rollupEventInbox, outbox, sequencerInbox, rollup logics, challengeManager
@@ -226,7 +231,43 @@ function _canBeUpgradedToTargetVersion(
   //     supportedSourceVersionsPerContract.Bridge = []
   //   }
   // } else
-  if (targetVersion === 'v2.1.2') {
+  if (targetVersion === 'v2.1.3') {
+    // v2.1.3 will upgrade the SequencerInbox and Inbox contracts to prevent 7702 accounts from calling certain functions
+    // v2.1.3 or v3.0.0 must be performed before the parent chain upgrades with 7702
+    // has the same prerequisites as v3.0.0
+    supportedSourceVersionsPerContract = {
+      Inbox: [
+        'v1.1.0',
+        'v1.1.1',
+        'v1.2.0',
+        'v1.2.1',
+        'v1.3.0',
+        'v2.0.0',
+        'v2.1.0',
+      ],
+      Outbox: ['any'],
+      Bridge: [
+        'v1.1.0',
+        'v1.1.1',
+        'v1.2.0',
+        'v1.2.1',
+        'v1.3.0',
+        'v2.0.0',
+        'v2.1.0',
+      ],
+      RollupEventInbox: ['any'],
+      RollupProxy: ['any'],
+      RollupAdminLogic: ['v2.0.0', 'v2.1.0'],
+      RollupUserLogic: ['v2.0.0', 'v2.1.0'],
+      ChallengeManager: ['v2.0.0', 'v2.1.0'],
+      SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0'],
+    }
+    if (isFeeTokenChain) {
+      supportedSourceVersionsPerContract.Bridge = ['v2.0.0', 'v2.1.0', 'v2.1.2']
+      // TODO: remove this later, but the script does not custom fee token chain yet
+      supportedSourceVersionsPerContract.Bridge = []
+    }
+  } else if (targetVersion === 'v2.1.2') {
     // v2.1.2 will upgrade the ERC20Bridge contract to set decimals in storage
     // v2.1.2 is only required for custom fee token chains
     // only necessary if ERC20Bridge is < v2.0.0
