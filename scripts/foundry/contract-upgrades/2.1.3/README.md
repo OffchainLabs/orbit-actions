@@ -40,7 +40,7 @@ Please refer to the top [README](/README.md#check-version-and-upgrade-path) `Che
 
 ### Testnets
 - L1 Sepolia: 0x82129aB330619388f46d3Cad387aEecb3843A16f
-- L1 Holesky: TODO
+- L1 Holesky: 0x29D1bA37B3A7CC49990e1F613fdF9B33f9Cb3cEE.
 - L2 ArbSepolia: 0x0E0Ee28333798F9aF0E76653beabC72F7477C287.
 - L2 BaseSepolia: 0x5F6e79237387b01208FDf3a93efd455a2CADBa32.
 
