@@ -166,6 +166,8 @@ function _checkForPossibleUpgrades(
     },
   ]
 
+  let canUpgradeTo = ''
+  let canUpgradeToActionName = ''
   for (const target of targetVersionsDescending.reverse()) {
     if (
       _canBeUpgradedToTargetVersion(
@@ -174,11 +176,19 @@ function _checkForPossibleUpgrades(
         isFeeTokenChain
       )
     ) {
-      console.log(
-        `This deployment can be upgraded to ${target.version} using ${target.actionName}`
-      )
-      return
+      if (canUpgradeTo === '') {
+        canUpgradeTo = target.version
+        canUpgradeToActionName = target.actionName
+      } else {
+        throw new Error('Multiple upgrade paths found')
+      }
     }
+  }
+  if (canUpgradeTo !== '') {
+    console.log(
+      `This deployment can be upgraded to ${canUpgradeTo} using ${canUpgradeToActionName}`
+    )
+    return
   }
 
   console.log('No upgrade path found')
@@ -192,7 +202,8 @@ function _canBeUpgradedToTargetVersion(
   isFeeTokenChain: boolean,
   verbose: boolean = false
 ): boolean {
-  if (verbose) console.log('\nChecking if deployment can be upgraded to', targetVersion)
+  if (verbose)
+    console.log('\nChecking if deployment can be upgraded to', targetVersion)
 
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
 
@@ -266,10 +277,22 @@ function _canBeUpgradedToTargetVersion(
       RollupAdminLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2'],
       RollupUserLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2'],
       ChallengeManager: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2'],
-      SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2'],
+      SequencerInbox: [
+        'v1.2.1',
+        'v1.3.0',
+        'v2.0.0',
+        'v2.1.0',
+        'v2.1.1',
+        'v2.1.2',
+      ],
     }
     if (isFeeTokenChain) {
-      supportedSourceVersionsPerContract.Bridge = ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2']
+      supportedSourceVersionsPerContract.Bridge = [
+        'v2.0.0',
+        'v2.1.0',
+        'v2.1.1',
+        'v2.1.2',
+      ]
     }
   } else if (targetVersion === 'v2.1.2') {
     // v2.1.2 will upgrade the ERC20Bridge contract to set decimals in storage
