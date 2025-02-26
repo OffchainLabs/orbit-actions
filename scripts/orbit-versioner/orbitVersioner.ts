@@ -141,6 +141,7 @@ function _checkForPossibleUpgrades(
   },
   isFeeTokenChain: boolean
 ) {
+  // version need to be in descending order
   const targetVersionsDescending = [
     // DISABLING BOLD UPGRADE FOR NOW
     // {
@@ -165,7 +166,7 @@ function _checkForPossibleUpgrades(
     },
   ]
 
-  for (const target of targetVersionsDescending) {
+  for (const target of targetVersionsDescending.reverse()) {
     if (
       _canBeUpgradedToTargetVersion(
         target.version,
@@ -188,9 +189,10 @@ function _canBeUpgradedToTargetVersion(
   currentVersions: {
     [key: string]: string | null
   },
-  isFeeTokenChain: boolean
+  isFeeTokenChain: boolean,
+  verbose: boolean = false
 ): boolean {
-  console.log('\nChecking if deployment can be upgraded to', targetVersion)
+  if (verbose) console.log('\nChecking if deployment can be upgraded to', targetVersion)
 
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
 
@@ -244,6 +246,8 @@ function _canBeUpgradedToTargetVersion(
         'v1.3.0',
         'v2.0.0',
         'v2.1.0',
+        'v2.1.1',
+        'v2.1.2',
       ],
       Outbox: ['any'],
       Bridge: [
@@ -254,18 +258,18 @@ function _canBeUpgradedToTargetVersion(
         'v1.3.0',
         'v2.0.0',
         'v2.1.0',
+        'v2.1.1',
+        'v2.1.2',
       ],
       RollupEventInbox: ['any'],
       RollupProxy: ['any'],
-      RollupAdminLogic: ['v2.0.0', 'v2.1.0'],
-      RollupUserLogic: ['v2.0.0', 'v2.1.0'],
-      ChallengeManager: ['v2.0.0', 'v2.1.0'],
-      SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0'],
+      RollupAdminLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2'],
+      RollupUserLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2'],
+      ChallengeManager: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2'],
+      SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2'],
     }
     if (isFeeTokenChain) {
-      supportedSourceVersionsPerContract.Bridge = ['v2.0.0', 'v2.1.0', 'v2.1.2']
-      // TODO: remove this later, but the script does not custom fee token chain yet
-      supportedSourceVersionsPerContract.Bridge = []
+      supportedSourceVersionsPerContract.Bridge = ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2']
     }
   } else if (targetVersion === 'v2.1.2') {
     // v2.1.2 will upgrade the ERC20Bridge contract to set decimals in storage
@@ -286,15 +290,33 @@ function _canBeUpgradedToTargetVersion(
       }
     } else {
       supportedSourceVersionsPerContract = {
-        Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
+        Inbox: [
+          'v1.1.0',
+          'v1.1.1',
+          'v1.2.0',
+          'v1.2.1',
+          'v1.3.0',
+          'v2.0.0',
+          'v2.1.0',
+          'v2.1.1',
+        ],
         Outbox: ['any'],
-        Bridge: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
+        Bridge: [
+          'v1.1.0',
+          'v1.1.1',
+          'v1.2.0',
+          'v1.2.1',
+          'v1.3.0',
+          'v2.0.0',
+          'v2.1.0',
+          'v2.1.1',
+        ],
         RollupEventInbox: ['any'],
         RollupProxy: ['any'],
-        RollupAdminLogic: ['v2.1.0'],
-        RollupUserLogic: ['v2.1.0'],
-        ChallengeManager: ['v2.1.0'],
-        SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0'],
+        RollupAdminLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1'],
+        RollupUserLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1'],
+        ChallengeManager: ['v2.0.0', 'v2.1.0', 'v2.1.1'],
+        SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0', 'v2.1.1'],
       }
     }
   } else if (targetVersion === 'v2.1.0') {
@@ -324,7 +346,7 @@ function _canBeUpgradedToTargetVersion(
       SequencerInbox: ['v1.1.0', 'v1.1.1'],
     }
   } else {
-    console.log('Unsupported target version')
+    if (verbose) console.log('Unsupported target version')
     return false
   }
 
@@ -337,7 +359,7 @@ function _canBeUpgradedToTargetVersion(
     }
     if (!supportedSourceVersions.includes(currentVersions[contract]!)) {
       // found contract that can't be upgraded to target version
-      console.log('Cannot upgrade', contract, 'to', targetVersion)
+      if (verbose) console.log('Cannot upgrade', contract, 'to', targetVersion)
       return false
     }
   }
