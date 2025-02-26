@@ -50,6 +50,10 @@ _This section is also referenced in the documentation on ["How to upgrade ArbOS 
 
 For ArbOS upgrades, a common pre-requisite is to deploy new Nitro contracts to the parent chain of your Orbit chain before scheduling the ArbOS upgrade. These contracts include the rollup logic, fraud proof contracts, and interfaces for interacting with Nitro precompiles. The scripts and instructions in this repository are meant for Orbit chain owners to upgrade the aforementioned contracts, set the new WASM module root, and then schedule the ArbOS upgrade.
 
+### Nitro contracts 2.1.3
+
+The [`nitro-contracts 2.1.3` upgrade guide](scripts/foundry/contract-upgrades/2.1.3) will patch the `Inbox` and `SequencerInbox` to properly handle EIP7702 callers. This upgrade is required before the parent chain upgrades to include EIP7702.
+
 ### Nitro contracts 2.1.2
 
 The [`nitro-contracts 2.1.2` upgrade guide](scripts/foundry/contract-upgrades/2.1.2) will patch the `ERC20Bridge` with a storage layout fix.
@@ -58,7 +62,7 @@ This upgrade is only required if:
 
 1. The chain has a custom native token; AND
 1. The chain was originally deployed before `v2.0.0`; AND
-1. The chain wishes to upgrade to `v3.0.0`
+1. The chain wishes to upgrade to `v3.0.0` or `v2.1.3`
 
 Do not perform this upgrade if the above requirements aren't met.
 
