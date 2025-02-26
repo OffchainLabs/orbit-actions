@@ -371,7 +371,9 @@ function _getVersionOfDeployedContract(metadataHash: string): {
   version: string | null
   isErc20: boolean
 } {
-  for (const [version] of Object.entries(referentMetadataHashes)) {
+  // referentMetadataHashes should be in descending order of version
+  // we want to return the lowest version that matches the hash
+  for (const [version] of Object.entries(referentMetadataHashes).reverse()) {
     // check if given hash matches any of the referent hashes for specific version
     const versionHashes = referentMetadataHashes[version]
     const allHashes = [
