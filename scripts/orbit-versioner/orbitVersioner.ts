@@ -141,12 +141,17 @@ function _checkForPossibleUpgrades(
   },
   isFeeTokenChain: boolean
 ) {
+  // version need to be in descending order
   const targetVersionsDescending = [
     // DISABLING BOLD UPGRADE FOR NOW
     // {
     //   version: 'v3.0.0',
     //   actionName: 'BOLD UpgradeAction',
     // },
+    {
+      version: 'v2.1.3',
+      actionName: 'NitroContracts2Point1Point3UpgradeAction',
+    },
     {
       version: 'v2.1.2',
       actionName: 'NitroContracts2Point1Point2UpgradeAction',
@@ -161,7 +166,9 @@ function _checkForPossibleUpgrades(
     },
   ]
 
-  for (const target of targetVersionsDescending) {
+  let canUpgradeTo = ''
+  let canUpgradeToActionName = ''
+  for (const target of targetVersionsDescending.reverse()) {
     if (
       _canBeUpgradedToTargetVersion(
         target.version,
@@ -169,11 +176,19 @@ function _checkForPossibleUpgrades(
         isFeeTokenChain
       )
     ) {
-      console.log(
-        `This deployment can be upgraded to ${target.version} using ${target.actionName}`
-      )
-      return
+      if (canUpgradeTo === '') {
+        canUpgradeTo = target.version
+        canUpgradeToActionName = target.actionName
+      } else {
+        throw new Error('Multiple upgrade paths found')
+      }
     }
+  }
+  if (canUpgradeTo !== '') {
+    console.log(
+      `This deployment can be upgraded to ${canUpgradeTo} using ${canUpgradeToActionName}`
+    )
+    return
   }
 
   console.log('No upgrade path found')
@@ -184,11 +199,14 @@ function _canBeUpgradedToTargetVersion(
   currentVersions: {
     [key: string]: string | null
   },
-  isFeeTokenChain: boolean
+  isFeeTokenChain: boolean,
+  verbose: boolean = false
 ): boolean {
-  console.log('\nChecking if deployment can be upgraded to', targetVersion)
+  if (verbose)
+    console.log('\nChecking if deployment can be upgraded to', targetVersion)
 
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
+
   // DISABLING BOLD UPGRADE FOR NOW
   // if (targetVersion === 'v3.0.0') {
   //   // v3.0.0 will upgrade bridge, inbox, rollupEventInbox, outbox, sequencerInbox, rollup logics, challengeManager
@@ -226,7 +244,57 @@ function _canBeUpgradedToTargetVersion(
   //     supportedSourceVersionsPerContract.Bridge = []
   //   }
   // } else
-  if (targetVersion === 'v2.1.2') {
+  if (targetVersion === 'v2.1.3') {
+    // v2.1.3 will upgrade the SequencerInbox and Inbox contracts to prevent 7702 accounts from calling certain functions
+    // v2.1.3 or v3.0.0 must be performed before the parent chain upgrades with 7702
+    // has the same prerequisites as v3.0.0
+    supportedSourceVersionsPerContract = {
+      Inbox: [
+        'v1.1.0',
+        'v1.1.1',
+        'v1.2.0',
+        'v1.2.1',
+        'v1.3.0',
+        'v2.0.0',
+        'v2.1.0',
+        'v2.1.1',
+        'v2.1.2',
+      ],
+      Outbox: ['any'],
+      Bridge: [
+        'v1.1.0',
+        'v1.1.1',
+        'v1.2.0',
+        'v1.2.1',
+        'v1.3.0',
+        'v2.0.0',
+        'v2.1.0',
+        'v2.1.1',
+        'v2.1.2',
+      ],
+      RollupEventInbox: ['any'],
+      RollupProxy: ['any'],
+      RollupAdminLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2'],
+      RollupUserLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2'],
+      ChallengeManager: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2'],
+      SequencerInbox: [
+        'v1.2.1',
+        'v1.3.0',
+        'v2.0.0',
+        'v2.1.0',
+        'v2.1.1',
+        'v2.1.2',
+      ],
+    }
+    if (isFeeTokenChain) {
+      supportedSourceVersionsPerContract.Bridge = [
+        'v2.0.0',
+        'v2.1.0',
+        'v2.1.1',
+        'v2.1.2',
+      ]
+    }
+  } else if (targetVersion === 'v2.1.2') {
     // v2.1.2 will upgrade the ERC20Bridge contract to set decimals in storage
     // v2.1.2 is only required for custom fee token chains
     // only necessary if ERC20Bridge is < v2.0.0
@@ -245,15 +313,33 @@ function _canBeUpgradedToTargetVersion(
       }
     } else {
       supportedSourceVersionsPerContract = {
-        Inbox: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
+        Inbox: [
+          'v1.1.0',
+          'v1.1.1',
+          'v1.2.0',
+          'v1.2.1',
+          'v1.3.0',
+          'v2.0.0',
+          'v2.1.0',
+          'v2.1.1',
+        ],
         Outbox: ['any'],
-        Bridge: ['v1.1.0', 'v1.1.1', 'v1.2.0', 'v1.2.1', 'v1.3.0'],
+        Bridge: [
+          'v1.1.0',
+          'v1.1.1',
+          'v1.2.0',
+          'v1.2.1',
+          'v1.3.0',
+          'v2.0.0',
+          'v2.1.0',
+          'v2.1.1',
+        ],
         RollupEventInbox: ['any'],
         RollupProxy: ['any'],
-        RollupAdminLogic: ['v2.1.0'],
-        RollupUserLogic: ['v2.1.0'],
-        ChallengeManager: ['v2.1.0'],
-        SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0'],
+        RollupAdminLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1'],
+        RollupUserLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1'],
+        ChallengeManager: ['v2.0.0', 'v2.1.0', 'v2.1.1'],
+        SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0', 'v2.1.1'],
       }
     }
   } else if (targetVersion === 'v2.1.0') {
@@ -283,7 +369,7 @@ function _canBeUpgradedToTargetVersion(
       SequencerInbox: ['v1.1.0', 'v1.1.1'],
     }
   } else {
-    console.log('Unsupported target version')
+    if (verbose) console.log('Unsupported target version')
     return false
   }
 
@@ -296,7 +382,7 @@ function _canBeUpgradedToTargetVersion(
     }
     if (!supportedSourceVersions.includes(currentVersions[contract]!)) {
       // found contract that can't be upgraded to target version
-      console.log('Cannot upgrade', contract, 'to', targetVersion)
+      if (verbose) console.log('Cannot upgrade', contract, 'to', targetVersion)
       return false
     }
   }
@@ -308,7 +394,9 @@ function _getVersionOfDeployedContract(metadataHash: string): {
   version: string | null
   isErc20: boolean
 } {
-  for (const [version] of Object.entries(referentMetadataHashes)) {
+  // referentMetadataHashes should be in descending order of version
+  // we want to return the lowest version that matches the hash
+  for (const [version] of Object.entries(referentMetadataHashes).reverse()) {
     // check if given hash matches any of the referent hashes for specific version
     const versionHashes = referentMetadataHashes[version]
     const allHashes = [
