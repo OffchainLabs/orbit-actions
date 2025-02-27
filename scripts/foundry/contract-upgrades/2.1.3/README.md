@@ -9,6 +9,8 @@ These scripts deploy and execute the `NitroContracts2Point1Point3UpgradeAction` 
 
 Upgrading to `v2.1.3` not required nor recommended if the chain aims to upgrade to v3.0.0 before the parent chain gets EIP7702.
 
+You may need to perform the `v2.1.2` upgrade first if your chain uses a custom gas token and was originally deployed before `v2.0.0`.
+
 `NitroContracts2Point1Point3UpgradeAction` will perform the following action:
 
 1. Upgrade the `Inbox` or `ERC20Inbox` contract to `v2.1.3`
