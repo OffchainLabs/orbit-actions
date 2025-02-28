@@ -23,6 +23,7 @@ contract ExecuteUpgradeArbOSVersionAtTimestampActionScript is Script {
 
         console.log("SCHEDULE_TIMESTAMP");
         console.logUint(scheduleTimestamp);
+
         bytes memory data =
             abi.encodeWithSelector(arbOwner.scheduleArbOSUpgrade.selector, arbosVersion, scheduleTimestamp);
 
@@ -68,6 +69,25 @@ contract ExecuteUpgradeArbOSVersionAtTimestampActionScript is Script {
         }
         
 
+      //  uint256 gasPrice = 10 gwei;
+      //  uint256 gasLimit = 1_000_0000;
+      //  uint256 maxGas = 1_000_0000;
+      //  bytes memory inboxData = abi.encodeCall(
+      //      IERC20Inbox.createRetryableTicket,
+      //      (
+      //          upgradeExecutorL2,
+      //          0,
+      //         0,
+      //          vm.envAddress("EXCESS_FEE_REFUND_ADDRESS"),
+      //          vm.envAddress("EXCESS_FEE_REFUND_ADDRESS"),
+      //          maxGas,
+      //          gasPrice,
+      //          gasLimit * gasPrice,
+      //          onL2data
+      //      )
+      //  );
+
+
         if (arbosVersion == 0 || scheduleTimestamp == 0) {
             revert("ARBOS_VERSION and SCHEDULE_TIMESTAMP must be set");
         }
@@ -96,7 +116,9 @@ contract ExecuteUpgradeArbOSVersionAtTimestampActionScript is Script {
 
         if (!multisig) {
             vm.startBroadcast();
+
             //{ value: 100000 gwei } for non fee token chains
+
             executor.executeCall(vm.envAddress("INBOX_ADDRESS"), inboxData);
             vm.stopBroadcast();
         } else {
