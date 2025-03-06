@@ -25,7 +25,7 @@ jobs:
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: nightly
+          version: stable
 
       - run: yarn
       - run: cp .env.example .env && yarn test:e2e
@@ -52,7 +52,7 @@ jobs:
   #     - name: Install Foundry
   #       uses: foundry-rs/foundry-toolchain@v1
   #       with:
-  #         version: nightly
+  #         version: stable
 
   #     - run: yarn
   #     - run: cp .env.example .env && yarn test:e2e
@@ -80,7 +80,7 @@ jobs:
   #     - name: Install Foundry
   #       uses: foundry-rs/foundry-toolchain@v1
   #       with:
-  #         version: nightly
+  #         version: stable
 
   #     - run: yarn
   #     - run: cp .env.example .env && yarn test:e2e

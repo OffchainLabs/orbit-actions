@@ -1,1 +1,8 @@
+NitroContracts2Point1Point2UpgradeActionTest:testShouldRevertOnEth() (gas: 61684)
+NitroContracts2Point1Point2UpgradeActionTest:testShouldRevertOnV2() (gas: 65683)
+NitroContracts2Point1Point2UpgradeActionTest:testShouldUpgradeAndSetDecimals() (gas: 92108)
+NitroContracts2Point1Point3UpgradeActionTest:testERC20() (gas: 13917471)
+NitroContracts2Point1Point3UpgradeActionTest:testERC20BelowV2() (gas: 15598010)
+NitroContracts2Point1Point3UpgradeActionTest:testEth() (gas: 13913461)
+NitroContracts2Point1Point3UpgradeActionTest:testNotInbox() (gas: 13853316)
 UpgradeArbOSVersionAtTimestampActionTest:test_1() (gas: 165)

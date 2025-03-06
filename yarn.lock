@@ -43,6 +43,28 @@
     patch-package "^6.4.7"
     solady "0.0.182"
 
+"@arbitrum/nitro-contracts-2.1.2@npm:@arbitrum/nitro-contracts@2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@arbitrum/nitro-contracts/-/nitro-contracts-2.1.2.tgz#ee06cdaa55941850c9921e5d0542379234047071"
+  integrity sha512-kOAep2l///8xBP9fUj843pxoCBiCWH7zL+Qc0pRy3llbE7s4TNI54tiycjuobbYT9geJ01tFvCLWF+pSe+q7DA==
+  dependencies:
+    "@offchainlabs/upgrade-executor" "1.1.0-beta.0"
+    "@openzeppelin/contracts" "4.5.0"
+    "@openzeppelin/contracts-upgradeable" "4.5.2"
+    patch-package "^6.4.7"
+    solady "0.0.182"
+
+"@arbitrum/nitro-contracts-2.1.3@npm:@arbitrum/nitro-contracts@2.1.3":
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@arbitrum/nitro-contracts/-/nitro-contracts-2.1.3.tgz#94e88495e2c5623cafa44ff234e435c382b1a6e6"
+  integrity sha512-tN224y23Iw47EsTYxjechaHeXN6NVLvTO0cEPNw5Hw9jzAjM3jhST2+6XldQtL+p+qvMoHbdX7pFxKKR5+Z+lg==
+  dependencies:
+    "@offchainlabs/upgrade-executor" "1.1.0-beta.0"
+    "@openzeppelin/contracts" "4.5.0"
+    "@openzeppelin/contracts-upgradeable" "4.5.2"
+    patch-package "^6.4.7"
+    solady "0.0.182"
+
 "@arbitrum/nitro-contracts@1.1.1":
   version "1.1.1"
   resolved "https://registry.npmjs.org/@arbitrum/nitro-contracts/-/nitro-contracts-1.1.1.tgz"
@@ -2694,6 +2716,42 @@ ethereumjs-util@^7.0.3, ethereumjs-util@^7.1.4:
     rlp "^2.2.4"
 
 "ethers-v5@npm:ethers@^5.7.2":
+  version "5.7.2"
+  resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
+  integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==
+  dependencies:
+    "@ethersproject/abi" "5.7.0"
+    "@ethersproject/abstract-provider" "5.7.0"
+    "@ethersproject/abstract-signer" "5.7.0"
+    "@ethersproject/address" "5.7.0"
+    "@ethersproject/base64" "5.7.0"
+    "@ethersproject/basex" "5.7.0"
+    "@ethersproject/bignumber" "5.7.0"
+    "@ethersproject/bytes" "5.7.0"
+    "@ethersproject/constants" "5.7.0"
+    "@ethersproject/contracts" "5.7.0"
+    "@ethersproject/hash" "5.7.0"
+    "@ethersproject/hdnode" "5.7.0"
+    "@ethersproject/json-wallets" "5.7.0"
+    "@ethersproject/keccak256" "5.7.0"
+    "@ethersproject/logger" "5.7.0"
+    "@ethersproject/networks" "5.7.1"
+    "@ethersproject/pbkdf2" "5.7.0"
+    "@ethersproject/properties" "5.7.0"
+    "@ethersproject/providers" "5.7.2"
+    "@ethersproject/random" "5.7.0"
+    "@ethersproject/rlp" "5.7.0"
+    "@ethersproject/sha2" "5.7.0"
+    "@ethersproject/signing-key" "5.7.0"
+    "@ethersproject/solidity" "5.7.0"
+    "@ethersproject/strings" "5.7.0"
+    "@ethersproject/transactions" "5.7.0"
+    "@ethersproject/units" "5.7.0"
+    "@ethersproject/wallet" "5.7.0"
+    "@ethersproject/web" "5.7.1"
+    "@ethersproject/wordlists" "5.7.0"
+
+ethers@^5.7.1, ethers@^5.7.2:
   version "5.7.2"
   resolved "https://registry.npmjs.org/ethers/-/ethers-5.7.2.tgz"
   integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==

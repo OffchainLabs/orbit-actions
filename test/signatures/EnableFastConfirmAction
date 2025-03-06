@@ -1,6 +1,13 @@
-{
-  "GNOSIS_COMPATIBILITY_FALLBACK_HANDLER()": "e9f250c1",
-  "GNOSIS_SAFE_1_3_0()": "acbd7fb4",
-  "GNOSIS_SAFE_PROXY_FACTORY()": "97ce5a2b",
-  "perform(address,address[],uint256,uint256)": "6214cbd9"
-}
+
+╭--------------------------------------------+------------╮
+| Method                                     | Identifier |
++=========================================================+
+| GNOSIS_COMPATIBILITY_FALLBACK_HANDLER()    | e9f250c1   |
+|--------------------------------------------+------------|
+| GNOSIS_SAFE_1_3_0()                        | acbd7fb4   |
+|--------------------------------------------+------------|
+| GNOSIS_SAFE_PROXY_FACTORY()                | 97ce5a2b   |
+|--------------------------------------------+------------|
+| perform(address,address[],uint256,uint256) | 6214cbd9   |
+╰--------------------------------------------+------------╯
+

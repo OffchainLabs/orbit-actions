@@ -28,6 +28,8 @@
     "@arbitrum/nitro-contracts-1.2.1": "npm:@arbitrum/nitro-contracts@1.2.1",
     "@arbitrum/nitro-contracts-1.3.0": "npm:@arbitrum/nitro-contracts@1.3.0",
     "@arbitrum/nitro-contracts-2.1.0": "npm:@arbitrum/nitro-contracts@2.1.0",
+    "@arbitrum/nitro-contracts-2.1.2": "npm:@arbitrum/nitro-contracts@2.1.2",
+    "@arbitrum/nitro-contracts-2.1.3": "npm:@arbitrum/nitro-contracts@2.1.3",
     "@arbitrum/token-bridge-1.2.2": "npm:@arbitrum/token-bridge-contracts@1.2.2",
     "@eigenda/nitro-contracts-2.1.0": "npm:@eigenda/nitro-contracts@2.1.0-production",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
