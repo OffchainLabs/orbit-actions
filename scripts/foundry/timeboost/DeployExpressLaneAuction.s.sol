@@ -4,7 +4,7 @@ pragma solidity 0.8.16;
 import {DeploymentHelpersScript} from "../helper/DeploymentHelpers.s.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
-import "@arbitrum/nitro-contracts-2.1.1/src/express-lane-auction/IExpressLaneAuction.sol";
+import "@arbitrum/nitro-contracts-2.1.3/src/express-lane-auction/IExpressLaneAuction.sol";
 
 /**
  * @title DeployAddWasmCacheManagerActionScript
