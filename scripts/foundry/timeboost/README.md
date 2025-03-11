@@ -12,7 +12,7 @@ This script deploy ExpressLaneAuction contract, the contract can then be configu
 `DeployExpressLaneAuction.s.sol` script deploys `ExpressLaneAuction` behind a proxy. It can be executed in this directory like this:
 
 ```bash
-forge script --sender $DEPLOYER --rpc-url $CHILD_CHAIN_RPC --broadcast --slow ./DeployExpressLaneAuction.s.sol -vvv --verify --broadcast
+forge script --sender $DEPLOYER --rpc-url $CHILD_CHAIN_RPC --slow ./DeployExpressLaneAuction.s.sol -vvv --verify --broadcast
 # use --account XXX / --private-key XXX / --interactive / --ledger to set the account to send the transaction from
 ```
 
