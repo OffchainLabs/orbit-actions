@@ -32,10 +32,10 @@ contract DeployExpressLaneAuctionScript is DeploymentHelpersScript {
                         _biddingToken: vm.envAddress("BIDDING_TOKEN_ADDRESS"),
                         _beneficiary: vm.envAddress("BENEFICIARY_ADDRESS"),
                         _roundTimingInfo: RoundTimingInfo({
-                            offsetTimestamp: block.timestamp,
-                            roundDurationSeconds: vm.envUint("ROUND_DURATION_SECONDS"),
-                            auctionClosingSeconds: vm.envUint("AUCTION_CLOSING_SECONDS"),
-                            reserveSubmissionSeconds: vm.envUint("RESERVE_SUBMISSION_SECONDS")
+                            offsetTimestamp: int64(uint64(block.timestamp)),
+                            roundDurationSeconds: uint64(vm.envUint("ROUND_DURATION_SECONDS")),
+                            auctionClosingSeconds: uint64(vm.envUint("AUCTION_CLOSING_SECONDS")),
+                            reserveSubmissionSeconds: uint64(vm.envUint("RESERVE_SUBMISSION_SECONDS"))
                         }),
                         _minReservePrice: vm.envUint("MIN_RESERVE_PRICE"),
                         _auctioneerAdmin: vm.envAddress("AUCTIONEER_ADMIN_ADDRESS"),
