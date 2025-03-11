@@ -49,7 +49,7 @@ contract DeployExpressLaneAuctionScript is DeploymentHelpersScript {
                 )
             )
         );
-
         vm.stopBroadcast();
+        require(expressLaneAuctionProxy != address(0), "DEPLOYMENT_FAILED");
     }
 }
