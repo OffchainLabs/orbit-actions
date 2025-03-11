@@ -19,7 +19,7 @@ contract DeployExpressLaneAuctionScript is DeploymentHelpersScript {
 
         // deploy CacheManger behind proxy
         address expressLaneAuctionLogic = deployBytecodeFromJSON(
-            "/node_modules/@arbitrum/nitro-contracts-2.1.1/build/contracts/src/express-lane-auction/ExpressLaneAuction.sol/ExpressLaneAuction.json"
+            "/node_modules/@arbitrum/nitro-contracts-2.1.3/build/contracts/src/express-lane-auction/ExpressLaneAuction.sol/ExpressLaneAuction.json"
         );
         address expressLaneAuctionProxy = address(
             new TransparentUpgradeableProxy(
