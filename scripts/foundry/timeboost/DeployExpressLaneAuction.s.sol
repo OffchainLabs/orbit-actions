@@ -37,7 +37,7 @@ contract DeployExpressLaneAuctionScript is DeploymentHelpersScript {
                             auctionClosingSeconds: vm.envUint("AUCTION_CLOSING_SECONDS"),
                             reserveSubmissionSeconds: vm.envUint("RESERVE_SUBMISSION_SECONDS")
                         }),
-                        _minReservePrice: 0,
+                        _minReservePrice: vm.envUint("MIN_RESERVE_PRICE"),
                         _auctioneerAdmin: vm.envAddress("AUCTIONEER_ADMIN_ADDRESS"),
                         _minReservePriceSetter: vm.envAddress("MIN_RESERVE_PRICE_SETTER_ADDRESS"),
                         _reservePriceSetter: vm.envAddress("RESERVE_PRICE_SETTER_ADDRESS"),
