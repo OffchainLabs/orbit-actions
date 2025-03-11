@@ -43,10 +43,21 @@
     patch-package "^6.4.7"
     solady "0.0.182"
 
-"@arbitrum/nitro-contracts-2.1.1@npm:@arbitrum/nitro-contracts@2.1.1-beta.0":
-  version "2.1.1-beta.0"
-  resolved "https://registry.yarnpkg.com/@arbitrum/nitro-contracts/-/nitro-contracts-2.1.1-beta.0.tgz#ee75671ea1d4b62a9ba9818311865b573dd0b382"
-  integrity sha512-CWhU0s0VPv1IWF+nBxMy6iS9L6hRfXpuebknykAzjFOGVfK2Un7OVBXp1c7p172nTwYYerjuAqo/KFIQUOU2Kg==
+"@arbitrum/nitro-contracts-2.1.2@npm:@arbitrum/nitro-contracts@2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@arbitrum/nitro-contracts/-/nitro-contracts-2.1.2.tgz#ee06cdaa55941850c9921e5d0542379234047071"
+  integrity sha512-kOAep2l///8xBP9fUj843pxoCBiCWH7zL+Qc0pRy3llbE7s4TNI54tiycjuobbYT9geJ01tFvCLWF+pSe+q7DA==
+  dependencies:
+    "@offchainlabs/upgrade-executor" "1.1.0-beta.0"
+    "@openzeppelin/contracts" "4.5.0"
+    "@openzeppelin/contracts-upgradeable" "4.5.2"
+    patch-package "^6.4.7"
+    solady "0.0.182"
+
+"@arbitrum/nitro-contracts-2.1.3@npm:@arbitrum/nitro-contracts@2.1.3":
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@arbitrum/nitro-contracts/-/nitro-contracts-2.1.3.tgz#94e88495e2c5623cafa44ff234e435c382b1a6e6"
+  integrity sha512-tN224y23Iw47EsTYxjechaHeXN6NVLvTO0cEPNw5Hw9jzAjM3jhST2+6XldQtL+p+qvMoHbdX7pFxKKR5+Z+lg==
   dependencies:
     "@offchainlabs/upgrade-executor" "1.1.0-beta.0"
     "@openzeppelin/contracts" "4.5.0"
@@ -2671,7 +2682,6 @@ ethereumjs-util@^7.0.3, ethereumjs-util@^7.1.4:
     rlp "^2.2.4"
 
 "ethers-v5@npm:ethers@^5.7.2", ethers@^5.7.1, ethers@^5.7.2:
-  name ethers-v5
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
   integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==

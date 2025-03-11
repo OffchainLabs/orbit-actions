@@ -1,7 +1,15 @@
-{
-  "newChallengeManagerImpl()": "924ef096",
-  "newOsp()": "5c4bb63c",
-  "newSequencerInboxImpl()": "d268538a",
-  "newWasmModuleRoot()": "6741148c",
-  "perform(address,address)": "857d1ab7"
-}
+
+╭---------------------------+------------╮
+| Method                    | Identifier |
++========================================+
+| newChallengeManagerImpl() | 924ef096   |
+|---------------------------+------------|
+| newOsp()                  | 5c4bb63c   |
+|---------------------------+------------|
+| newSequencerInboxImpl()   | d268538a   |
+|---------------------------+------------|
+| newWasmModuleRoot()       | 6741148c   |
+|---------------------------+------------|
+| perform(address,address)  | 857d1ab7   |
+╰---------------------------+------------╯
+

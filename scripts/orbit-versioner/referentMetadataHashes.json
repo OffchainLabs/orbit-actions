@@ -1,4 +1,128 @@
 {
+  "v2.1.3": {
+    "eth": {
+      "Inbox": [
+        "12203db8a1df622cbfdd5c34cc73814922a6eb991390c44059cc64611a45d7c9",
+        "12205dbd3b8d396e0948fa2a600b608e91cd302b0a5183ffc616f0537c120dd6"
+      ],
+      "Outbox": [
+        "1220624da9aa741818f470b4caf3f8e08df88623d1802f66a3fd323c420b37cc",
+        "12205dac104f2ad698f9c94426317dc7bff86b274b37ccc62ef98ba1eef5d350"
+      ],
+      "SequencerInbox": [
+        "1220a4d69803e223bfd54d28a9acae6029833ef5a6e9b2d4857a445f439c8dfb",
+        "122021d62fe49ecaac235631fb1ee6ae4e727f787b75249a7ff26f79985652fa"
+      ],
+      "Bridge": [
+        "12207906c40a3078fa66d1082076c2f064076f59ebbb5f852887676ed77eb626",
+        "12200f406ae35b9e61c8f22ad62debe4c79988400a22eb888639f5ed6401bb7a"
+      ],
+      "RollupEventInbox": [
+        "1220a69f3d907eaf365629a1e074f0ccd21cceab9cccdf01da621cd923ee2637",
+        "1220754c2454edc4cd4e4595061c4851bce8f1a59229f4b978315dc1e22c46e5"
+      ]
+    },
+    "erc20": {
+      "Inbox": [
+        "1220b00cd537c63f5a079ff98bff0c5bc0f5e505b12cd816fc6bebfd55b375fd",
+        "12203a6c443bb4ca8d47884e6d9b883bde915ec83d2867073e35bffdffc26f19"
+      ],
+      "Outbox": [
+        "1220a71941053ce9337d0546cdb740773fdd025c466e7f7a3849011147fa21a4",
+        "122015a1779bfca810b2cd7771c349b522204b327445a8c607ff6956df29d174"
+      ],
+      "SequencerInbox": [
+        "1220a4d69803e223bfd54d28a9acae6029833ef5a6e9b2d4857a445f439c8dfb",
+        "122021d62fe49ecaac235631fb1ee6ae4e727f787b75249a7ff26f79985652fa"
+      ],
+      "Bridge": [
+        "1220424bceeda990292690ac333ea05580602995e00759d6ffb0f3e7f1f9bc00",
+        "1220e3d34866aedb2cdc2de9a5d57b6acc8616edaea86787054978831e14e141"
+      ],
+      "RollupEventInbox": [
+        "1220a69f3d907eaf365629a1e074f0ccd21cceab9cccdf01da621cd923ee2637",
+        "1220754c2454edc4cd4e4595061c4851bce8f1a59229f4b978315dc1e22c46e5"
+      ]
+    },
+    "RollupProxy": [
+      "1220bab353bebd2841fa52caf85916c15589ea2750f92da55e48857dc5190a73",
+      "1220039b2791e4013e004cd51e37e19e1137184e0a7f5dec2621e721140c54ba"
+    ],
+    "RollupAdminLogic": [
+      "1220234108252d432aa9102cd74587054f02d4911560a43b4cada21493e410a8",
+      "1220839876227496412329143261f9aee68b0488c8443af858067961fa782617"
+    ],
+    "RollupUserLogic": [
+      "1220e522aeb65ca50fd75e371d71357f5aaf5d6bfc0a68fe6939eab69d97030e",
+      "12209d2c30d4500f07983f4c3ae838cdc93cdf73f3daf90d4dbd3288f072b2d1"
+    ],
+    "ChallengeManager": [
+      "1220eb8f14661a955d488296113b2812b49527fae08d28fe585f2540c6eed075",
+      "1220d1bac57c40e879ffe5492c445773e1293aadfc210845af4536fc292e062b"
+    ]
+  },
+  "v2.1.2": {
+    "eth": {
+      "Inbox": [
+        "1220628e60c87e41de8e6a81e185b46d287cde8c08a6428c975b93f51625154e",
+        "122091702e735e50f68dac5823e925b473ebcc2fb5f7a3e16423a6b66ae3e41f"
+      ],
+      "Outbox": [
+        "1220d72bec3b88f0c24d7071c836c8b7bae617bfcb4ba8257b31d08513327c3e",
+        "1220a71c0b2b1bb378b4e87b3d74997da580d1aeddfa0020bf7828e35ac6e461"
+      ],
+      "SequencerInbox": [
+        "1220808ebb88e683cd824929d0402cad1483444601cb2684e3cfaaaeed19ac57",
+        "12200b70d39c8af70cc4bbc2b5720d07462c71f7284b1e45497748c5118bb338"
+      ],
+      "Bridge": [
+        "122064054196f2755fb5f47e6097337338d1e194d98c5954455caa8b7baf8e5d",
+        "12206c38d558afd13c030589dace1d3b4f8d157625dfc5f1ee771258bbf86c5d"
+      ],
+      "RollupEventInbox": [
+        "12207d19a28e7f0e10a9b2eb981ce3da9fceb0fe3e7644296a1bb96e3c96cbc8",
+        "122083a34bbde14e9dec4a2f310a86f137fe593f771ab544d81c02bf11b957c6"
+      ]
+    },
+    "erc20": {
+      "Inbox": [
+        "1220554d1f2e24c9e4d69b248f0dd3a38201a778c4de8dfdeb6c9603141cf39c",
+        "1220b619f34ba272ec72ca2035fc421c7dd2bc6f98ff5f8a9cdeda227076bac5"
+      ],
+      "Outbox": [
+        "1220b6f57428af8be2dd64e9c538a09dc180519aae4ba146ec1c30d632f1d2b5",
+        "122065c63281532ea50f5bde466e32959b8197898044c1677fa59f725f274ff2"
+      ],
+      "SequencerInbox": [
+        "1220808ebb88e683cd824929d0402cad1483444601cb2684e3cfaaaeed19ac57",
+        "12200b70d39c8af70cc4bbc2b5720d07462c71f7284b1e45497748c5118bb338"
+      ],
+      "Bridge": [
+        "1220e960459b981dbc4d07204a7a2305085824f5a8787332d5649a5b64b1c098",
+        "122015780c5a69efd79a90adc3c14919c8a776c3acdc3575261bf44f3d54f2b6"
+      ],
+      "RollupEventInbox": [
+        "12207d19a28e7f0e10a9b2eb981ce3da9fceb0fe3e7644296a1bb96e3c96cbc8",
+        "122083a34bbde14e9dec4a2f310a86f137fe593f771ab544d81c02bf11b957c6"
+      ]
+    },
+    "RollupProxy": [
+      "1220bab353bebd2841fa52caf85916c15589ea2750f92da55e48857dc5190a73",
+      "1220039b2791e4013e004cd51e37e19e1137184e0a7f5dec2621e721140c54ba"
+    ],
+    "RollupAdminLogic": [
+      "1220234108252d432aa9102cd74587054f02d4911560a43b4cada21493e410a8",
+      "1220839876227496412329143261f9aee68b0488c8443af858067961fa782617"
+    ],
+    "RollupUserLogic": [
+      "1220e522aeb65ca50fd75e371d71357f5aaf5d6bfc0a68fe6939eab69d97030e",
+      "12209d2c30d4500f07983f4c3ae838cdc93cdf73f3daf90d4dbd3288f072b2d1"
+    ],
+    "ChallengeManager": [
+      "12203d3c8fc40e3acb1cd932cf29519fe01da37b3e32a8670a81760f4ecf9497",
+      "1220a10b85e7c0f109a0a569ed2fe7e8603230eaa7d5df62f1531f548fe0eff8"
+    ]
+  },
   "v2.1.0": {
     "eth": {
       "Inbox": [
@@ -16,7 +140,8 @@
       "Bridge": [
         "12206c38d558afd13c030589dace1d3b4f8d157625dfc5f1ee771258bbf86c5d",
         "12202046bd5adb858c77c93e2b65a31b8f11b3f381d5055793f137e085421542"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "erc20": {
       "Inbox": [
@@ -34,7 +159,8 @@
       "Bridge": [
         "122091f2b3a26837eb7f6ae1ee1395e00da6a57a8923d02f716ccaebf4348167",
         "12202b5d5c431949e42cc0f94ae888b71651bdbd6aad7d357822e0b769a9310d"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "RollupProxy": [
       "1220039b2791e4013e004cd51e37e19e1137184e0a7f5dec2621e721140c54ba",
@@ -70,7 +196,8 @@
       "Bridge": [
         "1220506ed7ef8395a03cfb43943c618809bd281b51ea77ecd261aed28bb30a8d",
         "12201a9f67fb3c7f5bfec02931dc84a6854b5cb012b0746f1476e2c0a03cdafb"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "erc20": {
       "Inbox": [
@@ -88,7 +215,8 @@
       "Bridge": [
         "12203ff1e011449147ed6c37be48c3ee711841c26d4edb6eec8f48144eac53c7",
         "12200597a9ae76302c33df923d6ed948d9378de1e91f0c351cf3b1c0410fad28"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "RollupProxy": [
       "1220c1a242275798d8f2e0b3a59eea6aea18c580869c70ad2fbf232f106e4ce5",
@@ -124,7 +252,8 @@
       "Bridge": [
         "1220ba7a1cededf660a42a7377a73bb0d14a4397581fcbb24bebdd45d63810c2",
         "1220cf8a2df9168c7d5af713d037a7a686dc8face22911e8979f91a80e8c1560"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "erc20": {
       "Inbox": [
@@ -142,7 +271,8 @@
       "Bridge": [
         "1220f587e602015bef05909a3dc4d3f302450c6b00ea429653353e9c6a202972",
         "12204de6c5de92ad43eb67bffc52cab35d3bfe43bdbe1c92a87b47c52c4219fe"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "RollupProxy": [
       "12201b31c429a0e4c8b02c3e9ecc213345054112368bf2c3821ae941dd87167c",
@@ -178,7 +308,8 @@
       "Bridge": [
         "1220ba7a1cededf660a42a7377a73bb0d14a4397581fcbb24bebdd45d63810c2",
         "1220c3c76b4863c78b535187aa58b9b008b260271e5be20b6319095c61fa1f62"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "erc20": {
       "Inbox": [
@@ -196,7 +327,8 @@
       "Bridge": [
         "1220f587e602015bef05909a3dc4d3f302450c6b00ea429653353e9c6a202972",
         "12202ba4687d78116ae8629782b0ccc8e70f30db90127cc1ee45a07dadbab544"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "RollupProxy": [
       "12201f644f13efd6c7b8c4ef216106f36b132e19c811eeb8cee47de7e96b69d5",
@@ -232,7 +364,8 @@
       "Bridge": [
         "1220fc415098f1984b6eb0036bf74d4c58c8f2aecced4f9aa23bc8f1ec40a763",
         "12202c5ff330f1a94e5bb5b2e35bdc74b9b974d83de9f9705f82ed0f23e74816"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "erc20": {
       "Inbox": [
@@ -250,7 +383,8 @@
       "Bridge": [
         "1220608c64e88e11ca7c69079c15d6e7a635d96c8c450b764d917d39c39d927a",
         "12200feb0990fb1e40d8b046a8996b213f9ee17c5e9a707d81f49b65d1fb9403"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "RollupProxy": [
       "122050d53014317e8cdb5c3e4f6737c818a3257250f410e29949414733539236",
@@ -286,7 +420,8 @@
       "Bridge": [
         "122036229552e25569ee81b36ff0079ed482a0f5114c34695a273717057e68b7",
         "12203cb53c06e3d38f5055af396f234d714307935d59ca28459db5226efad4d0"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "erc20": {
       "Inbox": [
@@ -304,7 +439,8 @@
       "Bridge": [
         "1220acaca6cc8d40714063ec21646cf3fb554ba0394dc105b80d1c758ae649ee",
         "1220611c0f41c29b817325b2d56fbd2d81ce85b6458fab21ed9f950ad47db5dd"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "RollupProxy": [
       "122045d1669737d3f66bbfc5cb21688cdbc2decfc09897811ac43760f60bfdc1",
@@ -340,7 +476,8 @@
       "Bridge": [
         "122036229552e25569ee81b36ff0079ed482a0f5114c34695a273717057e68b7",
         "12203cb53c06e3d38f5055af396f234d714307935d59ca28459db5226efad4d0"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "erc20": {
       "Inbox": [
@@ -358,7 +495,8 @@
       "Bridge": [
         "1220acaca6cc8d40714063ec21646cf3fb554ba0394dc105b80d1c758ae649ee",
         "1220611c0f41c29b817325b2d56fbd2d81ce85b6458fab21ed9f950ad47db5dd"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "RollupProxy": [
       "122045d1669737d3f66bbfc5cb21688cdbc2decfc09897811ac43760f60bfdc1",
@@ -390,13 +528,15 @@
       ],
       "Bridge": [
         "12201fc2f62f301cacfe134a078470b95e8ac19b8ac3be1ae1c76208c3da5e45"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "erc20": {
       "Inbox": ["n/a"],
       "Outbox": ["n/a"],
       "SequencerInbox": ["n/a"],
-      "Bridge": ["n/a"]
+      "Bridge": ["n/a"],
+      "RollupEventInbox": ["n/a"]
     },
     "RollupProxy": [
       "122060f5deee0a99bbc2c2d0731e05f3c9710ab8e2c75e0cbc20f8935a93229d"
@@ -424,13 +564,15 @@
       ],
       "Bridge": [
         "1220a48ff3a66ec9a49bf00ab4d639b5f224664d4cf9ee281ee5feb2111c43bf"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "erc20": {
       "Inbox": ["n/a"],
       "Outbox": ["n/a"],
       "SequencerInbox": ["n/a"],
-      "Bridge": ["n/a"]
+      "Bridge": ["n/a"],
+      "RollupEventInbox": ["n/a"]
     },
     "RollupProxy": [
       "122060f5deee0a99bbc2c2d0731e05f3c9710ab8e2c75e0cbc20f8935a93229d"
@@ -458,13 +600,15 @@
       ],
       "Bridge": [
         "1220a866b4912045c6c37c22a163c767d0d623c89bec19b9daba7e0208beee06"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "erc20": {
       "Inbox": ["n/a"],
       "Outbox": ["n/a"],
       "SequencerInbox": ["n/a"],
-      "Bridge": ["n/a"]
+      "Bridge": ["n/a"],
+      "RollupEventInbox": ["n/a"]
     },
     "RollupProxy": [
       "12202ed603dc21970c25521fb1c7854b938f777a8157233615740ea445d17d08"
@@ -492,13 +636,15 @@
       ],
       "Bridge": [
         "1220711f146678e425a300d270a5f9c04973e720a2571efa5f0ec557c81e750c"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "erc20": {
       "Inbox": ["n/a"],
       "Outbox": ["n/a"],
       "SequencerInbox": ["n/a"],
-      "Bridge": ["n/a"]
+      "Bridge": ["n/a"],
+      "RollupEventInbox": ["n/a"]
     },
     "RollupProxy": [
       "1220aeae77513137259801b7ab6793936907a0e6897fd62899007329b9a2e33f"
@@ -526,13 +672,15 @@
       ],
       "Bridge": [
         "12208d5132810e8d5b98491e43f5a09f382935a7c32e395c98416ee408e6742b"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "erc20": {
       "Inbox": ["n/a"],
       "Outbox": ["n/a"],
       "SequencerInbox": ["n/a"],
-      "Bridge": ["n/a"]
+      "Bridge": ["n/a"],
+      "RollupEventInbox": ["n/a"]
     },
     "RollupProxy": [
       "1220c810c2a8b0f7c41e29d1351996102968a231fa74a467bdcbba66c06a4c0e"
@@ -560,13 +708,15 @@
       ],
       "Bridge": [
         "122058d67ed2766b0236b5d54528534f6bf055a580c8cb1694f76b78ad2dd6b3"
-      ]
+      ],
+      "RollupEventInbox": ["n/a"]
     },
     "erc20": {
       "Inbox": ["n/a"],
       "Outbox": ["n/a"],
       "SequencerInbox": ["n/a"],
-      "Bridge": ["n/a"]
+      "Bridge": ["n/a"],
+      "RollupEventInbox": ["n/a"]
     },
     "RollupProxy": ["n/a"],
     "RollupAdminLogic": [
