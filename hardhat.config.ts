@@ -34,11 +34,8 @@ const config: HardhatUserConfig = {
     arbSepolia: {
       url: 'https://nd-547-613-041.p2pify.com/909153f12fbb522c2703d4b5b55a78a5',
     },
-    nova: {
-      url: 'https://nova.arbitrum.io/rpc',
-    },
-    holesky: {
-      url: 'https://1rpc.io/holesky',
+    421614: {
+      url: 'https://nd-547-613-041.p2pify.com/909153f12fbb522c2703d4b5b55a78a5',
     },
   },
 }

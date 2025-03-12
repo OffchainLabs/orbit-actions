@@ -7,7 +7,7 @@ import {
     IOneStepProofEntry
 } from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts2Point1Point0UpgradeAction.sol";
 import {MockArbSys} from "../../helper/MockArbSys.sol";
-
+import {console} from "forge-std/console.sol";
 /**
  * @title DeployNitroContracts2Point1Point0UpgradeActionScript
  * @notice This script deploys OSPs, ChallengeManager and Rollup templates, and the upgrade action.
@@ -16,8 +16,8 @@ contract DeployNitroContracts2Point1Point0UpgradeActionScript is DeploymentHelpe
     // ArbOS v32 https://github.com/OffchainLabs/nitro/releases/tag/consensus-v32
     bytes32 public constant WASM_MODULE_ROOT = 0x184884e1eb9fefdc158f6c8ac912bb183bf3cf83f0090317e0bc4ac5860baa39;
 
-    // ArbOS v20 https://github.com/OffchainLabs/nitro/releases/tag/consensus-v20
-    bytes32 public constant COND_WASM_MODULE_ROOT = 0x8b104a2e80ac6165dc58b9048de12f301d70b02a0ab51396c22b4b4b802a16a4;
+    // ArbOS v30 https://github.com/OffchainLabs/nitro/releases/tag/consensus-v30
+    bytes32 public constant COND_WASM_MODULE_ROOT = 0xb0de9cb89e4d944ae6023a3b62276e54804c242fd8c4c2d8e6cc4450f5fa8b1b;
 
     function run() public {
         bool isArbitrum = vm.envBool("PARENT_CHAIN_IS_ARBITRUM");
@@ -86,6 +86,8 @@ contract DeployNitroContracts2Point1Point0UpgradeActionScript is DeploymentHelpe
             "/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/rollup/RollupUserLogic.sol/RollupUserLogic.json"
         );
 
+        console.log("DOES COND_WASM_MODULE_ROOT MATCH `Current WASM`???");
+        console.log(COND_WASM_MODULE_ROOT == vm.envBytes32("CURRENT_WASM"));
         // finally deploy upgrade action
         new NitroContracts2Point1Point0UpgradeAction({
             _newWasmModuleRoot: WASM_MODULE_ROOT,
