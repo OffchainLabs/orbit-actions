@@ -314,7 +314,7 @@ function _canBeUpgradedToTargetVersion(
       SequencerInbox: ['v2.1.0-celestia'],
     }
     if (isFeeTokenChain) {
-      supportedSourceVersionsPerContract.Bridge = []
+      supportedSourceVersionsPerContract.Bridge = ['v2.1.0-celestia']
     }
   } else if (targetVersion === 'v2.1.2') {
     // v2.1.2 will upgrade the ERC20Bridge contract to set decimals in storage
