@@ -22,6 +22,9 @@ const config: HardhatUserConfig = {
     base: {
       url: 'https://base-mainnet.g.alchemy.com/v2/8I7-qkB146nw-z1yFOnVB3vkzlbg78hN',
     },
+    baseSepolia: {
+      url: 'https://base-sepolia.g.alchemy.com/v2/8I7-qkB146nw-z1yFOnVB3vkzlbg78hN',
+    },
     mainnet: {
       url: 'https://eth-mainnet.g.alchemy.com/v2/vptzjr-B0MGFskb9rh6G8AtzK4dWUzLA',
     },

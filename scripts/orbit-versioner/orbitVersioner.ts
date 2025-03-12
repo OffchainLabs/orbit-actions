@@ -73,32 +73,32 @@ async function main() {
 
   // get metadata hashes
   const metadataHashes: { [key: string]: string } = {
-    Inbox: await _getMetadataHash(
+    Inbox: await _getMetadataHash('Inbox',
       await _getLogicAddress(inboxAddress, provider),
       provider
     ),
-    Outbox: await _getMetadataHash(
+    Outbox: await _getMetadataHash('Outbox',
       await _getLogicAddress(outboxAddress, provider),
       provider
     ),
-    SequencerInbox: await _getMetadataHash(
+    SequencerInbox: await _getMetadataHash('SequencerInbox',
       await _getLogicAddress(seqInboxAddress, provider),
       provider
     ),
-    Bridge: await _getMetadataHash(
+    Bridge: await _getMetadataHash('Bridge',
       await _getLogicAddress(bridgeAddress, provider),
       provider
     ),
-    RollupEventInbox: await _getMetadataHash(
+    RollupEventInbox: await _getMetadataHash('RollupEventInbox',
       await _getLogicAddress(rollupEventInboxAddress, provider),
       provider
     ),
-    RollupProxy: await _getMetadataHash(rollupAddress, provider),
-    RollupAdminLogic: await _getMetadataHash(
+    RollupProxy: await _getMetadataHash('RollupProxy', rollupAddress, provider),
+    RollupAdminLogic: await _getMetadataHash('RollupAdminLogic',
       await _getLogicAddress(rollupAddress, provider),
       provider
     ),
-    RollupUserLogic: await _getMetadataHash(
+    RollupUserLogic: await _getMetadataHash('RollupUserLogic',
       await _getAddressAtStorageSlot(
         rollupAddress,
         provider,
@@ -106,7 +106,7 @@ async function main() {
       ),
       provider
     ),
-    ChallengeManager: await _getMetadataHash(
+    ChallengeManager: await _getMetadataHash('ChallengeManager',
       await _getLogicAddress(challengeManagerAddress, provider),
       provider
     ),
@@ -148,6 +148,11 @@ function _checkForPossibleUpgrades(
     //   version: 'v3.0.0',
     //   actionName: 'BOLD UpgradeAction',
     // },
+    {
+      //https://github.com/ConstellationCrypto/celestia-nitro-contracts/commit/0d04cf12b5652a819fcb3678203aadb40e425df8#diff-4ee3f0a797c30da8c8de2f3ebd8a5835fc2efbff834422d39233825fef5d4d8b
+      version: 'v2.1.3-celestia',
+      actionName: 'CelestiaNitroContracts2Point1Point3UpgradeAction',
+    },
     {
       version: 'v2.1.3',
       actionName: 'NitroContracts2Point1Point3UpgradeAction',
@@ -206,7 +211,6 @@ function _canBeUpgradedToTargetVersion(
     console.log('\nChecking if deployment can be upgraded to', targetVersion)
 
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
-
   // DISABLING BOLD UPGRADE FOR NOW
   // if (targetVersion === 'v3.0.0') {
   //   // v3.0.0 will upgrade bridge, inbox, rollupEventInbox, outbox, sequencerInbox, rollup logics, challengeManager
@@ -293,6 +297,24 @@ function _canBeUpgradedToTargetVersion(
         'v2.1.1',
         'v2.1.2',
       ]
+    }
+  } else if (targetVersion === 'v2.1.3-celestia') {
+    // v2.1.3 will upgrade the SequencerInbox and Inbox contracts to prevent 7702 accounts from calling certain functions
+    // v2.1.3 or v3.0.0 must be performed before the parent chain upgrades with 7702
+    // has the same prerequisites as v3.0.0
+    supportedSourceVersionsPerContract = {
+      Inbox: ['v2.1.0-celestia'],
+      Outbox: ['any'],
+      Bridge: ['v2.1.0-celestia'],
+      RollupEventInbox: ['any'],
+      RollupProxy: ['any'],
+      RollupAdminLogic: ['v2.1.0-celestia'],
+      RollupUserLogic: ['v2.1.0-celestia'],
+      ChallengeManager: ['v2.1.0-celestia'],
+      SequencerInbox: ['v2.1.0-celestia'],
+    }
+    if (isFeeTokenChain) {
+      supportedSourceVersionsPerContract.Bridge = []
     }
   } else if (targetVersion === 'v2.1.2') {
     // v2.1.2 will upgrade the ERC20Bridge contract to set decimals in storage
@@ -412,6 +434,7 @@ function _getVersionOfDeployedContract(metadataHash: string): {
 }
 
 async function _getMetadataHash(
+  name: string,
   contractAddress: string,
   provider: HardhatEthersProvider
 ): Promise<string> {
@@ -423,6 +446,7 @@ async function _getMetadataHash(
 
   if (matches && matches.length > 1) {
     // The actual metadata hash is in the first capturing group
+    console.log(`${name} - ${matches[1]}`)
     return matches[1]
   } else {
     throw new Error('No metadata hash found in bytecode')
