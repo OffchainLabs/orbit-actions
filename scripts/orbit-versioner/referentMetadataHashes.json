@@ -381,7 +381,6 @@
       "Bridge": [
         "1220ba7a1cededf660a42a7377a73bb0d14a4397581fcbb24bebdd45d63810c2",
         "1220c3c76b4863c78b535187aa58b9b008b260271e5be20b6319095c61fa1f62",
-        "1220a378434f1008237cf4c3f576948e94987eccfd608d2bb04e9665c7287de5",
         "12205e90d4ae98af8ceeea883788188727b513149619d7d46b214acf83aa5a10"
       ],
       "RollupEventInbox": ["n/a"]
@@ -401,7 +400,8 @@
       ],
       "Bridge": [
         "1220f587e602015bef05909a3dc4d3f302450c6b00ea429653353e9c6a202972",
-        "12202ba4687d78116ae8629782b0ccc8e70f30db90127cc1ee45a07dadbab544"
+        "12202ba4687d78116ae8629782b0ccc8e70f30db90127cc1ee45a07dadbab544",
+        "1220a378434f1008237cf4c3f576948e94987eccfd608d2bb04e9665c7287de5"
       ],
       "RollupEventInbox": ["n/a"]
     },
