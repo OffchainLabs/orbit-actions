@@ -304,7 +304,7 @@ function _canBeUpgradedToTargetVersion(
     // has the same prerequisites as v3.0.0
     supportedSourceVersionsPerContract = {
       Inbox: ['v2.1.0-celestia'],
-      Outbox: ['any'],
+      Outbox: ['v2.1.0-celestia'],
       Bridge: ['v2.1.0-celestia'],
       RollupEventInbox: ['any'],
       RollupProxy: ['any'],
