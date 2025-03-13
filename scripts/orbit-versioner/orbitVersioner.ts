@@ -124,7 +124,7 @@ async function main() {
       metadataHashes[key]
     )
     versions[key] = version
-    if (isErc20) isFeeTokenChain = true
+    if (key === 'Bridge' && isErc20) isFeeTokenChain = true
     console.log(
       `Version of deployed ${key}: ${versions[key] ? versions[key] : 'unknown'}`
     )
