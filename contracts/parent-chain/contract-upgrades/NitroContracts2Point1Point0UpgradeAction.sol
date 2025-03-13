@@ -30,7 +30,7 @@ contract NitroContracts2Point1Point0UpgradeAction {
     bytes32 public immutable newWasmModuleRoot;
     address public immutable newChallengeManagerImpl;
     IOneStepProofEntry public immutable osp;
-    bytes32 public immutable condRoot;
+    bytes32[2] public condRoot;
     IOneStepProofEntry public immutable condOsp;
 
     address public immutable newRollupAdminLogic;
@@ -40,7 +40,7 @@ contract NitroContracts2Point1Point0UpgradeAction {
         bytes32 _newWasmModuleRoot,
         address _newChallengeManagerImpl,
         IOneStepProofEntry _osp,
-        bytes32 _condRoot,
+        bytes32[2] memory _condRoot,
         IOneStepProofEntry _condOsp,
         address _newRollupAdminLogic,
         address _newRollupUserLogic
@@ -84,7 +84,7 @@ contract NitroContracts2Point1Point0UpgradeAction {
         }
 
         /// check that condRoot is being used
-        require(rollup.wasmModuleRoot() == condRoot, "NitroContracts2Point1Point0UpgradeAction: wasm root mismatch");
+        require(contains(condRoot, rollup.wasmModuleRoot()), "NitroContracts2Point1Point0UpgradeAction: wasm root mismatch");
 
         /// do the upgrade
         _upgradeChallengerManager(rollup, proxyAdmin);
@@ -95,10 +95,11 @@ contract NitroContracts2Point1Point0UpgradeAction {
         // set the new challenge manager impl
         TransparentUpgradeableProxy challengeManager =
             TransparentUpgradeableProxy(payable(address(rollup.challengeManager())));
+        bytes32 finalCondRoot = find(condRoot, rollup.wasmModuleRoot());
         proxyAdmin.upgradeAndCall(
             challengeManager,
             newChallengeManagerImpl,
-            abi.encodeCall(IChallengeManagerUpgradeInit.postUpgradeInit, (osp, condRoot, condOsp))
+            abi.encodeCall(IChallengeManagerUpgradeInit.postUpgradeInit, (osp, finalCondRoot, condOsp))
         );
 
         // verify
@@ -133,5 +134,27 @@ contract NitroContracts2Point1Point0UpgradeAction {
             rollup.anyTrustFastConfirmer() == address(0),
             "NitroContracts2Point1Point0UpgradeAction: unexpected fast confirmer address"
         );
+    }
+
+    function contains(bytes32[2] memory _condRoots, bytes32 _target) internal pure returns (bool) {
+        for (uint256 i = 0; i < _condRoots.length; i++) {
+            if (_condRoots[i] == _target) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function find(bytes32[2] memory _condRoots, bytes32 _target) internal pure returns (bytes32) {
+        for (uint256 i = 0; i < _condRoots.length; i++) {
+            if (_condRoots[i] == _target) {
+                return _condRoots[i];
+            }
+        }
+        revert("Did not find condroot!");
+    }
+
+    function getCondRoot() public view returns (bytes32[2] memory) {
+        return condRoot;
     }
 }

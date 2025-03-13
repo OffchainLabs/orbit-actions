@@ -28,7 +28,7 @@ contract ExecuteNitroContracts2Point1Point0UpgradeScript is Script {
 
         // check prerequisites
         IRollupCore rollup = IRollupCore(address(inbox.bridge().rollup()));
-        require(rollup.wasmModuleRoot() == upgradeAction.condRoot(), "Incorrect starting wasm module root");
+        require(contains(upgradeAction.getCondRoot(), rollup.wasmModuleRoot()), "Incorrect starting wasm module root");
 
         vm.startBroadcast();
 
@@ -57,5 +57,14 @@ contract ExecuteNitroContracts2Point1Point0UpgradeScript is Script {
         }
 
         vm.stopBroadcast();
+    }
+
+    function contains(bytes32[2] memory _condRoots, bytes32 _target) internal pure returns (bool) {
+        for (uint256 i = 0; i < _condRoots.length; i++) {
+            if (_condRoots[i] == _target) {
+                return true;
+            }
+        }
+        return false;
     }
 }
