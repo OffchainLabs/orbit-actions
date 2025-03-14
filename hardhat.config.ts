@@ -47,7 +47,8 @@ const config: HardhatUserConfig = {
     },
     84532: {
       url:
-        'https://base-sepolia.g.alchemy.com/v2/' + process.env['ALCHEMY_APIKEY'],
+        'https://base-sepolia.g.alchemy.com/v2/' +
+        process.env['ALCHEMY_APIKEY'],
     },
   },
 }

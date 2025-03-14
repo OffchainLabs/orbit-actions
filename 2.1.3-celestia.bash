@@ -22,7 +22,7 @@ fi
 if [[ "$PARENT_CHAIN_ID" == "1" || "$PARENT_CHAIN_ID" == "11155111" ]]; then
   export ETHERSCAN_API_KEY=RWSGJAX2JJNX42SB56ADUWFN6MSB5WBHNR
 else
-  export ETHERSCAN_API_KEY=VAQC4ZPAQGBRUMW8AR5CVAUKE96VNM2735
+  export ETHERSCAN_API_KEY=8CMHQUJ1JNEZ271FZWXT8VRD4MK9V7VH3F
 fi
 
 IS_FEE_TOKEN_CHAIN=$(cat $CPATH/.constellation/contracts.json | jq .chainInfo.nativeToken | tr -d '"') 
@@ -36,8 +36,8 @@ export MAX_DATA_SIZE=$(cast call --rpc-url $RPC $INBOX_ADDRESS "maxDataSize()(ui
 
 #DEV=true INBOX_ADDRESS=$INBOX_ADDRESS yarn orbit:contracts:version --network $(echo $PARENT_CHAIN_ID | tr -d '"')
 
-echo "Deploying DeployCelestiaNitroContracts2Point1Point3UpgradeActionScript"
-forge script --private-key $DEPLOYMENT_PK --rpc-url $RPC --broadcast DeployCelestiaNitroContracts2Point1Point3UpgradeActionScript -vvv --verify --skip-simulation
+echo "Deploying DeployNitroContracts2Point1Point3UpgradeActionCelestiaScript"
+forge script --private-key $DEPLOYMENT_PK --rpc-url $RPC --broadcast DeployNitroContracts2Point1Point3UpgradeActionCelestiaScript -vvv --verify --skip-simulation
 
 echo "Topup owner with 0.01ether"
 cast send --rpc-url $RPC --private-key $DEPLOYMENT_PK $OWNER_ADDRESS --value 0.001ether
