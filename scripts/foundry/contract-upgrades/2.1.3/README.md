@@ -9,6 +9,8 @@ These scripts deploy and execute the `NitroContracts2Point1Point3UpgradeAction` 
 
 Upgrading to `v2.1.3` not required nor recommended if the chain aims to upgrade to v3.0.0 before the parent chain gets EIP7702.
 
+You may need to perform the `v2.1.2` upgrade first if your chain uses a custom gas token and was originally deployed before `v2.0.0`. Please refer to the top [README](/README.md#check-version-and-upgrade-path) `Check Version and Upgrade Path` on how to determine your current nitro contracts version.
+
 `NitroContracts2Point1Point3UpgradeAction` will perform the following action:
 
 1. Upgrade the `Inbox` or `ERC20Inbox` contract to `v2.1.3`
@@ -33,16 +35,16 @@ Please refer to the top [README](/README.md#check-version-and-upgrade-path) `Che
 ## Deployed instances
 
 ### Mainnets
-- L1 Mainnet: TODO
-- L2 Arb1: TODO
-- L2 Nova: TODO
-- L2 Base: TODO
+- L1 Mainnet: 0x9128ef6A57B2653CF78e650Dd97d0931dCaf79A2
+- L2 Arb1: 0xA350fE71079Aa86d48a8f2fDc600bbc6fa9CFE70
+- L2 Nova: 0x89611a8feff5a6376ea41265a05243FFBA225a59
+- L2 Base: 0x934a1e5187A5011AcECBACACF7cf6B22abE599A5
 
 ### Testnets
-- L1 Sepolia: TODO
-- L1 Holesky: TODO
-- L2 ArbSepolia: TODO
-- L2 BaseSepolia: TODO
+- L1 Sepolia: 0x82129aB330619388f46d3Cad387aEecb3843A16f
+- L1 Holesky: 0x29D1bA37B3A7CC49990e1F613fdF9B33f9Cb3cEE.
+- L2 ArbSepolia: 0x0E0Ee28333798F9aF0E76653beabC72F7477C287.
+- L2 BaseSepolia: 0x5F6e79237387b01208FDf3a93efd455a2CADBa32.
 
 ## How to use it
 

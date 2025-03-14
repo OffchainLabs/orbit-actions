@@ -36,16 +36,16 @@ Please refer to the top [README](/README.md#check-version-and-upgrade-path) `Che
 ## Deployed instances
 
 ### Mainnets
-- L1 Mainnet: TODO
-- L2 Arb1: TODO
-- L2 Nova: TODO
-- L2 Base: TODO
+- L1 Mainnet: 0x78Ee30C74B3Ce1aeB38163Db3E7d769d9735542F
+- L2 Arb1: 0x7D42F098e79DE006CFAB475cFD50BdF2310d7ae8
+- L2 Nova: 0xEb35A5E1B0FdBa925880A539Eac661907d43Ee07
+- L2 Base: 0x9d924ffE6D66ca0727657734a615CC9730925c49
 
 ### Testnets
-- L1 Sepolia: TODO
-- L1 Holesky: TODO
-- L2 ArbSepolia: TODO
-- L2 BaseSepolia: TODO
+- L1 Sepolia: 0xA8a3869A55Baf88f20B81bdbf54eDaC532b98369
+- L1 Holesky: 0x619a0B831d61b90a8585CE9B25077021f1fFa925
+- L2 ArbSepolia: 0x76A35A0c721A6bf53982f5a00ccb3AaDb184aD8E
+- L2 BaseSepolia: 0xA5b663B60502ef6bFFe3e003A43d3E79AFB1aC1c
 
 ## How to use it
 
