@@ -21,9 +21,10 @@ contract DeployNitroContracts2Point1Point0UpgradeActionScript is DeploymentHelpe
 
     function run() public {
         
-        bytes32[2] memory COND_WASM_MODULE_ROOT = [
+        bytes32[3] memory COND_WASM_MODULE_ROOT = [
             bytes32(0x8b104a2e80ac6165dc58b9048de12f301d70b02a0ab51396c22b4b4b802a16a4),
-            bytes32(0xb0de9cb89e4d944ae6023a3b62276e54804c242fd8c4c2d8e6cc4450f5fa8b1b)
+            bytes32(0xb0de9cb89e4d944ae6023a3b62276e54804c242fd8c4c2d8e6cc4450f5fa8b1b),
+            bytes32(0x184884e1eb9fefdc158f6c8ac912bb183bf3cf83f0090317e0bc4ac5860baa39)
         ];        
         bool isArbitrum = vm.envBool("PARENT_CHAIN_IS_ARBITRUM");
         if (isArbitrum) {

@@ -59,7 +59,7 @@ contract ExecuteNitroContracts2Point1Point0UpgradeScript is Script {
         vm.stopBroadcast();
     }
 
-    function contains(bytes32[2] memory _condRoots, bytes32 _target) internal pure returns (bool) {
+    function contains(bytes32[3] memory _condRoots, bytes32 _target) internal pure returns (bool) {
         for (uint256 i = 0; i < _condRoots.length; i++) {
             if (_condRoots[i] == _target) {
                 return true;
