@@ -20,22 +20,34 @@ const config: HardhatUserConfig = {
       url: 'https://arb1.arbitrum.io/rpc',
     },
     base: {
-      url: 'https://base-mainnet.g.alchemy.com/v2/8I7-qkB146nw-z1yFOnVB3vkzlbg78hN',
+      url:
+        'https://base-mainnet.g.alchemy.com/v2/' +
+        process.env['ALCHEMY_APIKEY'],
     },
     baseSepolia: {
-      url: 'https://base-sepolia.g.alchemy.com/v2/8I7-qkB146nw-z1yFOnVB3vkzlbg78hN',
+      url:
+        'https://base-sepolia.g.alchemy.com/v2/' +
+        process.env['ALCHEMY_APIKEY'],
     },
     mainnet: {
-      url: 'https://eth-mainnet.g.alchemy.com/v2/vptzjr-B0MGFskb9rh6G8AtzK4dWUzLA',
+      url:
+        'https://eth-mainnet.g.alchemy.com/v2/' + process.env['ALCHEMY_APIKEY'],
     },
     sepolia: {
-      url: 'https://eth-sepolia.g.alchemy.com/v2/fpQPC7q22cy7i2rILZBCiibBXQkjpwJO',
+      url:
+        'https://eth-sepolia.g.alchemy.com/v2/' + process.env['ALCHEMY_APIKEY'],
     },
     arbSepolia: {
-      url: 'https://nd-547-613-041.p2pify.com/909153f12fbb522c2703d4b5b55a78a5',
+      url:
+        'https://arb-sepolia.g.alchemy.com/v2/' + process.env['ALCHEMY_APIKEY'],
     },
     421614: {
-      url: 'https://nd-547-613-041.p2pify.com/909153f12fbb522c2703d4b5b55a78a5',
+      url:
+        'https://arb-sepolia.g.alchemy.com/v2/' + process.env['ALCHEMY_APIKEY'],
+    },
+    84532: {
+      url:
+        'https://base-sepolia.g.alchemy.com/v2/' + process.env['ALCHEMY_APIKEY'],
     },
   },
 }
