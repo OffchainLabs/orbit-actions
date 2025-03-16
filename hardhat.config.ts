@@ -50,6 +50,10 @@ const config: HardhatUserConfig = {
         'https://base-sepolia.g.alchemy.com/v2/' +
         process.env['ALCHEMY_APIKEY'],
     },
+    11155111: {
+      url:
+        'https://eth-sepolia.g.alchemy.com/v2/' + process.env['ALCHEMY_APIKEY'],
+    },
   },
 }
 
