@@ -12,6 +12,45 @@ const config: HardhatUserConfig = {
   solidity: getSolidityConfigFromFoundryToml(
     process.env.FOUNDRY_PROFILE || 'default'
   ),
+  etherscan: {
+    apiKey: {
+      baseSepolia: process.env['ETHERSCAN_API_KEY'],
+    },
+    customChains: [
+      {
+        network: 'nova',
+        chainId: 42170,
+        urls: {
+          apiURL: 'https://api-nova.arbiscan.io/api',
+          browserURL: 'https://nova.arbiscan.io/',
+        },
+      },
+      {
+        network: 'arbGoerliRollup',
+        chainId: 421613,
+        urls: {
+          apiURL: 'https://api-goerli.arbiscan.io/api',
+          browserURL: 'https://goerli.arbiscan.io/',
+        },
+      },
+      {
+        network: 'arbSepolia',
+        chainId: 421614,
+        urls: {
+          apiURL: 'https://api-sepolia.arbiscan.io/api',
+          browserURL: 'https://sepolia.arbiscan.io/',
+        },
+      },
+      {
+        network: 'baseSepolia',
+        chainId: 84532,
+        urls: {
+          apiURL: 'https://api-sepolia.basescan.org/api',
+          browserURL: 'https://sepolia.basescan.org/',
+        },
+      },
+    ],
+  },
   networks: {
     fork: {
       url: process.env.FORK_URL || 'http://localhost:8545',

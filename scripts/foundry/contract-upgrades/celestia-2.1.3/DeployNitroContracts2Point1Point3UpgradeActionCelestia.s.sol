@@ -43,13 +43,13 @@ contract DeployNitroContracts2Point1Point3UpgradeActionCelestiaScript is
 
     // deploy new EthSequencerInbox contract from v2.1.3
     address newEthSeqInboxImpl = deployBytecodeWithConstructorFromJSON(
-      '/celestia-2.1.3/SequencerInbox.sol/SequencerInbox.json',
+      '/node_modules/@constellation-labs/celestia-nitro-contracts-2.1.3-arb-sepolia-base-sepolia/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json',
       abi.encode(vm.envUint('MAX_DATA_SIZE'), reader4844Address, false)
     );
 
     // deploy new Erc20SequencerInbox contract from v2.1.3
     address newErc20SeqInboxImpl = deployBytecodeWithConstructorFromJSON(
-      '/celestia-2.1.3/SequencerInbox.sol/SequencerInbox.json',
+      '/node_modules/@constellation-labs/celestia-nitro-contracts-2.1.3-arb-sepolia-base-sepolia/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json',
       abi.encode(vm.envUint('MAX_DATA_SIZE'), reader4844Address, true)
     );
 

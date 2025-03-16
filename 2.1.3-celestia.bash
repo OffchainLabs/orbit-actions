@@ -6,7 +6,7 @@ export CPATH=$3$MODULE_NAME
 
 export OWNER_PK=$(aws secretsmanager --query SecretString --output text get-secret-value --secret-id $(cat $CPATH/helm/values.yaml | yq .accounts.OWNER_KMS_ID) | jq .privateKey | tr -d '"')
 export OWNER_ADDRESS=$(cat $CPATH/helm/values.yaml | yq .accounts.OWNER_ADDRESS)
-
+export CHAIN_TYPE=$(cat $CPATH/helm/values.yaml | yq .CHAIN_TYPE)
 export RPC=$(cat $CPATH/helm/values.yaml | yq .L1_RPC_URL | tr -d '"')
 
 export INBOX_ADDRESS=$(cat $CPATH/.constellation/contracts.json | jq .coreContracts.inbox | tr -d '"') 
