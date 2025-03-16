@@ -34,16 +34,18 @@ fi
 
 export MAX_DATA_SIZE=$(cast call --rpc-url $RPC $INBOX_ADDRESS "maxDataSize()(uint256)" | awk '{print $1; exit}')
 
-#DEV=true INBOX_ADDRESS=$INBOX_ADDRESS yarn orbit:contracts:version --network $(echo $PARENT_CHAIN_ID | tr -d '"')
+DEV=true INBOX_ADDRESS=$INBOX_ADDRESS yarn orbit:contracts:version --network $(echo $PARENT_CHAIN_ID | tr -d '"')
 
-echo "Deploying DeployNitroContracts2Point1Point3UpgradeActionCelestiaScript"
-forge script --private-key $DEPLOYMENT_PK --rpc-url $RPC --broadcast DeployNitroContracts2Point1Point3UpgradeActionCelestiaScript -vvv --verify --skip-simulation
-
-echo "Topup owner with 0.01ether"
-cast send --rpc-url $RPC --private-key $DEPLOYMENT_PK $OWNER_ADDRESS --value 0.001ether
-echo "Balance of "$OWNER_ADDRESS
-cast from-wei $(cast balance --rpc-url $RPC $OWNER_ADDRESS)
-export MULTISIG=false
-# #export UPGRADE_ACTION_ADDRESS=
-# #forge script --private-key $OWNER_PK --rpc-url $RPC --broadcast ExecuteNitroContracts2Point1Point3UpgradeScript -vvv --verify --skip-simulation
-
+if [[ "$CHAIN_TYPE" != "Celestia" ]]; then
+  echo "Youre doing something silly with a non-Celestia chain."
+else
+  echo "Deploying DeployNitroContracts2Point1Point3UpgradeActionCelestiaScript"
+  forge script --private-key $DEPLOYMENT_PK --rpc-url $RPC --broadcast DeployNitroContracts2Point1Point3UpgradeActionCelestiaScript -vvv --verify --skip-simulation
+  echo "Topup owner with 0.01ether"
+  cast send --rpc-url $RPC --private-key $DEPLOYMENT_PK $OWNER_ADDRESS --value 0.001ether
+  echo "Balance of "$OWNER_ADDRESS
+  cast from-wei $(cast balance --rpc-url $RPC $OWNER_ADDRESS)
+  export MULTISIG=false
+  # #export UPGRADE_ACTION_ADDRESS=
+  # #forge script --private-key $OWNER_PK --rpc-url $RPC --broadcast ExecuteNitroContracts2Point1Point3UpgradeScript -vvv --verify --skip-simulation
+fi
