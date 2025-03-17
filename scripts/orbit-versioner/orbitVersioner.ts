@@ -73,32 +73,39 @@ async function main() {
 
   // get metadata hashes
   const metadataHashes: { [key: string]: string } = {
-    Inbox: await _getMetadataHash('Inbox',
+    Inbox: await _getMetadataHash(
+      'Inbox',
       await _getLogicAddress(inboxAddress, provider),
       provider
     ),
-    Outbox: await _getMetadataHash('Outbox',
+    Outbox: await _getMetadataHash(
+      'Outbox',
       await _getLogicAddress(outboxAddress, provider),
       provider
     ),
-    SequencerInbox: await _getMetadataHash('SequencerInbox',
+    SequencerInbox: await _getMetadataHash(
+      'SequencerInbox',
       await _getLogicAddress(seqInboxAddress, provider),
       provider
     ),
-    Bridge: await _getMetadataHash('Bridge',
+    Bridge: await _getMetadataHash(
+      'Bridge',
       await _getLogicAddress(bridgeAddress, provider),
       provider
     ),
-    RollupEventInbox: await _getMetadataHash('RollupEventInbox',
+    RollupEventInbox: await _getMetadataHash(
+      'RollupEventInbox',
       await _getLogicAddress(rollupEventInboxAddress, provider),
       provider
     ),
     RollupProxy: await _getMetadataHash('RollupProxy', rollupAddress, provider),
-    RollupAdminLogic: await _getMetadataHash('RollupAdminLogic',
+    RollupAdminLogic: await _getMetadataHash(
+      'RollupAdminLogic',
       await _getLogicAddress(rollupAddress, provider),
       provider
     ),
-    RollupUserLogic: await _getMetadataHash('RollupUserLogic',
+    RollupUserLogic: await _getMetadataHash(
+      'RollupUserLogic',
       await _getAddressAtStorageSlot(
         rollupAddress,
         provider,
@@ -106,7 +113,8 @@ async function main() {
       ),
       provider
     ),
-    ChallengeManager: await _getMetadataHash('ChallengeManager',
+    ChallengeManager: await _getMetadataHash(
+      'ChallengeManager',
       await _getLogicAddress(challengeManagerAddress, provider),
       provider
     ),
@@ -343,6 +351,7 @@ function _canBeUpgradedToTargetVersion(
           'v1.3.0',
           'v2.0.0',
           'v2.1.0',
+          'v2.1.0-celestia',
           'v2.1.1',
         ],
         Outbox: ['any'],

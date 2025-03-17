@@ -135,7 +135,8 @@
   "v2.1.0-celestia": {
     "eth": {
       "Inbox": [
-        "12201890e71c02fb2bd42a04ebb23350ee99d30cd89183ff705d9cba01125d4f"
+        "12201890e71c02fb2bd42a04ebb23350ee99d30cd89183ff705d9cba01125d4f",
+        "12205dbd3b8d396e0948fa2a600b608e91cd302b0a5183ffc616f0537c120dd6"
       ],
       "Outbox": [
         "1220ca19606bc4257576fe035e6aa92f344a5ac04e05c8dca5ecce583ca8dc3a"
@@ -199,7 +200,7 @@
     },
     "erc20": {
       "Inbox": [
-        
+        "1220cb8b19adc579207fc1b8ed46e0d256ffe31b095228dc3755f0a9590c58a5"
       ],
       "Outbox": [
         
