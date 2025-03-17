@@ -179,6 +179,54 @@
       "12207dae25785a4212abc418f4487080544a97665aece1664aa0915a2931aa17"
     ]
   },
+  "v2.1.3-celestia": {
+    "eth": {
+      "Inbox": [
+        "1220cb8b19adc579207fc1b8ed46e0d256ffe31b095228dc3755f0a9590c58a5"
+      ],
+      "Outbox": [
+        "1220fa5e0f8aea0c69c2eacd9fed53687983a0f5126d6df92d142c9667c25881"
+      ],
+      "SequencerInbox": [
+        "1220aaeb4defa245d758dddb3d158627341d01e417b05f9406a9646922849b33"
+      ],
+      "Bridge": [
+        "1220fd55470c1a1b7645518f2c7aad9960c68c04c68f8cd5bcf257d4322cdf95"
+      ],
+      "RollupEventInbox": [
+        "1220b2b5aa88613e76817491c0ceccc856444c0eaa93030df45e55b65f4fc283"
+      ]
+    },
+    "erc20": {
+      "Inbox": [
+        
+      ],
+      "Outbox": [
+        
+      ],
+      "SequencerInbox": [
+        
+      ],
+      "Bridge": [
+        
+      ],
+      "RollupEventInbox": [
+        
+      ]
+    },
+    "RollupProxy": [
+      "1220ea128962c85a9a5aeca5b89c232f49354e32645301a13df322f9650daebd"
+    ],
+    "RollupAdminLogic": [
+      "1220e32c515bc2949208aba3f6bcb8c4b610c10026cd9df1ba3a756351ef1db1"
+    ],
+    "RollupUserLogic": [
+      "12204ced162f9dd5f1bb30bc5fe511f97ba7094ed999aa1ffa7e989f1208b58c"
+    ],
+    "ChallengeManager": [
+      "12209bd5e0f5e1728ef01476a1e6e230071c8c806361262078ab45d6611f6399"
+    ]
+  },
   "v2.1.0": {
     "eth": {
       "Inbox": [

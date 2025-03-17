@@ -3,9 +3,6 @@
 export MODULE_NAME=$1
 
 export CPATH=/Users/inomurko/opt/cm2/module-driver/active-deployments/nitros/$MODULE_NAME
-export OWNER_PK=$(aws secretsmanager --query SecretString --output text get-secret-value --secret-id $(cat $CPATH/helm/values.yaml | yq .accounts.OWNER_KMS_ID) | jq .privateKey | tr -d '"')
-export OWNER_ADDRESS=$(cat $CPATH/helm/values.yaml | yq .accounts.OWNER_ADDRESS)
-
 export RPC=$(cat $CPATH/helm/values.yaml | yq .L1_RPC_URL | tr -d '"')
 
 export INBOX_ADDRESS=$(cat $CPATH/.constellation/contracts.json | jq .coreContracts.inbox | tr -d '"') 
@@ -17,19 +14,6 @@ if [[ "$PARENT_CHAIN_ID" == "421614" || "$PARENT_CHAIN_ID" == "42161" ]]; then
   export PARENT_CHAIN_IS_ARBITRUM=true
 else
   export PARENT_CHAIN_IS_ARBITRUM=false
-fi
-
-if [[ "$PARENT_CHAIN_ID" == "1" || "$PARENT_CHAIN_ID" == "11155111" ]]; then
-  export ETHERSCAN_API_KEY=RWSGJAX2JJNX42SB56ADUWFN6MSB5WBHNR
-else
-  export ETHERSCAN_API_KEY=VAQC4ZPAQGBRUMW8AR5CVAUKE96VNM2735
-fi
-
-IS_FEE_TOKEN_CHAIN=$(cat $CPATH/.constellation/contracts.json | jq .chainInfo.nativeToken | tr -d '"') 
-if [[ "$IS_FEE_TOKEN_CHAIN" == "0x0000000000000000000000000000000000000000" ]]; then
-  export IS_FEE_TOKEN_CHAIN=false
-else
-  export IS_FEE_TOKEN_CHAIN=true
 fi
 
 export MAX_DATA_SIZE=$(cast call --rpc-url $RPC $INBOX_ADDRESS "maxDataSize()(uint256)" | awk '{print $1; exit}')
