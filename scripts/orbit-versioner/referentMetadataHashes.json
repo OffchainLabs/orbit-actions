@@ -183,18 +183,23 @@
   "v2.1.3-celestia": {
     "eth": {
       "Inbox": [
+        "122097599b95167a4619919b764da90239626ad35f3bde1dfbb433b3864e3e49",
         "1220cb8b19adc579207fc1b8ed46e0d256ffe31b095228dc3755f0a9590c58a5"
       ],
       "Outbox": [
+        "1220c72ee63b9632d14bd82c21d862df75dfe60f44c7fa7a5bcd397045d62811",
         "1220fa5e0f8aea0c69c2eacd9fed53687983a0f5126d6df92d142c9667c25881"
       ],
       "SequencerInbox": [
+        "12206427cf551baae97848c424bf4e5bd18b185036b57c705bf1dcae49ead924",
         "1220aaeb4defa245d758dddb3d158627341d01e417b05f9406a9646922849b33"
       ],
       "Bridge": [
+        "12203780a20e8a4b5a00986c2955ab126de87b2a7e469db35d7f42ed94565862",
         "1220fd55470c1a1b7645518f2c7aad9960c68c04c68f8cd5bcf257d4322cdf95"
       ],
       "RollupEventInbox": [
+        "1220cfb3a01d5c215626f9b74d070bc2effac65690dc61e2a253aa1b4590e77e",
         "1220b2b5aa88613e76817491c0ceccc856444c0eaa93030df45e55b65f4fc283"
       ]
     },
@@ -225,6 +230,7 @@
       "12204ced162f9dd5f1bb30bc5fe511f97ba7094ed999aa1ffa7e989f1208b58c"
     ],
     "ChallengeManager": [
+      "12202ad6a2a310eccfda2d5dbb49ed8acfd5bbd2d65ae9cba717ab0d2f2265d0",
       "12209bd5e0f5e1728ef01476a1e6e230071c8c806361262078ab45d6611f6399"
     ]
   },
