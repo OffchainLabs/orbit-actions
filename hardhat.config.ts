@@ -93,6 +93,10 @@ const config: HardhatUserConfig = {
       url:
         'https://eth-sepolia.g.alchemy.com/v2/' + process.env['ALCHEMY_APIKEY'],
     },
+    1: {
+      url:
+        'https://eth-mainnet.g.alchemy.com/v2/' + process.env['ALCHEMY_APIKEY'],
+    },
   },
 }
 
