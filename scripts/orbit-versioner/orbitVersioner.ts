@@ -420,6 +420,11 @@ function _getVersionOfDeployedContract(metadataHash: string): {
   // we want to return the lowest version that matches the hash
   for (const [version] of Object.entries(referentMetadataHashes).reverse()) {
     // check if given hash matches any of the referent hashes for specific version
+
+    //dont get confused by celestia hashes if this is not on celestia SequencerInbox
+    if (version === 'v2.1.3-celestia' && isCelestia === false) continue
+    if (version === 'v2.1.0-celestia' && isCelestia === false) continue
+
     const versionHashes = referentMetadataHashes[version]
     const allHashes = [
       ...Object.values(versionHashes.eth).flat(),
@@ -441,7 +446,7 @@ function _getVersionOfDeployedContract(metadataHash: string): {
   }
   return { version: null, isErc20: false }
 }
-
+let isCelestia = false
 async function _getMetadataHash(
   name: string,
   contractAddress: string,
@@ -452,6 +457,23 @@ async function _getMetadataHash(
   // Pattern to match the metadata prefix and the following 64 hex characters (32 bytes)
   const metadataPattern = /a264697066735822([a-fA-F0-9]{64})/
   const matches = bytecode.match(metadataPattern)
+
+  if (name === 'SequencerInbox') {
+    const contractABI = [
+      'function CELESTIA_MESSAGE_HEADER_FLAG() external view returns (bytes1)',
+    ]
+    const contract = new ethers.Contract(contractAddress, contractABI, provider)
+    try {
+      const result = await contract.CELESTIA_MESSAGE_HEADER_FLAG()
+      const expectedValue = '0x63'
+      if (result === expectedValue) {
+        isCelestia = true
+        console.log('Identified as Celestia chain.')
+      }
+    } catch (error) {
+      isCelestia = false
+    }
+  }
 
   if (matches && matches.length > 1) {
     // The actual metadata hash is in the first capturing group
