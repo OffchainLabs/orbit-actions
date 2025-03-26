@@ -143,19 +143,6 @@ function _checkForPossibleUpgrades(
 ) {
   // version need to be in descending order
   const targetVersionsDescending = [
-    // DISABLING BOLD UPGRADE FOR NOW
-    // {
-    //   version: 'v3.0.0',
-    //   actionName: 'BOLD UpgradeAction',
-    // },
-    {
-      version: 'v2.1.3',
-      actionName: 'NitroContracts2Point1Point3UpgradeAction',
-    },
-    {
-      version: 'v2.1.2',
-      actionName: 'NitroContracts2Point1Point2UpgradeAction',
-    },
     {
       version: 'v3.0.0',
       actionName: 'BOLD UpgradeAction',
