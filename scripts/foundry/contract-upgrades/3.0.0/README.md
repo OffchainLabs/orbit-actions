@@ -36,9 +36,9 @@ $ git clone https://github.com/OffchainLabs/nitro-contracts.git
 $ cd nitro-contracts
 ```
 
-2. Checkout the v3.0.0 tag
+2. Checkout the v3.0.0 tag (TODO: cut release that includes fixes)
 ```
-$ git checkout v3.0.0
+$ git checkout 6896921cbe888a6f75e633f196f5af3d480dfb7a
 ```
 
 3. Install dependencies and build contracts
