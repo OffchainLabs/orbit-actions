@@ -165,8 +165,9 @@ function _checkForPossibleUpgrades(
     },
   ]
 
-  let canUpgradeTo = ''
-  let canUpgradeToActionName = ''
+  console.log() // add a new line for better readability
+
+  let canBeUpgraded = false
   for (const target of targetVersionsDescending.reverse()) {
     if (
       _canBeUpgradedToTargetVersion(
@@ -175,22 +176,16 @@ function _checkForPossibleUpgrades(
         isFeeTokenChain
       )
     ) {
-      if (canUpgradeTo === '') {
-        canUpgradeTo = target.version
-        canUpgradeToActionName = target.actionName
-      } else {
-        throw new Error('Multiple upgrade paths found')
-      }
+      canBeUpgraded = true
+      console.log(
+        `This deployment can be upgraded to ${target.version} using ${target.actionName}`
+      )
     }
   }
-  if (canUpgradeTo !== '') {
-    console.log(
-      `This deployment can be upgraded to ${canUpgradeTo} using ${canUpgradeToActionName}`
-    )
-    return
-  }
 
-  console.log('No upgrade path found')
+  if (!canBeUpgraded) {
+    console.log('No upgrade path found')
+  }
 }
 
 function _canBeUpgradedToTargetVersion(
