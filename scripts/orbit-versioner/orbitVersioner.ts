@@ -165,6 +165,17 @@ function _checkForPossibleUpgrades(
     },
   ]
 
+  // if 2.1.3 and 3.0.0 are both possible, then notify and early return
+  if (
+    _canBeUpgradedToTargetVersion('v2.1.3', currentVersions, isFeeTokenChain) &&
+    _canBeUpgradedToTargetVersion('v3.0.0', currentVersions, isFeeTokenChain)
+  ) {
+    console.log(
+      'This deployment can be upgraded to both v2.1.3 and v3.0.0. v3.0.0 is recommended'
+    )
+    return
+  }
+
   let canUpgradeTo = ''
   let canUpgradeToActionName = ''
   for (const target of targetVersionsDescending.reverse()) {
@@ -258,8 +269,7 @@ function _canBeUpgradedToTargetVersion(
         'v2.1.3',
       ]
     }
-  } else
-  if (targetVersion === 'v2.1.3') {
+  } else if (targetVersion === 'v2.1.3') {
     // v2.1.3 will upgrade the SequencerInbox and Inbox contracts to prevent 7702 accounts from calling certain functions
     // v2.1.3 or v3.0.0 must be performed before the parent chain upgrades with 7702
     // has the same prerequisites as v3.0.0
