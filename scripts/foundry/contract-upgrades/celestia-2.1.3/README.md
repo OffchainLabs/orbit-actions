@@ -5,7 +5,7 @@
 >
 > v3.0.0 is also compatible with an EIP7702 enabled parent chain.
 
-These scripts deploy and execute the `CelestiaNitroContracts2Point1Point3UpgradeAction` contract which allows Orbit chains to upgrade to the Celestia compatible [2.1.3 release](https://github.com/celestiaorg/nitro-contracts/tree/v2.1.3).
+These scripts deploy and execute the `CelestiaNitroContracts2Point1Point3UpgradeAction` (for migrations) or the `NitroContracts2Point1Point3UpgradeAction` (for updating a chain with Celestia DA) contract which allows Orbit chains to upgrade to the Celestia compatible [2.1.3 release](https://github.com/celestiaorg/nitro-contracts/tree/v2.1.3).
 
 Upgrading to `v2.1.3` not required nor recommended if the chain aims to upgrade to v3.0.0 before the parent chain gets EIP7702.
 

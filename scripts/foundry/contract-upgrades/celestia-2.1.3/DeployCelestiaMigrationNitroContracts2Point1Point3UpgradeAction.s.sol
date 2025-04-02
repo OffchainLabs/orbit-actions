@@ -9,7 +9,7 @@ import { MockArbSys } from '../../helper/MockArbSys.sol';
  * @title DeployNitroContracts2Point1Point3UpgradeActionScript
  * @notice This script deploys the ERC20Bridge contract and NitroContracts2Point1Point3UpgradeAction contract.
  */
-contract DeployCelestiaNitroContracts2Point1Point3UpgradeActionScript is
+contract DeployCelestiaMigrationNitroContracts2Point1Point3UpgradeActionScript is
   DeploymentHelpersScript
 {
   // https://github.com/celestiaorg/nitro/releases/tag/v3.2.1-rc.1

@@ -14,7 +14,7 @@ import { IRollupCore } from '@arbitrum/nitro-contracts-2.1.0/src/rollup/IRollupC
  * @title ExecuteNitroContracts1Point2Point3UpgradeScript
  * @notice This script executes nitro contracts 2.1.3 upgrade through UpgradeExecutor
  */
-contract ExecuteCelestiaNitroContracts2Point1Point3UpgradeScript is Script {
+contract ExecuteCelestiaMigrationNitroContracts2Point1Point3UpgradeScript is Script {
   function run() public {
     // used to check upgrade was successful
     bytes32 wasmModuleRoot = vm.envBytes32('TARGET_WASM_MODULE_ROOT');
