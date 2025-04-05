@@ -3,7 +3,7 @@
 export MODULE_NAME=$1
 export DEPLOYMENT_PK=$2
 
-export CPATH=/Users/inomurko/opt/cm2/module-driver/active-deployments/nitros/$MODULE_NAME
+export CPATH=$3$MODULE_NAME
 export OWNER_PK=$(aws secretsmanager --query SecretString --output text get-secret-value --secret-id $(cat $CPATH/helm/values.yaml | yq .accounts.OWNER_KMS_ID) | jq .privateKey | tr -d '"')
 export OWNER_ADDRESS=$(cat $CPATH/helm/values.yaml | yq .accounts.OWNER_ADDRESS)
 

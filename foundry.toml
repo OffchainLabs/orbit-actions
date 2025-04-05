@@ -6,6 +6,6 @@ test = 'test'
 cache_path  = 'cache_forge'
 solc_version = '0.8.16'
 optimizer_runs = 2000
-fs_permissions = [{ access = "read", path = "node_modules/@offchainlabs/"},{ access = "read", path = "node_modules/@arbitrum/"}, { access = "read", path = "node_modules/@openzeppelin/"},{ access = "read-write", path = "./scripts/foundry"}]
+fs_permissions = [{ access = "read", path = "node_modules/@constellation-labs/"},{ access = "read", path = "node_modules/@offchainlabs/"},{ access = "read", path = "./celestia-2.1.0"}, { access = "read", path = "./celestia-2.1.3"}, { access = "read", path = "node_modules/@arbitrum/"}, { access = "read", path = "node_modules/@openzeppelin/"},{ access = "read-write", path = "./scripts/foundry"}]
 script = 'scripts'
 evm_version = 'cancun'

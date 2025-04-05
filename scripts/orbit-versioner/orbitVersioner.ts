@@ -73,32 +73,39 @@ async function main() {
 
   // get metadata hashes
   const metadataHashes: { [key: string]: string } = {
-    Inbox: await _getMetadataHash('Inbox',
+    Inbox: await _getMetadataHash(
+      'Inbox',
       await _getLogicAddress(inboxAddress, provider),
       provider
     ),
-    Outbox: await _getMetadataHash('Outbox',
+    Outbox: await _getMetadataHash(
+      'Outbox',
       await _getLogicAddress(outboxAddress, provider),
       provider
     ),
-    SequencerInbox: await _getMetadataHash('SequencerInbox',
+    SequencerInbox: await _getMetadataHash(
+      'SequencerInbox',
       await _getLogicAddress(seqInboxAddress, provider),
       provider
     ),
-    Bridge: await _getMetadataHash('Bridge',
+    Bridge: await _getMetadataHash(
+      'Bridge',
       await _getLogicAddress(bridgeAddress, provider),
       provider
     ),
-    RollupEventInbox: await _getMetadataHash('RollupEventInbox',
+    RollupEventInbox: await _getMetadataHash(
+      'RollupEventInbox',
       await _getLogicAddress(rollupEventInboxAddress, provider),
       provider
     ),
     RollupProxy: await _getMetadataHash('RollupProxy', rollupAddress, provider),
-    RollupAdminLogic: await _getMetadataHash('RollupAdminLogic',
+    RollupAdminLogic: await _getMetadataHash(
+      'RollupAdminLogic',
       await _getLogicAddress(rollupAddress, provider),
       provider
     ),
-    RollupUserLogic: await _getMetadataHash('RollupUserLogic',
+    RollupUserLogic: await _getMetadataHash(
+      'RollupUserLogic',
       await _getAddressAtStorageSlot(
         rollupAddress,
         provider,
@@ -106,7 +113,8 @@ async function main() {
       ),
       provider
     ),
-    ChallengeManager: await _getMetadataHash('ChallengeManager',
+    ChallengeManager: await _getMetadataHash(
+      'ChallengeManager',
       await _getLogicAddress(challengeManagerAddress, provider),
       provider
     ),
@@ -343,6 +351,7 @@ function _canBeUpgradedToTargetVersion(
           'v1.3.0',
           'v2.0.0',
           'v2.1.0',
+          'v2.1.0-celestia',
           'v2.1.1',
         ],
         Outbox: ['any'],
@@ -411,6 +420,11 @@ function _getVersionOfDeployedContract(metadataHash: string): {
   // we want to return the lowest version that matches the hash
   for (const [version] of Object.entries(referentMetadataHashes).reverse()) {
     // check if given hash matches any of the referent hashes for specific version
+
+    //dont get confused by celestia hashes if this is not on celestia SequencerInbox
+    if (version === 'v2.1.3-celestia' && isCelestia === false) continue
+    if (version === 'v2.1.0-celestia' && isCelestia === false) continue
+
     const versionHashes = referentMetadataHashes[version]
     const allHashes = [
       ...Object.values(versionHashes.eth).flat(),
@@ -432,7 +446,7 @@ function _getVersionOfDeployedContract(metadataHash: string): {
   }
   return { version: null, isErc20: false }
 }
-
+let isCelestia = false
 async function _getMetadataHash(
   name: string,
   contractAddress: string,
@@ -443,6 +457,23 @@ async function _getMetadataHash(
   // Pattern to match the metadata prefix and the following 64 hex characters (32 bytes)
   const metadataPattern = /a264697066735822([a-fA-F0-9]{64})/
   const matches = bytecode.match(metadataPattern)
+
+  if (name === 'SequencerInbox') {
+    const contractABI = [
+      'function CELESTIA_MESSAGE_HEADER_FLAG() external view returns (bytes1)',
+    ]
+    const contract = new ethers.Contract(contractAddress, contractABI, provider)
+    try {
+      const result = await contract.CELESTIA_MESSAGE_HEADER_FLAG()
+      const expectedValue = '0x63'
+      if (result === expectedValue) {
+        isCelestia = true
+        console.log('Identified as Celestia chain.')
+      }
+    } catch (error) {
+      isCelestia = false
+    }
+  }
 
   if (matches && matches.length > 1) {
     // The actual metadata hash is in the first capturing group
