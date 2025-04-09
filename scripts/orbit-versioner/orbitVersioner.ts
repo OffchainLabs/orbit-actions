@@ -231,7 +231,8 @@ function _canBeUpgradedToTargetVersion(
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
 
   if (targetVersion === 'v3.0.0') {
-    if (parentChainId !== 1n) {
+    // todo: remove once nitro supports bold for L3's
+    if (parentChainId !== 1n && parentChainId !== 11155111n) {
       supportedSourceVersionsPerContract = {
         Inbox: [],
         Outbox: [],
