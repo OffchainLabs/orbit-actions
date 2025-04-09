@@ -132,14 +132,15 @@ async function main() {
 
   // TODO: make this more generic to support other other upgrade paths in the future
   // TODO: also check  osp
-  _checkForPossibleUpgrades(versions, isFeeTokenChain)
+  _checkForPossibleUpgrades(versions, isFeeTokenChain, chainId)
 }
 
 function _checkForPossibleUpgrades(
   currentVersions: {
     [key: string]: string | null
   },
-  isFeeTokenChain: boolean
+  isFeeTokenChain: boolean,
+  parentChainId: bigint
 ) {
   // version need to be in descending order
   const targetVersionsDescending = [
@@ -167,8 +168,18 @@ function _checkForPossibleUpgrades(
 
   // if 2.1.3 and 3.0.0 are both possible, then notify and early return
   if (
-    _canBeUpgradedToTargetVersion('v2.1.3', currentVersions, isFeeTokenChain) &&
-    _canBeUpgradedToTargetVersion('v3.0.0', currentVersions, isFeeTokenChain)
+    _canBeUpgradedToTargetVersion(
+      'v2.1.3',
+      currentVersions,
+      isFeeTokenChain,
+      parentChainId
+    ) &&
+    _canBeUpgradedToTargetVersion(
+      'v3.0.0',
+      currentVersions,
+      isFeeTokenChain,
+      parentChainId
+    )
   ) {
     console.log(
       'This deployment can be upgraded to both v2.1.3 and v3.0.0. v3.0.0 is recommended'
@@ -183,7 +194,8 @@ function _checkForPossibleUpgrades(
       _canBeUpgradedToTargetVersion(
         target.version,
         currentVersions,
-        isFeeTokenChain
+        isFeeTokenChain,
+        parentChainId
       )
     ) {
       if (canUpgradeTo === '') {
@@ -210,6 +222,7 @@ function _canBeUpgradedToTargetVersion(
     [key: string]: string | null
   },
   isFeeTokenChain: boolean,
+  parentChainId: bigint,
   verbose: boolean = false
 ): boolean {
   if (verbose)
@@ -218,56 +231,70 @@ function _canBeUpgradedToTargetVersion(
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
 
   if (targetVersion === 'v3.0.0') {
-    // v3.0.0 will upgrade bridge, inbox, rollupEventInbox, outbox, sequencerInbox, rollup logics, challengeManager
-    supportedSourceVersionsPerContract = {
-      Inbox: [
-        'v1.1.0',
-        'v1.1.1',
-        'v1.2.0',
-        'v1.2.1',
-        'v1.3.0',
-        'v2.0.0',
-        'v2.1.0',
-        'v2.1.1',
-        'v2.1.2',
-        'v2.1.3',
-      ],
-      Outbox: ['any'],
-      Bridge: [
-        'v1.1.0',
-        'v1.1.1',
-        'v1.2.0',
-        'v1.2.1',
-        'v1.3.0',
-        'v2.0.0',
-        'v2.1.0',
-        'v2.1.1',
-        'v2.1.2',
-        'v2.1.3',
-      ],
-      RollupEventInbox: ['any'],
-      RollupProxy: ['any'],
-      RollupAdminLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2', 'v2.1.3'],
-      RollupUserLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2', 'v2.1.3'],
-      ChallengeManager: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2', 'v2.1.3'],
-      SequencerInbox: [
-        'v1.2.1',
-        'v1.3.0',
-        'v2.0.0',
-        'v2.1.0',
-        'v2.1.1',
-        'v2.1.2',
-        'v2.1.3',
-      ],
-    }
-    if (isFeeTokenChain) {
-      supportedSourceVersionsPerContract.Bridge = [
-        'v2.0.0',
-        'v2.1.0',
-        'v2.1.1',
-        'v2.1.2',
-        'v2.1.3',
-      ]
+    if (parentChainId !== 1n) {
+      supportedSourceVersionsPerContract = {
+        Inbox: [],
+        Outbox: [],
+        Bridge: [],
+        RollupEventInbox: [],
+        RollupProxy: [],
+        RollupAdminLogic: [],
+        RollupUserLogic: [],
+        ChallengeManager: [],
+        SequencerInbox: [],
+      }
+    } else {
+      // v3.0.0 will upgrade bridge, inbox, rollupEventInbox, outbox, sequencerInbox, rollup logics, challengeManager
+      supportedSourceVersionsPerContract = {
+        Inbox: [
+          'v1.1.0',
+          'v1.1.1',
+          'v1.2.0',
+          'v1.2.1',
+          'v1.3.0',
+          'v2.0.0',
+          'v2.1.0',
+          'v2.1.1',
+          'v2.1.2',
+          'v2.1.3',
+        ],
+        Outbox: ['any'],
+        Bridge: [
+          'v1.1.0',
+          'v1.1.1',
+          'v1.2.0',
+          'v1.2.1',
+          'v1.3.0',
+          'v2.0.0',
+          'v2.1.0',
+          'v2.1.1',
+          'v2.1.2',
+          'v2.1.3',
+        ],
+        RollupEventInbox: ['any'],
+        RollupProxy: ['any'],
+        RollupAdminLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2', 'v2.1.3'],
+        RollupUserLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2', 'v2.1.3'],
+        ChallengeManager: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2', 'v2.1.3'],
+        SequencerInbox: [
+          'v1.2.1',
+          'v1.3.0',
+          'v2.0.0',
+          'v2.1.0',
+          'v2.1.1',
+          'v2.1.2',
+          'v2.1.3',
+        ],
+      }
+      if (isFeeTokenChain) {
+        supportedSourceVersionsPerContract.Bridge = [
+          'v2.0.0',
+          'v2.1.0',
+          'v2.1.1',
+          'v2.1.2',
+          'v2.1.3',
+        ]
+      }
     }
   } else if (targetVersion === 'v2.1.3') {
     // v2.1.3 will upgrade the SequencerInbox and Inbox contracts to prevent 7702 accounts from calling certain functions
