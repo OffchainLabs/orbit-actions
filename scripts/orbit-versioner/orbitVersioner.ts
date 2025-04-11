@@ -145,7 +145,7 @@ function _checkForPossibleUpgrades(
   // version need to be in descending order
   const targetVersionsDescending = [
     {
-      version: 'v3.0.0',
+      version: 'v3.1.0',
       actionName: 'BOLD UpgradeAction',
     },
     {
@@ -166,7 +166,7 @@ function _checkForPossibleUpgrades(
     },
   ]
 
-  // if 2.1.3 and 3.0.0 are both possible, then notify and early return
+  // if 2.1.3 and 3.1.0 are both possible, then notify and early return
   if (
     _canBeUpgradedToTargetVersion(
       'v2.1.3',
@@ -175,14 +175,14 @@ function _checkForPossibleUpgrades(
       parentChainId
     ) &&
     _canBeUpgradedToTargetVersion(
-      'v3.0.0',
+      'v3.1.0',
       currentVersions,
       isFeeTokenChain,
       parentChainId
     )
   ) {
     console.log(
-      'This deployment can be upgraded to both v2.1.3 and v3.0.0. v3.0.0 is recommended'
+      'This deployment can be upgraded to both v2.1.3 and v3.1.0. v3.1.0 is recommended'
     )
     return
   }
@@ -230,7 +230,7 @@ function _canBeUpgradedToTargetVersion(
 
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
 
-  if (targetVersion === 'v3.0.0') {
+  if (targetVersion === 'v3.1.0') {
     // todo: remove once nitro supports bold for L3's
     if (parentChainId !== 1n && parentChainId !== 11155111n) {
       supportedSourceVersionsPerContract = {
@@ -245,7 +245,7 @@ function _canBeUpgradedToTargetVersion(
         SequencerInbox: [],
       }
     } else {
-      // v3.0.0 will upgrade bridge, inbox, rollupEventInbox, outbox, sequencerInbox, rollup logics, challengeManager
+      // v3.1.0 will upgrade bridge, inbox, rollupEventInbox, outbox, sequencerInbox, rollup logics, challengeManager
       supportedSourceVersionsPerContract = {
         Inbox: [
           'v1.1.0',
@@ -299,8 +299,8 @@ function _canBeUpgradedToTargetVersion(
     }
   } else if (targetVersion === 'v2.1.3') {
     // v2.1.3 will upgrade the SequencerInbox and Inbox contracts to prevent 7702 accounts from calling certain functions
-    // v2.1.3 or v3.0.0 must be performed before the parent chain upgrades with 7702
-    // has the same prerequisites as v3.0.0
+    // v2.1.3 or v3.1.0 must be performed before the parent chain upgrades with 7702
+    // has the same prerequisites as v3.1.0
     supportedSourceVersionsPerContract = {
       Inbox: [
         'v1.1.0',

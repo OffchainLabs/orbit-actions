@@ -1,13 +1,13 @@
 # Nitro contracts 2.1.3 upgrade
 
 > [!CAUTION]
-> This is a patch version and is only necessary for chains that aren't ready for v3.0.0 whose parent chains are upgrading to include EIP7702.
+> This is a patch version and is only necessary for chains that aren't ready for v3.1.0 whose parent chains are upgrading to include EIP7702.
 >
-> v3.0.0 is also compatible with an EIP7702 enabled parent chain.
+> v3.1.0 is also compatible with an EIP7702 enabled parent chain.
 
 These scripts deploy and execute the `NitroContracts2Point1Point3UpgradeAction` contract which allows Orbit chains to upgrade to [2.1.3 release](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v2.1.3). Predeployed instances of the upgrade action exist on the chains listed in the following section.
 
-Upgrading to `v2.1.3` not required nor recommended if the chain aims to upgrade to v3.0.0 before the parent chain gets EIP7702.
+Upgrading to `v2.1.3` not required nor recommended if the chain aims to upgrade to v3.1.0 before the parent chain gets EIP7702.
 
 You may need to perform the `v2.1.2` upgrade first if your chain uses a custom gas token and was originally deployed before `v2.0.0`. Please refer to the top [README](/README.md#check-version-and-upgrade-path) `Check Version and Upgrade Path` on how to determine your current nitro contracts version.
 

@@ -1,12 +1,12 @@
-# Nitro contracts 3.0.0 upgrade
+# Nitro contracts 3.1.0 upgrade
 
-To upgrade to Nitro contracts 3.0.0 (BoLD), you will need to use the [BOLDUpgradeAction](https://github.com/OffchainLabs/nitro-contracts/blob/main/src/rollup/BOLDUpgradeAction.sol) from the [nitro-contract](https://github.com/OffchainLabs/nitro-contracts) repo. 
+To upgrade to Nitro contracts 3.1.0 (BoLD), you will need to use the [BOLDUpgradeAction](https://github.com/OffchainLabs/nitro-contracts/blob/main/src/rollup/BOLDUpgradeAction.sol) from the [nitro-contract](https://github.com/OffchainLabs/nitro-contracts) repo. 
 
 BOLDUpgradeAction will perform the following actions:
 
-1. Upgrade bridge, inbox, rollupEventInbox, outbox, sequencerInbox to v3.0.0
-2. Deploy new v3.0.0 BoLD challenge manager
-3. Migrate v2 rollup into a new v3.0.0 rollup address
+1. Upgrade bridge, inbox, rollupEventInbox, outbox, sequencerInbox to v3.1.0
+2. Deploy new v3.1.0 BoLD challenge manager
+3. Migrate v2 rollup into a new v3.1.0 rollup address
 4. Setup the rollup according to the new config and use the latest confirmed assertion on the old rollup as genesis of the new rollup
 
 Note that contracts without code changes are not upgraded. It is normal to have some contracts still in the old version after the upgrade as they are equivalent to the new version. There are no associated ArbOS upgrade for this version.
@@ -36,9 +36,9 @@ $ git clone https://github.com/OffchainLabs/nitro-contracts.git
 $ cd nitro-contracts
 ```
 
-2. Checkout the v3.0.0 tag (TODO: cut release that includes fixes)
+2. Checkout the v3.1.0 tag
 ```
-$ git checkout 6896921cbe888a6f75e633f196f5af3d480dfb7a
+$ git checkout v3.1.0
 ```
 
 3. Install dependencies and build contracts
