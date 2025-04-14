@@ -108,3 +108,14 @@ For migrations, please refer to [CelestiaNitroContracts2Point1Point3UpgradeActio
 For upgrading a chain already on Celestia DA, refer to [this deployment script](https://github.com/celestiaorg/orbit-actions/blob/main/scripts/foundry/contract-upgrades/celestia-2.1.3/DeployNitroContracts2Point1Point3UpgradeActionCelestia.s.sol), which can then be executed with the upstream 2.1.3 execute script.
 
 Note that for either path, you can upgrade to 2.1.2 using the canonical upgrade action, followed by the corresponding celestia action.
+## Enable Fast Confirmation
+
+See [EnableFastConfirmAction](scripts/foundry/fast-confirm).
+
+## Enable Stylus Cache Manager
+
+See [setCacheManager](scripts/foundry/stylus/setCacheManager).
+
+## Enable BoLD
+
+See [Nitro contracts 3.1.0 upgrade](https://github.com/OffchainLabs/orbit-actions/tree/main/scripts/foundry/contract-upgrades/3.1.0). 
