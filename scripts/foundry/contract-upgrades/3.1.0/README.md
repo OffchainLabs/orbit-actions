@@ -13,7 +13,7 @@ Note that contracts without code changes are not upgraded. It is normal to have 
 
 ## Requirements
 
-This upgrade only support upgrading from the following [nitro-contract release](https://github.com/OffchainLabs/nitro-contracts/releases):
+**Nitro contracts**: This upgrade only support upgrading from the following [nitro-contract release](https://github.com/OffchainLabs/nitro-contracts/releases); please refer to the top [README](../../README.md) `Check Version and Upgrade Path` on how to determine your current nitro contracts version:
 
 - Inbox: v1.1.0 - v2.1.3 inclusive
 - Outbox: any
@@ -26,7 +26,11 @@ This upgrade only support upgrading from the following [nitro-contract release](
 - RollupUserLogic: v2.0.0 - v2.1.3 inclusive
 - ChallengeManager: v2.0.0 - v2.1.3 inclusive
 
-Please refer to the top [README](../../README.md) `Check Version and Upgrade Path` on how to determine your current nitro contracts version.
+**Nitro node**: The minimum node version for this upgrade is Nitro v3.5.4, which introduced compatibility with pre-BoLD and BoLD chains to ensure a smooth upgrade. Nodes will automatically detect whether the chain is running pre-BoLD or BoLD Rollup and Challenge contracts and will perform the appropriate calls depending on that check.
+
+Most of the parameters used in Nitro before v3.5.4 will stay the same when running a higher version but, depending on the type of node, you'll have to include a few more BoLD-specific parameters:
+- For validator nodes: add `--node.bold.enable=true` and `--node.bold.strategy=<MakeNodes | ResolveNodes | Defensive>` to configure the validator to create and/or confirm assertions in the new Rollup contract (find more information in [How to run a validator](/run-arbitrum-node/more-types/02-run-validator-node.mdx#step-1-configure-and-run-your-validator))
+- For all other types of node: add `--node.bold.enable=true` to enable [watchtower mode](/run-arbitrum-node/03-run-full-node.mdx#watchtower-mode)
 
 ## How to use it
 
