@@ -50,6 +50,10 @@ _This section is also referenced in the documentation on ["How to upgrade ArbOS 
 
 For ArbOS upgrades, a common pre-requisite is to deploy new Nitro contracts to the parent chain of your Orbit chain before scheduling the ArbOS upgrade. These contracts include the rollup logic, fraud proof contracts, and interfaces for interacting with Nitro precompiles. The scripts and instructions in this repository are meant for Orbit chain owners to upgrade the aforementioned contracts, set the new WASM module root, and then schedule the ArbOS upgrade.
 
+### Nitro contracts 3.1.0 (for [BoLD](https://docs.arbitrum.io/how-arbitrum-works/bold/gentle-introduction))
+
+The [`nitro-contracts 3.1.0` upgrade guide](scripts/foundry/contract-upgrades/3.1.0) will use the [BOLDUpgradeAction](https://github.com/OffchainLabs/nitro-contracts/blob/main/src/rollup/BOLDUpgradeAction.sol) from the [nitro-contract](https://github.com/OffchainLabs/nitro-contracts) repo. There are no associated ArbOS upgrade for BoLD. 
+
 ### Nitro contracts 2.1.3
 
 The [`nitro-contracts 2.1.3` upgrade guide](scripts/foundry/contract-upgrades/2.1.3) will patch the `Inbox` and `SequencerInbox` to properly handle EIP7702 callers. This upgrade is required before the parent chain upgrades to include EIP7702.
@@ -62,7 +66,7 @@ This upgrade is only required if:
 
 1. The chain has a custom native token; AND
 1. The chain was originally deployed before `v2.0.0`; AND
-1. The chain wishes to upgrade to `v3.0.0` or `v2.1.3`
+1. The chain wishes to upgrade to `v3.1.0` or `v2.1.3`
 
 Do not perform this upgrade if the above requirements aren't met.
 
@@ -110,4 +114,10 @@ See [EnableFastConfirmAction](scripts/foundry/fast-confirm).
 
 ## Enable Stylus Cache Manager
 
-See [setCacheManager](scripts/foundry/stylus/setCacheManager). 
+See [setCacheManager](scripts/foundry/stylus/setCacheManager).
+
+## Enable BoLD
+
+Currently limited to L2s; L3 support is expected in a future update.
+
+See [Nitro contracts 3.1.0 upgrade](https://github.com/OffchainLabs/orbit-actions/tree/main/scripts/foundry/contract-upgrades/3.1.0). 

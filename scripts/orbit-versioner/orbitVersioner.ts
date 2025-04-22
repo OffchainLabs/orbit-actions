@@ -124,7 +124,7 @@ async function main() {
       metadataHashes[key]
     )
     versions[key] = version
-    if (isErc20) isFeeTokenChain = true
+    if (key === 'Bridge' && isErc20) isFeeTokenChain = true
     console.log(
       `Version of deployed ${key}: ${versions[key] ? versions[key] : 'unknown'}`
     )
@@ -132,22 +132,22 @@ async function main() {
 
   // TODO: make this more generic to support other other upgrade paths in the future
   // TODO: also check  osp
-  _checkForPossibleUpgrades(versions, isFeeTokenChain)
+  _checkForPossibleUpgrades(versions, isFeeTokenChain, chainId)
 }
 
 function _checkForPossibleUpgrades(
   currentVersions: {
     [key: string]: string | null
   },
-  isFeeTokenChain: boolean
+  isFeeTokenChain: boolean,
+  parentChainId: bigint
 ) {
   // version need to be in descending order
   const targetVersionsDescending = [
-    // DISABLING BOLD UPGRADE FOR NOW
-    // {
-    //   version: 'v3.0.0',
-    //   actionName: 'BOLD UpgradeAction',
-    // },
+    {
+      version: 'v3.1.0',
+      actionName: 'BOLD UpgradeAction',
+    },
     {
       version: 'v2.1.3',
       actionName: 'NitroContracts2Point1Point3UpgradeAction',
@@ -166,6 +166,27 @@ function _checkForPossibleUpgrades(
     },
   ]
 
+  // if 2.1.3 and 3.1.0 are both possible, then notify and early return
+  if (
+    _canBeUpgradedToTargetVersion(
+      'v2.1.3',
+      currentVersions,
+      isFeeTokenChain,
+      parentChainId
+    ) &&
+    _canBeUpgradedToTargetVersion(
+      'v3.1.0',
+      currentVersions,
+      isFeeTokenChain,
+      parentChainId
+    )
+  ) {
+    console.log(
+      'This deployment can be upgraded to both v2.1.3 and v3.1.0. v3.1.0 is recommended'
+    )
+    return
+  }
+
   let canUpgradeTo = ''
   let canUpgradeToActionName = ''
   for (const target of targetVersionsDescending.reverse()) {
@@ -173,7 +194,8 @@ function _checkForPossibleUpgrades(
       _canBeUpgradedToTargetVersion(
         target.version,
         currentVersions,
-        isFeeTokenChain
+        isFeeTokenChain,
+        parentChainId
       )
     ) {
       if (canUpgradeTo === '') {
@@ -200,6 +222,7 @@ function _canBeUpgradedToTargetVersion(
     [key: string]: string | null
   },
   isFeeTokenChain: boolean,
+  parentChainId: bigint,
   verbose: boolean = false
 ): boolean {
   if (verbose)
@@ -207,47 +230,77 @@ function _canBeUpgradedToTargetVersion(
 
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
 
-  // DISABLING BOLD UPGRADE FOR NOW
-  // if (targetVersion === 'v3.0.0') {
-  //   // v3.0.0 will upgrade bridge, inbox, rollupEventInbox, outbox, sequencerInbox, rollup logics, challengeManager
-  //   supportedSourceVersionsPerContract = {
-  //     Inbox: [
-  //       'v1.1.0',
-  //       'v1.1.1',
-  //       'v1.2.0',
-  //       'v1.2.1',
-  //       'v1.3.0',
-  //       'v2.0.0',
-  //       'v2.1.0',
-  //     ],
-  //     Outbox: ['any'],
-  //     Bridge: [
-  //       'v1.1.0',
-  //       'v1.1.1',
-  //       'v1.2.0',
-  //       'v1.2.1',
-  //       'v1.3.0',
-  //       'v2.0.0',
-  //       'v2.1.0',
-  //     ],
-  //     RollupEventInbox: ['any'],
-  //     RollupProxy: ['any'],
-  //     RollupAdminLogic: ['v2.0.0', 'v2.1.0'],
-  //     RollupUserLogic: ['v2.0.0', 'v2.1.0'],
-  //     ChallengeManager: ['v2.0.0', 'v2.1.0'],
-  //     SequencerInbox: ['v1.2.1', 'v1.3.0', 'v2.0.0', 'v2.1.0'],
-  //   }
-  //   if (isFeeTokenChain) {
-  //     // cannot upgrade erc20 orbit chains from v1 to v3 right now due to a storage diff
-  //     supportedSourceVersionsPerContract.Bridge = ['v2.0.0', 'v2.1.0', 'v2.1.2']
-  //     // TODO: remove this later, but the script does not custom fee token chain yet
-  //     supportedSourceVersionsPerContract.Bridge = []
-  //   }
-  // } else
-  if (targetVersion === 'v2.1.3') {
+  if (targetVersion === 'v3.1.0') {
+    // todo: remove once nitro supports bold for L3's
+    if (parentChainId !== 1n && parentChainId !== 11155111n) {
+      supportedSourceVersionsPerContract = {
+        Inbox: [],
+        Outbox: [],
+        Bridge: [],
+        RollupEventInbox: [],
+        RollupProxy: [],
+        RollupAdminLogic: [],
+        RollupUserLogic: [],
+        ChallengeManager: [],
+        SequencerInbox: [],
+      }
+    } else {
+      // v3.1.0 will upgrade bridge, inbox, rollupEventInbox, outbox, sequencerInbox, rollup logics, challengeManager
+      supportedSourceVersionsPerContract = {
+        Inbox: [
+          'v1.1.0',
+          'v1.1.1',
+          'v1.2.0',
+          'v1.2.1',
+          'v1.3.0',
+          'v2.0.0',
+          'v2.1.0',
+          'v2.1.1',
+          'v2.1.2',
+          'v2.1.3',
+        ],
+        Outbox: ['any'],
+        Bridge: [
+          'v1.1.0',
+          'v1.1.1',
+          'v1.2.0',
+          'v1.2.1',
+          'v1.3.0',
+          'v2.0.0',
+          'v2.1.0',
+          'v2.1.1',
+          'v2.1.2',
+          'v2.1.3',
+        ],
+        RollupEventInbox: ['any'],
+        RollupProxy: ['any'],
+        RollupAdminLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2', 'v2.1.3'],
+        RollupUserLogic: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2', 'v2.1.3'],
+        ChallengeManager: ['v2.0.0', 'v2.1.0', 'v2.1.1', 'v2.1.2', 'v2.1.3'],
+        SequencerInbox: [
+          'v1.2.1',
+          'v1.3.0',
+          'v2.0.0',
+          'v2.1.0',
+          'v2.1.1',
+          'v2.1.2',
+          'v2.1.3',
+        ],
+      }
+      if (isFeeTokenChain) {
+        supportedSourceVersionsPerContract.Bridge = [
+          'v2.0.0',
+          'v2.1.0',
+          'v2.1.1',
+          'v2.1.2',
+          'v2.1.3',
+        ]
+      }
+    }
+  } else if (targetVersion === 'v2.1.3') {
     // v2.1.3 will upgrade the SequencerInbox and Inbox contracts to prevent 7702 accounts from calling certain functions
-    // v2.1.3 or v3.0.0 must be performed before the parent chain upgrades with 7702
-    // has the same prerequisites as v3.0.0
+    // v2.1.3 or v3.1.0 must be performed before the parent chain upgrades with 7702
+    // has the same prerequisites as v3.1.0
     supportedSourceVersionsPerContract = {
       Inbox: [
         'v1.1.0',
