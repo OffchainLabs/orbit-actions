@@ -7,8 +7,8 @@ import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transpa
 import "@arbitrum/nitro-contracts-2.1.3/src/express-lane-auction/IExpressLaneAuction.sol";
 
 /**
- * @title DeployAddWasmCacheManagerActionScript
- * @notice This script deploys CacheManager and then deploys action that's used to add cache manager on a child chain.
+ * @title DeployExpressLaneAuctionScript
+ * @notice This script deploys ExpressLaneAuction on a child chain.
  */
 contract DeployExpressLaneAuctionScript is DeploymentHelpersScript {
     // https://github.com/OffchainLabs/nitro/releases/tag/consensus-v32
@@ -17,7 +17,7 @@ contract DeployExpressLaneAuctionScript is DeploymentHelpersScript {
     function run() public {
         vm.startBroadcast();
 
-        // deploy CacheManger behind proxy
+        // deploy ExpressLaneAuction behind proxy
         address expressLaneAuctionLogic = deployBytecodeFromJSON(
             "/node_modules/@arbitrum/nitro-contracts-2.1.3/build/contracts/src/express-lane-auction/ExpressLaneAuction.sol/ExpressLaneAuction.json"
         );
