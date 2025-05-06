@@ -20,7 +20,7 @@ else
 fi
 
 if [[ "$PARENT_CHAIN_ID" == "1" || "$PARENT_CHAIN_ID" == "11155111" ]]; then
-  export ETHERSCAN_API_KEY=RWSGJAX2JJNX42SB56ADUWFN6MSB5WBHNR
+  export ETHERSCAN_API_KEY=CBQKA3A3U5F9Z7T7A2FJS4IMW6MFBDC8HH
 else
   export ETHERSCAN_API_KEY=VAQC4ZPAQGBRUMW8AR5CVAUKE96VNM2735
 fi
@@ -31,6 +31,11 @@ if [[ "$IS_FEE_TOKEN_CHAIN" == "0x0000000000000000000000000000000000000000" ]]; 
 else
   export IS_FEE_TOKEN_CHAIN=true
 fi
+if [[ "$PARENT_CHAIN_ID" == "8453" || "$PARENT_CHAIN_ID" == "84532" ]]; then
+  export ETHERSCAN_API_KEY=N7MQWFSFH7PTU38W28KKGKDGDWRI5EYFR6
+else
+  export ETHERSCAN_API_KEY=VAQC4ZPAQGBRUMW8AR5CVAUKE96VNM2735
+fi
 
 export MAX_DATA_SIZE=$(cast call --rpc-url $RPC $INBOX_ADDRESS "maxDataSize()(uint256)" | awk '{print $1; exit}')
 
@@ -40,12 +45,12 @@ if [[ "$CHAIN_TYPE" != "Celestia" ]]; then
   echo "Youre doing something silly with a non-Celestia chain."
 else
   echo "Deploying DeployNitroContracts2Point1Point3UpgradeActionCelestiaScript"
-  forge script --private-key $DEPLOYMENT_PK --rpc-url $RPC --broadcast DeployCelestiaNitroContracts2Point1Point3UpgradeActionCelestiaScript -vvv --verify --skip-simulation
+  forge script --private-key $DEPLOYMENT_PK --rpc-url $RPC --broadcast DeployCelestiaNitroContracts2Point1Point3UpgradeActionCelestia -vvv --verify --skip-simulation
   echo "Topup owner with 0.01ether"
-  cast send --rpc-url $RPC --private-key $DEPLOYMENT_PK $OWNER_ADDRESS --value 0.001ether
+  #cast send --rpc-url $RPC --private-key $DEPLOYMENT_PK $OWNER_ADDRESS --value 0.001ether
   echo "Balance of "$OWNER_ADDRESS
   cast from-wei $(cast balance --rpc-url $RPC $OWNER_ADDRESS)
-  export MULTISIG=false
+  export MULTISIG=true
   # #export UPGRADE_ACTION_ADDRESS=
   # #forge script --private-key $OWNER_PK --rpc-url $RPC --broadcast ExecuteNitroContracts2Point1Point3UpgradeScript -vvv --verify --skip-simulation
 fi

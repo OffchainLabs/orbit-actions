@@ -21,9 +21,13 @@ fi
 
 if [[ "$PARENT_CHAIN_ID" == "1" || "$PARENT_CHAIN_ID" == "11155111" ]]; then
   export ETHERSCAN_API_KEY=RWSGJAX2JJNX42SB56ADUWFN6MSB5WBHNR
+fi
+if [[ "$PARENT_CHAIN_ID" == "8453" || "$PARENT_CHAIN_ID" == "84532" ]]; then
+  export ETHERSCAN_API_KEY=N7MQWFSFH7PTU38W28KKGKDGDWRI5EYFR6
 else
   export ETHERSCAN_API_KEY=VAQC4ZPAQGBRUMW8AR5CVAUKE96VNM2735
 fi
+
 
 IS_FEE_TOKEN_CHAIN=$(cat $CPATH/.constellation/contracts.json | jq .chainInfo.nativeToken | tr -d '"') 
 if [[ "$IS_FEE_TOKEN_CHAIN" == "0x0000000000000000000000000000000000000000" ]]; then
@@ -42,8 +46,8 @@ else
   echo "Deploying DeployNitroContracts2Point1Point3UpgradeActionScript"
   forge script --private-key $DEPLOYMENT_PK --rpc-url $RPC --broadcast DeployNitroContracts2Point1Point2UpgradeActionScript -vvv --verify --skip-simulation
 
-  echo "Topup owner with 0.01ether"
-  cast send --rpc-url $RPC --private-key $DEPLOYMENT_PK $OWNER_ADDRESS --value 0.001ether
+  #echo "Topup owner with 0.01ether"
+  #cast send --rpc-url $RPC --private-key $DEPLOYMENT_PK $OWNER_ADDRESS --value 0.001ether
   echo "Balance of "$OWNER_ADDRESS
   cast from-wei $(cast balance --rpc-url $RPC $OWNER_ADDRESS)
   export MULTISIG=false

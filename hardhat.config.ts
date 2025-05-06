@@ -101,6 +101,11 @@ const config: HardhatUserConfig = {
       url:
         'https://arb-mainnet.g.alchemy.com/v2/' + process.env['ALCHEMY_APIKEY'],
     },
+    8453: {
+      url:
+        'https://base-mainnet.g.alchemy.com/v2/' +
+        process.env['ALCHEMY_APIKEY'],
+    },
   },
 }
 

@@ -17,3 +17,9 @@ fi
 export MAX_DATA_SIZE=$(cast call --rpc-url $RPC $INBOX_ADDRESS "maxDataSize()(uint256)" | awk '{print $1; exit}')
 echo $INBOX_ADDRESS
 DEV=true INBOX_ADDRESS=$INBOX_ADDRESS yarn orbit:contracts:version --network $(echo $PARENT_CHAIN_ID | tr -d '"')
+export ROLLUP_ADDRESS=$(cat $CPATH/.constellation/contracts.json | jq .coreContracts.rollup | tr -d '"') 
+export CURRENT_WASM=$(cast call --rpc-url $RPC $ROLLUP_ADDRESS "wasmModuleRoot()")
+echo "Current WASM"
+echo $CURRENT_WASM
+echo "Current MAX_DATA_SIZE"
+echo $MAX_DATA_SIZE

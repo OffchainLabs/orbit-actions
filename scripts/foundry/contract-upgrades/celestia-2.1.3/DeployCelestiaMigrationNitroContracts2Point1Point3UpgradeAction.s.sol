@@ -16,9 +16,10 @@ contract DeployCelestiaMigrationNitroContracts2Point1Point3UpgradeActionScript i
   bytes32 public constant WASM_MODULE_ROOT =
     0xe81f986823a85105c5fd91bb53b4493d38c0c26652d23f76a7405ac889908287;
 
-  // ArbOS v20 https://github.com/OffchainLabs/nitro/releases/tag/consensus-v20
+  // ArbOS v32 bianca
+  // this script assumes that the rollup we're MIGRATING (not UPDATING) is on 2.1.3 and on latest bianca
   bytes32 public constant COND_WASM_MODULE_ROOT =
-    0x8b104a2e80ac6165dc58b9048de12f301d70b02a0ab51396c22b4b4b802a16a4;
+    0x184884e1eb9fefdc158f6c8ac912bb183bf3cf83f0090317e0bc4ac5860baa39;
 
   function run() public {
     bool isArbitrum = vm.envBool('PARENT_CHAIN_IS_ARBITRUM');

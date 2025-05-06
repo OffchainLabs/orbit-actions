@@ -134,6 +134,18 @@
     patch-package "^6.4.7"
     solady "0.0.182"
 
+"@constellation-labs/celestia-nitro-contracts-2.1.3-mainnet@^2.1.3-mainnet":
+  version "2.1.3-mainnet"
+  resolved "https://registry.yarnpkg.com/@constellation-labs/celestia-nitro-contracts-2.1.3-mainnet/-/celestia-nitro-contracts-2.1.3-mainnet-2.1.3-mainnet.tgz#dcbc77c1174bcb45fae7cc4a50f15ad76c7e9d60"
+  integrity sha512-8yKednl2F+Dk8NeCKCw8DF4Kh1uPN/HOlG0cKERLXQr+PQwDB6bYD2vhi6vhoxmi0lrRQKE1GveXonXbNNq5ZQ==
+  dependencies:
+    "@nomiclabs/hardhat-etherscan" "^3.1.8"
+    "@offchainlabs/upgrade-executor" "1.1.0-beta.0"
+    "@openzeppelin/contracts" "4.5.0"
+    "@openzeppelin/contracts-upgradeable" "4.5.2"
+    patch-package "^6.4.7"
+    solady "0.0.182"
+
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
@@ -1901,6 +1913,28 @@ cbor@^9.0.0:
   integrity sha512-JPypkxsB10s9QOWwa6zwPzqE1Md3vqpPc+cai4sAecuCsRyAtAl/pMyhPlMbT/xtPnm2dznJZYRLui57qiRhaQ==
   dependencies:
     nofilter "^3.1.0"
+
+"celestia-nitro-contracts-2.1.0-no-ir@npm:celestia-nitro-contracts@2.1.0-no-ir":
+  version "2.1.0-no-ir"
+  resolved "https://registry.yarnpkg.com/celestia-nitro-contracts/-/celestia-nitro-contracts-2.1.0-no-ir.tgz#83328c9ac6a9b1fa5d2dcee2d7a82958e1e459cf"
+  integrity sha512-U8ZoU4K/UN0y8be8gMaYRHU4mqNo3ZrOAkxXIzFAngBvFIsp5xAF8gVNegn1XZUhvTChDHnWeIGSVP0/DpqBUQ==
+  dependencies:
+    "@offchainlabs/upgrade-executor" "1.1.0-beta.0"
+    "@openzeppelin/contracts" "4.5.0"
+    "@openzeppelin/contracts-upgradeable" "4.5.2"
+    patch-package "^6.4.7"
+    solady "0.0.182"
+
+"celestia-nitro-contracts-2.1.3-no-ir@npm:celestia-nitro-contracts@2.1.3-no-ir":
+  version "2.1.3-no-ir"
+  resolved "https://registry.yarnpkg.com/celestia-nitro-contracts/-/celestia-nitro-contracts-2.1.3-no-ir.tgz#9d88a8055338527e98f8214ccb90abf31fc95d03"
+  integrity sha512-4/6ktUciW9bviPsruq9z4tgR0XI0zQsFiYUKzGGFlOVLs1p7hwd1nRU8H4J2V2ULdM3pwbl0Mpu3uENL378JNw==
+  dependencies:
+    "@offchainlabs/upgrade-executor" "1.1.0-beta.0"
+    "@openzeppelin/contracts" "4.5.0"
+    "@openzeppelin/contracts-upgradeable" "4.5.2"
+    patch-package "^6.4.7"
+    solady "0.0.182"
 
 chai-as-promised@^7.1.1:
   version "7.1.1"
