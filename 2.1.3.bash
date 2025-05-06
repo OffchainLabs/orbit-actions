@@ -22,6 +22,9 @@ fi
 
 if [[ "$PARENT_CHAIN_ID" == "1" || "$PARENT_CHAIN_ID" == "11155111" ]]; then
   export ETHERSCAN_API_KEY=RWSGJAX2JJNX42SB56ADUWFN6MSB5WBHNR
+fi
+if [[ "$PARENT_CHAIN_ID" == "8453" || "$PARENT_CHAIN_ID" == "84532" ]]; then
+  export ETHERSCAN_API_KEY=N7MQWFSFH7PTU38W28KKGKDGDWRI5EYFR6
 else
   export ETHERSCAN_API_KEY=VAQC4ZPAQGBRUMW8AR5CVAUKE96VNM2735
 fi
@@ -41,12 +44,13 @@ if [[ "$CHAIN_TYPE" == "Celestia" ]]; then
   echo "Youre doing something silly with a Celestia chain."
 else
   echo "Deploying DeployNitroContracts2Point1Point3UpgradeActionScript"
+  export ETHERSCAN_API_KEY=RWSGJAX2JJNX42SB56ADUWFN6MSB5WBHNR
   forge script --private-key $DEPLOYMENT_PK --rpc-url $RPC --broadcast DeployNitroContracts2Point1Point3UpgradeActionScript -vvv --verify --skip-simulation #--verifier blockscout --verifier-url https://base-sepolia.blockscout.com/api?
-  echo "Topup owner with 0.01ether"
-  cast send --rpc-url $RPC --private-key $DEPLOYMENT_PK $OWNER_ADDRESS --value 0.001ether
-  echo "Balance of "$OWNER_ADDRESS
+  #echo "Topup owner with 0.01ether"
+  #cast send --rpc-url $RPC --private-key $DEPLOYMENT_PK $OWNER_ADDRESS --value 0.001ether
+  #echo "Balance of "$OWNER_ADDRESS
   cast from-wei $(cast balance --rpc-url $RPC $OWNER_ADDRESS)
-  export MULTISIG=false
+  export MULTISIG=true
   #export UPGRADE_ACTION_ADDRESS=
   #forge script --private-key $OWNER_PK --rpc-url $RPC --broadcast ExecuteNitroContracts2Point1Point3UpgradeScript -vvv --verify --skip-simulation
 fi

@@ -48,10 +48,10 @@ echo "Deploying DeployNitroContracts2Point1Point0UpgradeActionScript"
 forge script --private-key $DEPLOYMENT_PK --rpc-url $RPC --broadcast DeployNitroContracts2Point1Point0UpgradeActionScript -vvv --verify --skip-simulation
 
 echo "Topup owner with 0.01ether"
-cast send --rpc-url $RPC --private-key $DEPLOYMENT_PK $OWNER_ADDRESS --value 0.01ether
+#cast send --rpc-url $RPC --private-key $DEPLOYMENT_PK $OWNER_ADDRESS --value 0.01ether
 echo "Balance of "$OWNER_ADDRESS
 cast from-wei $(cast balance --rpc-url $RPC $OWNER_ADDRESS)
-export MULTISIG=false
+export MULTISIG=true
 #export UPGRADE_ACTION_ADDRESS=
 #forge script --private-key $OWNER_PK --rpc-url $RPC --broadcast  ExecuteNitroContracts2Point1Point0UpgradeScript -vvv --verify --skip-simulation
 echo "Set - --node.batch-poster.max-delay=1m on batch poster!" 

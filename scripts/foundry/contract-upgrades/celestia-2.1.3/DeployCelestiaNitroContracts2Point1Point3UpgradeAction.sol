@@ -4,6 +4,7 @@ pragma solidity 0.8.16;
 import { DeploymentHelpersScript } from '../../helper/DeploymentHelpers.s.sol';
 import { NitroContracts2Point1Point3UpgradeAction } from '../../../../contracts/parent-chain/contract-upgrades/NitroContracts2Point1Point3UpgradeAction.sol';
 import { MockArbSys } from '../../helper/MockArbSys.sol';
+import 'forge-std/console.sol';
 
 /**
  * @title DeployNitroContracts2Point1Point3UpgradeActionScript
@@ -13,7 +14,7 @@ contract DeployCelestiaNitroContracts2Point1Point3UpgradeActionCelestia is
   DeploymentHelpersScript
 {
   function run() public {
-    bool isArbitrum = vm.envBool('PARENT_CHAIN_IS_ARBITRUM');
+        bool isArbitrum = vm.envBool('PARENT_CHAIN_IS_ARBITRUM');
     if (isArbitrum) {
       // etch a mock ArbSys contract so that foundry simulate it nicely
       bytes memory mockArbSysCode = address(new MockArbSys()).code;
@@ -29,7 +30,9 @@ contract DeployCelestiaNitroContracts2Point1Point3UpgradeActionCelestia is
         '/node_modules/@arbitrum/nitro-contracts-2.1.3/out/yul/Reader4844.yul/Reader4844.json'
       );
     }
-
+    console.log(reader4844Address);
+    uint maxSize = vm.envUint('MAX_DATA_SIZE');
+    console.logUint(maxSize);
     // deploy new ETHInbox contract from v2.1.3
     address newEthInboxImpl = deployBytecodeWithConstructorFromJSON(
       '/node_modules/@arbitrum/nitro-contracts-2.1.3/build/contracts/src/bridge/Inbox.sol/Inbox.json',
@@ -43,13 +46,13 @@ contract DeployCelestiaNitroContracts2Point1Point3UpgradeActionCelestia is
 
     // deploy new EthSequencerInbox contract from v2.1.3
     address newEthSeqInboxImpl = deployBytecodeWithConstructorFromJSON(
-      '/node_modules/@constellation-labs/celestia-nitro-contracts-2.1.3-arb-sepolia-base-sepolia/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json',
+      '/node_modules/celestia-nitro-contracts-2.1.3-no-ir/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json',
       abi.encode(vm.envUint('MAX_DATA_SIZE'), reader4844Address, false)
     );
 
     // deploy new Erc20SequencerInbox contract from v2.1.3
     address newErc20SeqInboxImpl = deployBytecodeWithConstructorFromJSON(
-      '/node_modules/@constellation-labs/celestia-nitro-contracts-2.1.3-arb-sepolia-base-sepolia/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json',
+      '/node_modules/celestia-nitro-contracts-2.1.3-no-ir/build/contracts/src/bridge/SequencerInbox.sol/SequencerInbox.json',
       abi.encode(vm.envUint('MAX_DATA_SIZE'), reader4844Address, true)
     );
 
