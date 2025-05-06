@@ -114,4 +114,10 @@ See [EnableFastConfirmAction](scripts/foundry/fast-confirm).
 
 ## Enable Stylus Cache Manager
 
-See [setCacheManager](scripts/foundry/stylus/setCacheManager). 
+See [setCacheManager](scripts/foundry/stylus/setCacheManager).
+
+## Enable BoLD
+
+Currently limited to L2s; L3 support is expected in a future update.
+
+See [Nitro contracts 3.1.0 upgrade](https://github.com/OffchainLabs/orbit-actions/tree/main/scripts/foundry/contract-upgrades/3.1.0). 
