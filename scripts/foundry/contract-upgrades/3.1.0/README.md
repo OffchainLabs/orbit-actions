@@ -34,6 +34,10 @@ Most of the parameters used in Nitro before v3.5.4 will stay the same when runni
 - For validator nodes: add `--node.bold.enable=true` and `--node.bold.strategy=<MakeNodes | ResolveNodes | Defensive>` to configure the validator to create and/or confirm assertions in the new Rollup contract (find more information in [How to run a validator](/run-arbitrum-node/more-types/02-run-validator-node.mdx#step-1-configure-and-run-your-validator))
 - For all other types of node: add `--node.bold.enable=true` to enable [watchtower mode](/run-arbitrum-node/03-run-full-node.mdx#watchtower-mode)
 
+Additionally, after performing the upgrade, the `--chain.info-json` object also needs to be modified:
+- Update the new rollup address in the `rollup.rollup` field
+- Add the stake token in a new `rollup.stake-token` field
+
 ## How to use it
 
 1. Clone nitro-contract repo
