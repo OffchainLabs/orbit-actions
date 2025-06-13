@@ -29,10 +29,10 @@ Please refer to the top [README](../../README.md) `Check Version and Upgrade Pat
 - L2 Base: 0xABFE646C3205A2d93Ec8C6e41eA67BC07e1275df
 
 ### Testnets
-- L1 Sepolia: 0x618e44fd8a7639386256880ef8100e09a8bcd4f3
-- L1 Holesky: 0x087F2f584B1CE7c938e2F4df088EbBCB784920AF.
-- L2 ArbSepolia: 0x618e44Fd8a7639386256880Ef8100e09A8BcD4F3
-- L2 BaseSepolia: 0xe0560Dc64Acd8acC2dBE1E642Fd80A45c9Da1cBE.
+- L1 Sepolia: 0x67446FD1Ba7D4539143032dC0AF08aaC7Cf13eb1
+- L1 Holesky: 0xDCAeFAB0DA03a9BCed926BEC1Bd048748dDA3Df3
+- L2 ArbSepolia: 0xe88489Bc3C3239c4e2DCb268Bca746dc8F1eC87C
+- L2 BaseSepolia: 0x448285Eeb395Bb5198e3fAC26c5df4Dc99bDF566
 
 ## How to use it
 1. Setup .env according to the example files, make sure your fast confirm committee is secure (it should match your DAS committee). See the previous section for predeployed instances of the action contract. If you need to deploy the action contract yourself, follow the steps below.
