@@ -311,6 +311,7 @@
   "v2.1.3-celestia": {
     "eth": {
       "Inbox": [
+        "12205dbd3b8d396e0948fa2a600b608e91cd302b0a5183ffc616f0537c120dd6",
         "122097599b95167a4619919b764da90239626ad35f3bde1dfbb433b3864e3e49",
         "1220cb8b19adc579207fc1b8ed46e0d256ffe31b095228dc3755f0a9590c58a5"
       ],
@@ -319,6 +320,7 @@
         "1220fa5e0f8aea0c69c2eacd9fed53687983a0f5126d6df92d142c9667c25881"
       ],
       "SequencerInbox": [
+        "12201126e1c3249c7c58ba5fe0a32f45c354c8248022a6006ddc6ed7b1ea9364",
         "12206427cf551baae97848c424bf4e5bd18b185036b57c705bf1dcae49ead924",
         "1220aaeb4defa245d758dddb3d158627341d01e417b05f9406a9646922849b33"
       ],
@@ -348,9 +350,7 @@
         
       ]
     },
-    "RollupProxy": [
-      "1220ea128962c85a9a5aeca5b89c232f49354e32645301a13df322f9650daebd"
-    ],
+    "RollupProxy": [],
     "RollupAdminLogic": [
       "1220e32c515bc2949208aba3f6bcb8c4b610c10026cd9df1ba3a756351ef1db1"
     ],
