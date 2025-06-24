@@ -28,6 +28,8 @@ Please refers to the top [README](../../README.md) `Check Version and Upgrade Pa
 - L1 mainnet (custom fee token): 0x2e0c12e2478a0dEc2EF6C2CCC2ED8d4fEd3597d1
 - L2 Arb1 (eth fee token): 0x606Bb75B1f910F82086557aa14eD2Dc0bEB85D6B
 - L2 Arb1 (custom fee token): 0xb28c89b6997F025BD35205b99a7968C264cCe353
+- L2 Nova (eth fee token): 0xa9e7ed87ff334d0a733c9304318362ae9946c675
+- L2 Nova (custom fee token): 0xfb589ba672579d2431f18f50a90181538ea4d893
 - L1 Sepolia (eth fee token): 0xBC1e0ca800781F58F3a2f73dA4D895FdD61B0Cb5
 - L1 Sepolia (custom fee token): 0xEFf65644557573e3E781B0B586fD7488a26c8E46
 - L2 ArbSepolia (eth fee token): 0xe9F95d0975e87e8E633fceCDF17fFc0f646cCfb8
