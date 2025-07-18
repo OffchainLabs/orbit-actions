@@ -50,7 +50,7 @@ $ git clone https://github.com/OffchainLabs/nitro-contracts.git
 $ cd nitro-contracts
 ```
 
-2. Checkout the v3.1.0-scripts tag
+2. Checkout the v3.1.0-scripts branch
 
 ```
 $ git checkout v3.1.0-scripts
