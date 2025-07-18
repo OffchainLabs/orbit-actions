@@ -50,10 +50,10 @@ $ git clone https://github.com/OffchainLabs/nitro-contracts.git
 $ cd nitro-contracts
 ```
 
-2. Checkout the v3.1.0-qol tag
+2. Checkout the v3.1.0-scripts branch
 
 ```
-$ git checkout v3.1.0-qol
+$ git checkout v3.1.0-scripts
 ```
 
 3. Install dependencies and build contracts
