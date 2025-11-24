@@ -52,7 +52,7 @@ For ArbOS upgrades, a common pre-requisite is to deploy new Nitro contracts to t
 
 ### Nitro contracts 3.1.0 (for [BoLD](https://docs.arbitrum.io/how-arbitrum-works/bold/gentle-introduction))
 
-The [`nitro-contracts 3.1.0` upgrade guide](scripts/foundry/contract-upgrades/3.1.0) will use the [BOLDUpgradeAction](https://github.com/OffchainLabs/nitro-contracts/blob/main/src/rollup/BOLDUpgradeAction.sol) from the [nitro-contract](https://github.com/OffchainLabs/nitro-contracts) repo. There are no associated ArbOS upgrade for BoLD. 
+The [`nitro-contracts 3.1.0` upgrade guide](scripts/foundry/contract-upgrades/3.1.0) will use the [BOLDUpgradeAction](https://github.com/OffchainLabs/nitro-contracts/blob/main/src/rollup/BOLDUpgradeAction.sol) from the [nitro-contract](https://github.com/OffchainLabs/nitro-contracts) repo. There is no associated ArbOS upgrade for BoLD. 
 
 ### Nitro contracts 2.1.3
 
@@ -90,7 +90,13 @@ This action schedule an upgrade of the ArbOS to a specific version at a specific
 
 ## Common upgrade paths
 
-Here is a list of common upgrade paths that can be used to upgrade the Orbit chains. These instructions are duplicated from the docs on [How to upgrade ArbOS on your Orbit chain](https://docs.arbitrum.io/launch-orbit-chain/how-tos/arbos-upgrade), specifically Steps 1 through 3. Step 4 is mentioned below under "Other Actions".
+Here is a list of common upgrade paths that can be used to upgrade the Orbit chains, beginning with the most recent upgrade. These instructions are duplicated from the docs on [How to upgrade ArbOS on your Orbit chain](https://docs.arbitrum.io/launch-orbit-chain/how-tos/arbos-upgrade), specifically Steps 1 through 3. Step 4 is mentioned below under "Other Actions".
+
+### [ArbOS 40 Callisto](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos40)
+
+1. Upgrade your Nitro node(s) to [Nitro v3.6.5](https://github.com/OffchainLabs/nitro/releases/tag/v3.6.5) or higher
+1. Upgrade `nitro-contracts` to `v3.1.0` using [nitro-contract 3.1.0 BoLD upgrade action](scripts/foundry/contract-upgrades/3.1.0)
+1. Schedule the ArbOS 40 Callisto upgrade using [ArbOS upgrade at timestamp action](scripts/foundry/arbos-upgrades/at-timestamp)
 
 ### [ArbOS 32 Bianca](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos32)
 
