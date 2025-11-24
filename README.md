@@ -94,7 +94,7 @@ Here is a list of common upgrade paths that can be used to upgrade the Orbit cha
 
 ### [ArbOS 40 Callisto](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos40)
 
-1. Upgrade your Nitro node(s) to [Nitro v3.6.5](https://github.com/OffchainLabs/nitro/releases/tag/v3.6.5)
+1. Upgrade your Nitro node(s) to [Nitro v3.6.5](https://github.com/OffchainLabs/nitro/releases/tag/v3.6.5) or higher
 1. Upgrade `nitro-contracts` to `v3.1.0` using [nitro-contract 3.1.0 BoLD upgrade action](scripts/foundry/contract-upgrades/3.1.0)
 1. Schedule the ArbOS 40 Callisto upgrade using [ArbOS upgrade at timestamp action](scripts/foundry/arbos-upgrades/at-timestamp)
 
