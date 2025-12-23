@@ -1,17 +1,16 @@
 import { ethers } from 'hardhat'
 import metadataHashes from './referentMetadataHashes.json'
-import { HardhatEthersProvider } from '@nomicfoundation/hardhat-ethers/internal/hardhat-ethers-provider'
 import {
   IBridge__factory,
   IInbox__factory,
   IRollupCore__factory,
 } from '../../typechain-types'
 
-main()
-  .then(() => process.exit(0))
-  .catch((error: Error) => {
-    console.error(error)
-  })
+// main()
+//   .then(() => process.exit(0))
+//   .catch((error: Error) => {
+//     console.error(error)
+//   })
 
 /**
  * Interfaces
@@ -43,10 +42,114 @@ interface MetadataHashesByVersion {
 
 const referentMetadataHashes: MetadataHashesByVersion = metadataHashes
 
+
+async function getVersionsFromInbox(inboxAddress: string, provider: Provider) {
+
+  // get all core addresses from inbox address
+  const inbox = IInbox__factory.connect(inboxAddress, provider)
+  const bridgeAddress = await inbox.bridge()
+  const bridge = IBridge__factory.connect(bridgeAddress, provider)
+  const seqInboxAddress = await bridge.sequencerInbox()
+  const rollupAddress = await bridge.rollup()
+  const rollup = IRollupCore__factory.connect(rollupAddress, provider)
+  const outboxAddress = await rollup.outbox()
+  const challengeManagerAddress = await rollup.challengeManager()
+  const rollupEventInboxAddress = await rollup.rollupEventInbox()
+
+  // get metadata hashes
+  const metadataHashes: { [key: string]: string } = {
+    Inbox: await _getMetadataHash(
+      await _getLogicAddress(inboxAddress, provider),
+      provider
+    ),
+    Outbox: await _getMetadataHash(
+      await _getLogicAddress(outboxAddress, provider),
+      provider
+    ),
+    SequencerInbox: await _getMetadataHash(
+      await _getLogicAddress(seqInboxAddress, provider),
+      provider
+    ),
+    Bridge: await _getMetadataHash(
+      await _getLogicAddress(bridgeAddress, provider),
+      provider
+    ),
+    RollupEventInbox: await _getMetadataHash(
+      await _getLogicAddress(rollupEventInboxAddress, provider),
+      provider
+    ),
+    RollupProxy: await _getMetadataHash(rollupAddress, provider),
+    RollupAdminLogic: await _getMetadataHash(
+      await _getLogicAddress(rollupAddress, provider),
+      provider
+    ),
+    RollupUserLogic: await _getMetadataHash(
+      await _getAddressAtStorageSlot(
+        rollupAddress,
+        provider,
+        '0x2b1dbce74324248c222f0ec2d5ed7bd323cfc425b336f0253c5ccfda7265546d'
+      ),
+      provider
+    ),
+    ChallengeManager: await _getMetadataHash(
+      await _getLogicAddress(challengeManagerAddress, provider),
+      provider
+    ),
+  }
+
+  if (process.env.DEV === 'true') {
+    console.log('\nMetadataHashes of deployed contracts:', metadataHashes, '\n')
+  }
+
+  let isFeeTokenChain = false
+  const versions: { [key: string]: string | null } = {}
+  // get and print version per bridge contract
+  Object.keys(metadataHashes).forEach(key => {
+    const { version, isErc20 } = _getVersionOfDeployedContract(
+      metadataHashes[key]
+    )
+    versions[key] = version
+    if (key === 'Bridge' && isErc20) isFeeTokenChain = true
+  })
+
+  return versions
+}
+
+function printMaxVersion(label: string, versions: { [key: string]: string | null }) {
+  let highest = ''
+  Object.values(versions).forEach(version => {
+    if (version && (version > highest)) {
+      highest = version
+    }
+  })
+  console.log(`${label}: ${highest}`)
+}
+
+import fs from 'fs/promises';
+import { JsonRpcProvider, Provider } from 'ethers'
+async function readFileAndPrintVersions() {
+  const data = JSON.parse((await fs.readFile('./scripts/orbit-versioner/orbitChainsData.json')).toString())
+  const providers = {
+    1: new JsonRpcProvider(process.env.ETH_URL),
+    42161: new JsonRpcProvider(process.env.ARB_URL),
+    8453: new JsonRpcProvider(process.env.BASE_URL),
+  }
+
+  for (const chain of data.mainnet) {
+    const provider = providers[chain.parentChainId as keyof typeof providers]
+    if (!provider) throw new Error(`No provider for chainId ${chain.parentChainId}`)
+    const inboxAddress = chain.ethBridge.inbox
+    const versions = await getVersionsFromInbox(inboxAddress, provider)
+    printMaxVersion(chain.name, versions)
+  }
+}
+
+readFileAndPrintVersions()
+
 /**
  * Script will
  */
-async function main() {
+async function checkVersions() {
   if (!process.env.INBOX_ADDRESS) {
     throw new Error('INBOX_ADDRESS env variable shall be set')
   }
@@ -466,7 +569,7 @@ function _getVersionOfDeployedContract(metadataHash: string): {
 
 async function _getMetadataHash(
   contractAddress: string,
-  provider: HardhatEthersProvider
+  provider: Provider
 ): Promise<string> {
   const bytecode = await provider.getCode(contractAddress)
 
@@ -484,7 +587,7 @@ async function _getMetadataHash(
 
 async function _getLogicAddress(
   contractAddress: string,
-  provider: HardhatEthersProvider
+  provider: Provider
 ): Promise<string> {
   const logic = (
     await _getAddressAtStorageSlot(
@@ -503,7 +606,7 @@ async function _getLogicAddress(
 
 async function _getAddressAtStorageSlot(
   contractAddress: string,
-  provider: HardhatEthersProvider,
+  provider: Provider,
   storageSlotBytes: string
 ): Promise<string> {
   const storageValue = await provider.getStorage(
