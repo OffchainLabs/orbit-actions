@@ -27,7 +27,7 @@ yarn install
 
 ## Using Docker
 
-The orbit actions are also available via docker.
+The Orbit actions are also available via Docker.
 
 ### Build the image
 
