@@ -25,6 +25,65 @@ For token bridge related operations, these are the additional requirements:
 yarn install
 ```
 
+## Using Docker
+
+The orbit actions are also available via docker.
+
+### Build the image
+
+```bash
+docker build -t orbit-actions .
+```
+
+### Run commands
+
+Pass the command you want to run directly to Docker:
+
+```bash
+# Check contract versions
+docker run --rm \
+  -e INBOX_ADDRESS=0xYourInboxAddress \
+  -e INFURA_KEY=your_infura_key \
+  orbit-actions \
+  yarn orbit:contracts:version --network arb1
+
+# Run forge script
+docker run --rm \
+  --env-file orbit.env \
+  -v $(pwd)/broadcast:/app/broadcast \
+  orbit-actions \
+  forge script --sender 0xYourAddress --rpc-url $PARENT_CHAIN_RPC --broadcast \
+  scripts/foundry/contract-upgrades/2.1.3/DeployNitroContracts2Point1Point3UpgradeAction.s.sol -vvv
+
+# Run cast commands
+docker run --rm \
+  orbit-actions \
+  cast call --rpc-url https://arb1.arbitrum.io/rpc 0xYourRollup "wasmModuleRoot()"
+```
+
+### Environment variables
+
+Create an `orbit.env` file with your configuration and pass it using `--env-file`:
+
+```bash
+PARENT_CHAIN_RPC=https://arb1.arbitrum.io/rpc
+INBOX_ADDRESS=0x...
+PROXY_ADMIN_ADDRESS=0x...
+PARENT_UPGRADE_EXECUTOR_ADDRESS=0x...
+```
+
+### Getting output artifacts
+
+Mount a volume to retrieve broadcast artifacts:
+
+```bash
+docker run --rm \
+  --env-file orbit.env \
+  -v $(pwd)/broadcast:/app/broadcast \
+  orbit-actions \
+  forge script ...
+```
+
 ## Check Version and Upgrade Path
 
 Run the follow command to check the version of Nitro contracts deployed on the parent chain of your Orbit chain.
