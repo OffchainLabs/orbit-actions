@@ -11,8 +11,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
         with:
-          submodules: recursive
+          version: stable
+
+      - name: Install forge dependencies
+        run: forge install
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

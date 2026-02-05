@@ -31,10 +31,10 @@ The orbit actions are also available via docker.
 
 ### Build the image
 
-First, ensure submodules are initialized (required for Foundry dependencies):
+First, ensure Foundry dependencies are installed:
 
 ```bash
-git submodule update --init --recursive
+forge install
 ```
 
 Then build the image:
