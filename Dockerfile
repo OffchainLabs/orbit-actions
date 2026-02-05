@@ -11,8 +11,8 @@ RUN curl -L https://foundry.paradigm.xyz | bash
 ENV PATH="/root/.foundry/bin:${PATH}"
 RUN foundryup
 
-# Enable Yarn via corepack
-RUN corepack enable && corepack prepare yarn@stable --activate
+# Install Yarn Classic (v1) - matches the repo's yarn.lock format
+RUN npm install -g --force yarn@1.22.22
 
 # Set working directory
 WORKDIR /app
@@ -20,8 +20,8 @@ WORKDIR /app
 # Copy package files first for better caching
 COPY package.json yarn.lock ./
 
-# Install dependencies
-RUN yarn install --frozen-lockfile
+# Install dependencies (using --ignore-scripts like CI does, then forge install separately)
+RUN yarn install --frozen-lockfile --ignore-scripts
 
 # Copy the rest of the repository
 COPY . .
