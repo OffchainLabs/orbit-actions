@@ -31,6 +31,14 @@ The orbit actions are also available via docker.
 
 ### Build the image
 
+First, ensure submodules are initialized (required for Foundry dependencies):
+
+```bash
+git submodule update --init --recursive
+```
+
+Then build the image:
+
 ```bash
 docker build -t orbit-actions .
 ```
