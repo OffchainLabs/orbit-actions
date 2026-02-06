@@ -204,8 +204,12 @@ contract UpgradeCreatorTemplatesScript is DeploymentHelpersScript {
         bytes memory updateErc20TemplatesCalldata;
         {
             // generate calldata for updating erc20 templates
-            (IBridge erc20Bridge,, IInboxBase erc20Inbox, IRollupEventInbox erc20RollupEventInbox, IOutbox erc20Outbox)
-            = bridgeCreator.erc20BasedTemplates();
+            (
+                IBridge erc20Bridge,,
+                IInboxBase erc20Inbox,
+                IRollupEventInbox erc20RollupEventInbox,
+                IOutbox erc20Outbox
+            ) = bridgeCreator.erc20BasedTemplates();
             updateErc20TemplatesCalldata = abi.encodeWithSelector(
                 BridgeCreator.updateERC20Templates.selector,
                 BridgeCreator.BridgeContracts(

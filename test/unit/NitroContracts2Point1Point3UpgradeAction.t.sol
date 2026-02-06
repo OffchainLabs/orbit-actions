@@ -11,7 +11,8 @@ import {
 import {Bridge as Bridge_2_1_0} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/Bridge.sol";
 import {ERC20Inbox as ERC20Inbox_2_1_0} from "@arbitrum/nitro-contracts-2.1.0/src/bridge/ERC20Inbox.sol";
 import {
-    Inbox as Inbox_2_1_0, IInboxBase as IInboxBase_2_1_0
+    Inbox as Inbox_2_1_0,
+    IInboxBase as IInboxBase_2_1_0
 } from "@arbitrum/nitro-contracts-2.1.0/src/bridge/Inbox.sol";
 import {
     SequencerInbox as SequencerInbox_2_1_0,
@@ -21,8 +22,9 @@ import {IReader4844 as IReader4844_2_1_0} from "@arbitrum/nitro-contracts-2.1.0/
 
 import {ERC20Bridge as ERC20Bridge_1_3_0} from "@arbitrum/nitro-contracts-1.3.0/src/bridge/ERC20Bridge.sol";
 
-import {NitroContracts2Point1Point3UpgradeAction} from
-    "contracts/parent-chain/contract-upgrades/NitroContracts2Point1Point3UpgradeAction.sol";
+import {
+    NitroContracts2Point1Point3UpgradeAction
+} from "contracts/parent-chain/contract-upgrades/NitroContracts2Point1Point3UpgradeAction.sol";
 
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
@@ -131,16 +133,13 @@ contract NitroContracts2Point1Point3UpgradeActionTest is Test, DeploymentHelpers
         // initialize everything
         Bridge_2_1_0(bridge_2_1_0).initialize(IOwnable_2_1_0(fakeRollup));
         ERC20Bridge_2_1_0(erc20Bridge_2_1_0).initialize(IOwnable_2_1_0(fakeRollup), fakeToken);
-        SequencerInbox_2_1_0(sequencerInbox_2_1_0).initialize(
-            Bridge_2_1_0(bridge_2_1_0), ISequencerInbox_2_1_0.MaxTimeVariation(10, 10, 10, 10)
-        );
-        SequencerInbox_2_1_0(erc20SequencerInbox_2_1_0).initialize(
-            Bridge_2_1_0(erc20Bridge_2_1_0), ISequencerInbox_2_1_0.MaxTimeVariation(10, 10, 10, 10)
-        );
+        SequencerInbox_2_1_0(sequencerInbox_2_1_0)
+            .initialize(Bridge_2_1_0(bridge_2_1_0), ISequencerInbox_2_1_0.MaxTimeVariation(10, 10, 10, 10));
+        SequencerInbox_2_1_0(erc20SequencerInbox_2_1_0)
+            .initialize(Bridge_2_1_0(erc20Bridge_2_1_0), ISequencerInbox_2_1_0.MaxTimeVariation(10, 10, 10, 10));
         Inbox_2_1_0(inbox_2_1_0).initialize(Bridge_2_1_0(bridge_2_1_0), SequencerInbox_2_1_0(sequencerInbox_2_1_0));
-        ERC20Inbox_2_1_0(erc20Inbox_2_1_0).initialize(
-            Bridge_2_1_0(erc20Bridge_2_1_0), SequencerInbox_2_1_0(erc20SequencerInbox_2_1_0)
-        );
+        ERC20Inbox_2_1_0(erc20Inbox_2_1_0)
+            .initialize(Bridge_2_1_0(erc20Bridge_2_1_0), SequencerInbox_2_1_0(erc20SequencerInbox_2_1_0));
     }
 
     // copied from deployment script

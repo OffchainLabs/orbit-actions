@@ -92,6 +92,12 @@ This action schedule an upgrade of the ArbOS to a specific version at a specific
 
 Here is a list of common upgrade paths that can be used to upgrade the Orbit chains, beginning with the most recent upgrade. These instructions are duplicated from the docs on [How to upgrade ArbOS on your Orbit chain](https://docs.arbitrum.io/launch-orbit-chain/how-tos/arbos-upgrade), specifically Steps 1 through 3. Step 4 is mentioned below under "Other Actions".
 
+### [ArbOS 51 Dia](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos51)
+
+1. Upgrade your Nitro node(s) to [Nitro v3.9.3](https://github.com/OffchainLabs/nitro/releases/tag/v3.9.3) or higher
+1. Update the wasm module root on the Rollup contract in the parent chain to `0x8a7513bf7bb3e3db04b0d982d0e973bcf57bf8b88aef7c6d03dba3a81a56a499`, following the instructions in [Set wasmModuleRoot](docs/arbos-upgrades/set-wasm-module-root/README.md)
+1. Schedule the ArbOS 51 Dia upgrade using [ArbOS upgrade at timestamp action](scripts/foundry/arbos-upgrades/at-timestamp)
+
 ### [ArbOS 40 Callisto](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos40)
 
 1. Upgrade your Nitro node(s) to [Nitro v3.6.5](https://github.com/OffchainLabs/nitro/releases/tag/v3.6.5) or higher
