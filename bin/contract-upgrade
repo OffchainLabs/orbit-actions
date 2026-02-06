@@ -1,0 +1,281 @@
+#!/bin/bash
+set -euo pipefail
+
+# Contract upgrades script for orbit-actions
+# Handles deploy, execute, and deploy-execute-verify commands
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../lib/common.sh"
+
+CONTRACTS_DIR="/app/scripts/foundry/contract-upgrades"
+
+# =============================================================================
+# Commands
+# =============================================================================
+
+cmd_deploy() {
+    local version_dir="$1"
+    shift
+
+    parse_auth_args "$@"
+
+    require_env PARENT_CHAIN_RPC
+
+    local deploy_script=$(find "$version_dir" -maxdepth 1 -name "Deploy*.s.sol" -type f 2>/dev/null | head -1)
+    if [[ -z "$deploy_script" ]]; then
+        die "No deploy script found in $version_dir"
+    fi
+
+    log "Running: $(basename "$deploy_script")"
+
+    local cmd="forge script $deploy_script --rpc-url $PARENT_CHAIN_RPC --slow -vvv --skip-simulation"
+
+    if [[ -n "$AUTH_ARGS" ]]; then
+        cmd="$cmd --broadcast $AUTH_ARGS"
+    fi
+
+    eval $cmd
+}
+
+cmd_execute() {
+    local version_dir="$1"
+    shift
+
+    parse_auth_args "$@"
+
+    require_env PARENT_CHAIN_RPC
+    require_env UPGRADE_ACTION_ADDRESS
+
+    local execute_script=$(find "$version_dir" -maxdepth 1 -name "Execute*.s.sol" -type f 2>/dev/null | head -1)
+    if [[ -z "$execute_script" ]]; then
+        die "No execute script found in $version_dir"
+    fi
+
+    log "Running: $(basename "$execute_script")"
+
+    local cmd="forge script $execute_script --rpc-url $PARENT_CHAIN_RPC -vvv"
+
+    if [[ -n "$AUTH_ARGS" ]]; then
+        cmd="$cmd --broadcast $AUTH_ARGS"
+    fi
+
+    eval $cmd
+}
+
+cmd_deploy_execute_verify() {
+    local version_dir="$1"
+    local version=$(basename "$version_dir")
+    shift
+
+    parse_deploy_execute_auth "$@"
+
+    # Find scripts
+    local deploy_script=$(find "$version_dir" -maxdepth 1 -name "Deploy*.s.sol" -type f 2>/dev/null | head -1)
+    local execute_script=$(find "$version_dir" -maxdepth 1 -name "Execute*.s.sol" -type f 2>/dev/null | head -1)
+
+    if [[ -z "$deploy_script" ]]; then
+        die "No deploy script found in $version_dir"
+    fi
+    if [[ -z "$execute_script" ]]; then
+        die "No execute script found in $version_dir"
+    fi
+
+    log "Version: $version"
+    log "Deploy script: $(basename "$deploy_script")"
+    log "Execute script: $(basename "$execute_script")"
+
+    # Auto-detect skip_deploy if UPGRADE_ACTION_ADDRESS is set
+    local skip_deploy=false
+    if [[ -n "${UPGRADE_ACTION_ADDRESS:-}" ]]; then
+        skip_deploy=true
+        log "Using existing action from .env: $UPGRADE_ACTION_ADDRESS"
+    fi
+
+    # Validate required env vars
+    require_env PARENT_CHAIN_RPC
+    require_env INBOX_ADDRESS
+    require_env PROXY_ADMIN_ADDRESS
+    require_env PARENT_UPGRADE_EXECUTOR_ADDRESS
+
+    # Validate auth
+    local deploy_auth=$(get_deploy_auth)
+    local execute_auth=$(get_execute_auth)
+
+    if [[ "$skip_deploy" != "true" && "$DRY_RUN" != "true" && -z "$deploy_auth" ]]; then
+        die "Deploy auth required. Use --deploy-key, --deploy-account, --deploy-ledger, or --deploy-interactive"
+    fi
+    if [[ "$SKIP_EXECUTE" != "true" && "$DRY_RUN" != "true" && -z "$execute_auth" ]]; then
+        die "Execute auth required. Use --execute-key, --execute-account, --execute-ledger, or --execute-interactive"
+    fi
+
+    local chain_id
+    chain_id=$(get_chain_id "$PARENT_CHAIN_RPC")
+    log "Target chain ID: $chain_id"
+
+    # Step 1: Deploy
+    if [[ "$skip_deploy" != "true" ]]; then
+        log "Step 1: Deploying upgrade action..."
+
+        local forge_cmd="forge script $deploy_script --rpc-url $PARENT_CHAIN_RPC --slow -vvv --skip-simulation"
+
+        if [[ "$DRY_RUN" != "true" ]]; then
+            forge_cmd="$forge_cmd --broadcast $deploy_auth"
+        fi
+        if [[ "$VERIFY_CONTRACTS" == "true" ]]; then
+            forge_cmd="$forge_cmd --verify"
+        fi
+
+        eval $forge_cmd
+
+        if [[ "$DRY_RUN" != "true" ]]; then
+            UPGRADE_ACTION_ADDRESS=$(parse_action_address "$deploy_script" "$chain_id")
+            log "Deployed action at: $UPGRADE_ACTION_ADDRESS"
+        else
+            log "Dry run - no action deployed"
+            if [[ "$SKIP_EXECUTE" != "true" ]]; then
+                log "Note: Set UPGRADE_ACTION_ADDRESS in .env to run execute step"
+                return 0
+            fi
+        fi
+    else
+        log "Step 1: Skipped deploy"
+    fi
+
+    export UPGRADE_ACTION_ADDRESS
+
+    # Step 2: Execute
+    if [[ "$SKIP_EXECUTE" != "true" ]]; then
+        log "Step 2: Executing upgrade..."
+
+        local forge_cmd="forge script $execute_script --rpc-url $PARENT_CHAIN_RPC -vvv"
+
+        if [[ "$DRY_RUN" != "true" ]]; then
+            forge_cmd="$forge_cmd --broadcast $execute_auth"
+        fi
+
+        eval $forge_cmd
+
+        if [[ "$DRY_RUN" == "true" ]]; then
+            log "Dry run - upgrade not executed"
+        else
+            log "Upgrade executed successfully"
+        fi
+    else
+        log "Step 2: Skipped execute"
+    fi
+
+    # Step 3: Verify
+    if [[ "$DRY_RUN" != "true" && "$SKIP_EXECUTE" != "true" ]]; then
+        log "Step 3: Verifying upgrade..."
+
+        case "$version" in
+            2.1.2|2.1.3)
+                local bridge
+                bridge=$(cast call --rpc-url "$PARENT_CHAIN_RPC" "$INBOX_ADDRESS" "bridge()(address)" 2>/dev/null || echo "")
+                if [[ -n "$bridge" && "$bridge" != "0x" ]]; then
+                    local decimals
+                    decimals=$(cast call --rpc-url "$PARENT_CHAIN_RPC" "$bridge" "nativeTokenDecimals()(uint8)" 2>/dev/null || echo "N/A")
+                    log "Verification: nativeTokenDecimals = $decimals"
+                fi
+                ;;
+            1.2.1|2.1.0)
+                if [[ -n "${ROLLUP:-}" ]]; then
+                    local wasm_root
+                    wasm_root=$(cast call --rpc-url "$PARENT_CHAIN_RPC" "$ROLLUP" "wasmModuleRoot()(bytes32)" 2>/dev/null || echo "N/A")
+                    log "Verification: wasmModuleRoot = $wasm_root"
+                else
+                    log "Verification: Set ROLLUP in .env to check wasmModuleRoot"
+                fi
+                ;;
+        esac
+    fi
+
+    log "Done"
+}
+
+# =============================================================================
+# Main
+# =============================================================================
+
+show_help() {
+    cat <<'EOF'
+Usage: contract-upgrade <version> <command> [options]
+
+Commands:
+  deploy                Run deploy script only
+  execute               Run execute script only
+  deploy-execute-verify Full upgrade flow (deploy, execute, verify)
+
+Options for deploy/execute:
+  --private-key KEY     Private key
+  --account NAME        Keystore account
+  --ledger              Use Ledger
+  --interactive         Prompt for key
+
+Options for deploy-execute-verify:
+  --deploy-key KEY          Private key for deploy step
+  --deploy-account NAME     Keystore account for deploy
+  --deploy-ledger           Use Ledger for deploy
+  --execute-key KEY         Private key for execute step
+  --execute-account NAME    Keystore account for execute
+  --execute-ledger          Use Ledger for execute
+  --dry-run, -n             Simulate without broadcasting
+  --skip-execute            Deploy only
+  --verify, -v              Verify on block explorer
+
+Required .env variables:
+  PARENT_CHAIN_RPC                  Parent chain RPC URL
+  INBOX_ADDRESS                     Inbox contract address
+  PROXY_ADMIN_ADDRESS               ProxyAdmin address
+  PARENT_UPGRADE_EXECUTOR_ADDRESS   UpgradeExecutor address
+
+Optional .env variables:
+  UPGRADE_ACTION_ADDRESS    Pre-deployed action (skips deploy)
+  ROLLUP                    Rollup address (for verification)
+EOF
+}
+
+main() {
+    if [[ $# -lt 2 ]]; then
+        show_help
+        exit 1
+    fi
+
+    local version="$1"
+    local command="$2"
+    shift 2
+
+    if [[ "$version" == "--help" || "$version" == "-h" ]]; then
+        show_help
+        exit 0
+    fi
+
+    local version_dir="$CONTRACTS_DIR/$version"
+    if [[ ! -d "$version_dir" ]]; then
+        die "Unknown version: $version
+
+Available versions: $(ls "$CONTRACTS_DIR" 2>/dev/null | tr '\n' ' ' || echo "none found")"
+    fi
+
+    case "$command" in
+        deploy)
+            cmd_deploy "$version_dir" "$@"
+            ;;
+        execute)
+            cmd_execute "$version_dir" "$@"
+            ;;
+        deploy-execute-verify)
+            cmd_deploy_execute_verify "$version_dir" "$@"
+            ;;
+        --help|-h)
+            show_help
+            ;;
+        *)
+            die "Unknown command: $command
+
+Commands: deploy, execute, deploy-execute-verify"
+            ;;
+    esac
+}
+
+main "$@"

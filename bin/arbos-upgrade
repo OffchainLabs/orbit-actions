@@ -1,0 +1,320 @@
+#!/bin/bash
+set -euo pipefail
+
+# ArbOS upgrades script for orbit-actions
+# Handles deploy, execute, verify, and deploy-execute-verify commands
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../lib/common.sh"
+
+ARBOS_DIR="/app/scripts/foundry/arbos-upgrades/at-timestamp"
+
+# =============================================================================
+# Commands
+# =============================================================================
+
+cmd_deploy() {
+    local version="$1"
+    shift
+
+    parse_auth_args "$@"
+
+    require_env CHILD_CHAIN_RPC
+
+    export ARBOS_VERSION="$version"
+
+    local deploy_script="$ARBOS_DIR/DeployUpgradeArbOSVersionAtTimestampAction.s.sol"
+    if [[ ! -f "$deploy_script" ]]; then
+        die "Deploy script not found: $deploy_script"
+    fi
+
+    log "Running: $(basename "$deploy_script") for ArbOS $version"
+
+    local cmd="forge script $deploy_script --rpc-url $CHILD_CHAIN_RPC --slow -vvv"
+
+    if [[ -n "$AUTH_ARGS" ]]; then
+        cmd="$cmd --broadcast $AUTH_ARGS"
+    fi
+
+    eval $cmd
+}
+
+cmd_execute() {
+    shift  # version not needed for execute
+
+    parse_auth_args "$@"
+
+    require_env CHILD_CHAIN_RPC
+    require_env CHILD_UPGRADE_EXECUTOR_ADDRESS
+    require_env UPGRADE_ACTION_ADDRESS
+
+    log "Executing ArbOS upgrade action: $UPGRADE_ACTION_ADDRESS"
+
+    local perform_calldata="0xb0a75d36"
+
+    if [[ -z "$AUTH_ARGS" ]]; then
+        # No auth - output calldata for multisig
+        local execute_calldata
+        execute_calldata=$(cast calldata "execute(address,bytes)" "$UPGRADE_ACTION_ADDRESS" "$perform_calldata")
+
+        log "Calldata for UpgradeExecutor.execute():"
+        echo ""
+        echo "To: $CHILD_UPGRADE_EXECUTOR_ADDRESS"
+        echo "Calldata: $execute_calldata"
+        echo ""
+        log "Submit this to your multisig/Safe to execute the upgrade"
+    else
+        local cast_cmd="cast send $CHILD_UPGRADE_EXECUTOR_ADDRESS \"execute(address,bytes)\" $UPGRADE_ACTION_ADDRESS $perform_calldata --rpc-url $CHILD_CHAIN_RPC $AUTH_ARGS"
+
+        eval $cast_cmd
+
+        log "ArbOS upgrade scheduled successfully"
+    fi
+}
+
+cmd_verify() {
+    shift  # version not needed for verify
+
+    require_env CHILD_CHAIN_RPC
+
+    log "Checking ArbOS upgrade status..."
+
+    local scheduled
+    scheduled=$(cast call --rpc-url "$CHILD_CHAIN_RPC" \
+        "0x000000000000000000000000000000000000006b" \
+        "getScheduledUpgrade()(uint64,uint64)" 2>/dev/null || echo "N/A")
+    log "Scheduled upgrade (version, timestamp): $scheduled"
+
+    local current_raw
+    current_raw=$(cast call --rpc-url "$CHILD_CHAIN_RPC" \
+        "0x0000000000000000000000000000000000000064" \
+        "arbOSVersion()(uint64)" 2>/dev/null || echo "0")
+    local current_version=$((current_raw - 55))
+    log "Current ArbOS version: $current_version"
+}
+
+cmd_deploy_execute_verify() {
+    local version="$1"
+    shift
+
+    parse_deploy_execute_auth "$@"
+
+    log "ArbOS version: $version"
+
+    local deploy_script="$ARBOS_DIR/DeployUpgradeArbOSVersionAtTimestampAction.s.sol"
+    if [[ ! -f "$deploy_script" ]]; then
+        die "Deploy script not found: $deploy_script"
+    fi
+
+    # Auto-detect skip_deploy if UPGRADE_ACTION_ADDRESS is set
+    local skip_deploy=false
+    if [[ -n "${UPGRADE_ACTION_ADDRESS:-}" ]]; then
+        skip_deploy=true
+        log "Using existing action from .env: $UPGRADE_ACTION_ADDRESS"
+    fi
+
+    # Validate required env vars
+    require_env CHILD_CHAIN_RPC
+    require_env CHILD_UPGRADE_EXECUTOR_ADDRESS
+    require_env SCHEDULE_TIMESTAMP
+
+    export ARBOS_VERSION="$version"
+
+    # Validate auth
+    local deploy_auth=$(get_deploy_auth)
+    local execute_auth=$(get_execute_auth)
+
+    if [[ "$skip_deploy" != "true" && "$DRY_RUN" != "true" && -z "$deploy_auth" ]]; then
+        die "Deploy auth required. Use --deploy-key, --deploy-account, --deploy-ledger, or --deploy-interactive"
+    fi
+    if [[ "$SKIP_EXECUTE" != "true" && "$DRY_RUN" != "true" && -z "$execute_auth" ]]; then
+        die "Execute auth required. Use --execute-key, --execute-account, --execute-ledger, or --execute-interactive"
+    fi
+
+    log "Scheduled timestamp: $SCHEDULE_TIMESTAMP"
+
+    # Step 1: Deploy
+    local chain_id=""
+    if [[ "$skip_deploy" != "true" ]]; then
+        chain_id=$(get_chain_id "$CHILD_CHAIN_RPC")
+        log "Target chain ID: $chain_id"
+        log "Step 1: Deploying ArbOS upgrade action..."
+
+        local forge_cmd="forge script $deploy_script --rpc-url $CHILD_CHAIN_RPC --slow -vvv"
+
+        if [[ "$DRY_RUN" != "true" ]]; then
+            forge_cmd="$forge_cmd --broadcast $deploy_auth"
+        fi
+        if [[ "$VERIFY_CONTRACTS" == "true" ]]; then
+            forge_cmd="$forge_cmd --verify"
+        fi
+
+        eval $forge_cmd
+
+        if [[ "$DRY_RUN" != "true" ]]; then
+            UPGRADE_ACTION_ADDRESS=$(parse_action_address "$deploy_script" "$chain_id")
+            log "Deployed action at: $UPGRADE_ACTION_ADDRESS"
+        else
+            log "Dry run - no action deployed"
+            if [[ "$SKIP_EXECUTE" != "true" ]]; then
+                log "Note: Set UPGRADE_ACTION_ADDRESS in .env to run execute step"
+                return 0
+            fi
+        fi
+    else
+        log "Step 1: Skipped deploy"
+    fi
+
+    # Step 2: Execute via cast send
+    if [[ "$SKIP_EXECUTE" != "true" ]]; then
+        log "Step 2: Executing ArbOS upgrade..."
+
+        local perform_calldata="0xb0a75d36"
+
+        if [[ "$DRY_RUN" == "true" ]]; then
+            local execute_calldata
+            execute_calldata=$(cast calldata "execute(address,bytes)" "$UPGRADE_ACTION_ADDRESS" "$perform_calldata")
+
+            log "Dry run - calldata for UpgradeExecutor.execute():"
+            echo ""
+            echo "To: $CHILD_UPGRADE_EXECUTOR_ADDRESS"
+            echo "Calldata: $execute_calldata"
+            echo ""
+            log "Submit this to your multisig/Safe to execute the upgrade"
+        else
+            local cast_cmd="cast send $CHILD_UPGRADE_EXECUTOR_ADDRESS \"execute(address,bytes)\" $UPGRADE_ACTION_ADDRESS $perform_calldata --rpc-url $CHILD_CHAIN_RPC"
+
+            if [[ -n "$EXECUTE_KEY" ]]; then
+                cast_cmd="$cast_cmd --private-key $EXECUTE_KEY"
+            elif [[ -n "$EXECUTE_ACCOUNT" ]]; then
+                cast_cmd="$cast_cmd --account $EXECUTE_ACCOUNT"
+            elif [[ "$EXECUTE_LEDGER" == "true" ]]; then
+                cast_cmd="$cast_cmd --ledger"
+            elif [[ "$EXECUTE_INTERACTIVE" == "true" ]]; then
+                cast_cmd="$cast_cmd --interactive"
+            fi
+
+            eval $cast_cmd
+
+            log "ArbOS upgrade scheduled successfully"
+        fi
+    else
+        log "Step 2: Skipped execute"
+    fi
+
+    # Step 3: Verify
+    if [[ "$DRY_RUN" != "true" && "$SKIP_EXECUTE" != "true" ]]; then
+        log "Step 3: Verifying scheduled upgrade..."
+
+        local scheduled
+        scheduled=$(cast call --rpc-url "$CHILD_CHAIN_RPC" \
+            "0x000000000000000000000000000000000000006b" \
+            "getScheduledUpgrade()(uint64,uint64)" 2>/dev/null || echo "N/A")
+        log "Scheduled upgrade (version, timestamp): $scheduled"
+
+        local current_raw
+        current_raw=$(cast call --rpc-url "$CHILD_CHAIN_RPC" \
+            "0x0000000000000000000000000000000000000064" \
+            "arbOSVersion()(uint64)" 2>/dev/null || echo "0")
+        local current_version=$((current_raw - 55))
+        log "Current ArbOS version: $current_version"
+    fi
+
+    log "Done"
+}
+
+# =============================================================================
+# Main
+# =============================================================================
+
+show_help() {
+    cat <<'EOF'
+Usage: arbos-upgrade <arbos-version> <command> [options]
+
+Commands:
+  deploy                Run deploy script only
+  execute               Execute upgrade action (schedule the upgrade)
+  verify                Check scheduled upgrade status
+  deploy-execute-verify Full upgrade flow (deploy, execute, verify)
+
+Options for deploy:
+  --private-key KEY     Private key
+  --account NAME        Keystore account
+  --ledger              Use Ledger
+  --interactive         Prompt for key
+
+Options for deploy-execute-verify:
+  --deploy-key KEY          Private key for deploy step
+  --deploy-account NAME     Keystore account for deploy
+  --deploy-ledger           Use Ledger for deploy
+  --execute-key KEY         Private key for execute step
+  --execute-account NAME    Keystore account for execute
+  --execute-ledger          Use Ledger for execute
+  --dry-run, -n             Simulate without broadcasting
+  --skip-execute            Deploy only
+  --verify, -v              Verify on block explorer
+
+Required .env variables:
+  CHILD_CHAIN_RPC                   Child chain RPC URL
+  CHILD_UPGRADE_EXECUTOR_ADDRESS    UpgradeExecutor address
+  SCHEDULE_TIMESTAMP                Unix timestamp for upgrade
+
+Optional .env variables:
+  ARBOS_VERSION             ArbOS version (alternative to positional arg)
+  UPGRADE_ACTION_ADDRESS    Pre-deployed action (skips deploy)
+EOF
+}
+
+main() {
+    if [[ $# -lt 1 ]]; then
+        show_help
+        exit 1
+    fi
+
+    local version="$1"
+    shift
+
+    if [[ "$version" == "--help" || "$version" == "-h" ]]; then
+        show_help
+        exit 0
+    fi
+
+    # Version can also come from env
+    if [[ -z "$version" && -n "${ARBOS_VERSION:-}" ]]; then
+        version="$ARBOS_VERSION"
+    fi
+
+    if [[ -z "$version" ]]; then
+        die "ArbOS version required"
+    fi
+
+    local command="${1:-deploy-execute-verify}"
+    if [[ $# -gt 0 ]]; then
+        shift
+    fi
+
+    case "$command" in
+        deploy)
+            cmd_deploy "$version" "$@"
+            ;;
+        execute)
+            cmd_execute "$version" "$@"
+            ;;
+        verify)
+            cmd_verify "$version" "$@"
+            ;;
+        deploy-execute-verify)
+            cmd_deploy_execute_verify "$version" "$@"
+            ;;
+        --help|-h)
+            show_help
+            ;;
+        *)
+            die "Unknown command: $command
+
+Commands: deploy, execute, verify, deploy-execute-verify"
+            ;;
+    esac
+}
+
+main "$@"
