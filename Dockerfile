@@ -1,9 +1,10 @@
 FROM node:18-slim
 
-# Install dependencies for Foundry and git
+# Install dependencies for Foundry, git, and jq (for JSON parsing in upgrade scripts)
 RUN apt-get update && apt-get install -y \
     curl \
     git \
+    jq \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Foundry
@@ -28,3 +29,9 @@ COPY . .
 
 # Build contracts
 RUN forge build
+
+# Make scripts executable
+RUN chmod +x /app/entrypoint.sh /app/bin/* /app/lib/*
+
+# Set entrypoint for command routing
+ENTRYPOINT ["/app/entrypoint.sh"]

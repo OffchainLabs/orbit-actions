@@ -1,0 +1,188 @@
+#!/bin/bash
+set -euo pipefail
+
+# =============================================================================
+# orbit-actions router
+# Handles path parsing, directory listing, file viewing, and command dispatch
+# =============================================================================
+
+SCRIPTS_DIR="/app/scripts/foundry"
+
+# =============================================================================
+# Utility Functions
+# =============================================================================
+
+die() {
+    echo "Error: $1" >&2
+    exit 1
+}
+
+# =============================================================================
+# Directory Listing
+# =============================================================================
+
+list_directory() {
+    local dir="$1"
+    local rel_path="${dir#$SCRIPTS_DIR/}"
+    # Normalize: remove leading ./
+    rel_path="${rel_path#./}"
+
+    # List actual contents
+    ls -1 "$dir"
+
+    # Add virtual commands based on directory type
+    case "$rel_path" in
+        contract-upgrades/[0-9]*)
+            echo "---"
+            echo "deploy                 (run Deploy script)"
+            echo "execute                (run Execute script)"
+            echo "deploy-execute-verify  (full upgrade flow)"
+            ;;
+        arbos-upgrades/at-timestamp)
+            echo "---"
+            echo "deploy <version>                 (run Deploy script)"
+            echo "execute                          (execute upgrade action)"
+            echo "verify                           (check upgrade status)"
+            echo "deploy-execute-verify <version>  (full upgrade flow)"
+            ;;
+    esac
+}
+
+# =============================================================================
+# Help
+# =============================================================================
+
+show_help() {
+    cat <<'EOF'
+Usage: docker run orbit-actions [path] [args...]
+
+Browse and execute scripts from the foundry scripts directory.
+
+Browsing:
+  .                                      List top-level directories
+  contract-upgrades                      List available versions
+  contract-upgrades/1.2.1                List version contents + commands
+  contract-upgrades/1.2.1/env-templates  List env templates
+
+Viewing files:
+  contract-upgrades/1.2.1/README.md                     View README
+  contract-upgrades/1.2.1/env-templates/.env.example    View env template
+  contract-upgrades/2.1.0/.env.sample                   View env sample
+
+Running upgrade scripts:
+  contract-upgrades/<version>/deploy [--private-key KEY]
+  contract-upgrades/<version>/execute [--private-key KEY]
+  contract-upgrades/<version>/deploy-execute-verify [--deploy-key KEY] [--execute-key KEY]
+
+  arbos-upgrades/at-timestamp/deploy <arbos-version> [--private-key KEY]
+  arbos-upgrades/at-timestamp/deploy-execute-verify <arbos-version> [--deploy-key KEY] [--execute-key KEY]
+
+Options for deploy-execute-verify:
+  --deploy-key KEY          Private key for deploy step
+  --deploy-account NAME     Keystore account for deploy
+  --deploy-ledger           Use Ledger for deploy
+  --execute-key KEY         Private key for execute step
+  --execute-account NAME    Keystore account for execute
+  --execute-ledger          Use Ledger for execute
+  --dry-run, -n             Simulate without broadcasting
+  --skip-execute            Deploy only
+  --verify, -v              Verify on block explorer
+
+Passthrough commands:
+  forge ...                 Run forge directly
+  cast ...                  Run cast directly
+  yarn ...                  Run yarn directly
+
+Examples:
+  docker run orbit-actions contract-upgrades/1.2.1
+  docker run orbit-actions contract-upgrades/1.2.1/README.md
+  docker run -v $(pwd)/.env:/app/.env orbit-actions contract-upgrades/1.2.1/deploy-execute-verify --dry-run
+EOF
+}
+
+# =============================================================================
+# Main Router
+# =============================================================================
+
+main() {
+    # No args - list top level
+    if [[ $# -eq 0 ]]; then
+        ls -1 "$SCRIPTS_DIR"
+        exit 0
+    fi
+
+    local path="$1"
+    shift
+
+    # Help
+    if [[ "$path" == "help" || "$path" == "--help" || "$path" == "-h" ]]; then
+        show_help
+        exit 0
+    fi
+
+    # Passthrough: forge, cast, yarn, node, bash, etc.
+    if command -v "$path" &>/dev/null && [[ ! -e "$SCRIPTS_DIR/$path" ]]; then
+        exec "$path" "$@"
+    fi
+
+    # Parse path for virtual commands
+    local full_path="$SCRIPTS_DIR/$path"
+    local parent_path=$(dirname "$full_path")
+    local basename=$(basename "$path")
+
+    # Check for virtual commands (deploy, execute, deploy-execute-verify)
+    if [[ ! -e "$full_path" && -d "$parent_path" ]]; then
+        local rel_parent="${parent_path#$SCRIPTS_DIR/}"
+        # Normalize: remove leading ./
+        rel_parent="${rel_parent#./}"
+
+        case "$rel_parent" in
+            contract-upgrades/[0-9]*)
+                local version=$(basename "$rel_parent")
+                case "$basename" in
+                    deploy|execute|deploy-execute-verify)
+                        exec /app/bin/contract-upgrade "$version" "$basename" "$@"
+                        ;;
+                esac
+                ;;
+            arbos-upgrades/at-timestamp)
+                case "$basename" in
+                    deploy|deploy-execute-verify)
+                        # These commands need a version argument
+                        local version="${1:-}"
+                        if [[ -z "$version" ]]; then
+                            echo "Error: ArbOS version required" >&2
+                            echo "Usage: arbos-upgrades/at-timestamp/$basename <version> [options]" >&2
+                            exit 1
+                        fi
+                        shift
+                        exec /app/bin/arbos-upgrade "$version" "$basename" "$@"
+                        ;;
+                    execute|verify)
+                        # These commands don't need a version argument
+                        exec /app/bin/arbos-upgrade "" "$basename" "$@"
+                        ;;
+                esac
+                ;;
+        esac
+    fi
+
+    # Directory - list contents
+    if [[ -d "$full_path" ]]; then
+        list_directory "$full_path"
+        exit 0
+    fi
+
+    # Regular file - cat it
+    if [[ -f "$full_path" ]]; then
+        cat "$full_path"
+        exit 0
+    fi
+
+    # Not found
+    die "Not found: $path
+
+Use 'help' to see available commands."
+}
+
+main "$@"
