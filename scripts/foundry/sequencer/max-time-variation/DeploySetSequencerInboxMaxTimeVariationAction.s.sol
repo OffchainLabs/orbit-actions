@@ -2,8 +2,9 @@
 pragma solidity 0.8.16;
 
 import "forge-std/Script.sol";
-import {SetSequencerInboxMaxTimeVariationAction} from
-    "../../../../contracts/parent-chain/sequencer/SetSequencerInboxMaxTimeVariationAction.sol";
+import {
+    SetSequencerInboxMaxTimeVariationAction
+} from "../../../../contracts/parent-chain/sequencer/SetSequencerInboxMaxTimeVariationAction.sol";
 
 /**
  * @title DeployUpgradeArbOSVersionAtTimestampActionScript
