@@ -1,7 +1,3 @@
-/**
- * ArbOS upgrade commands
- */
-
 import { Command } from 'commander';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -20,6 +16,13 @@ import {
 const ARBOS_DIR = path.join(getScriptsDir(), 'arbos-upgrades', 'at-timestamp');
 const DEPLOY_SCRIPT = path.join(ARBOS_DIR, 'DeployUpgradeArbOSVersionAtTimestampAction.s.sol');
 
+// ArbOS precompile addresses
+const ARB_OWNER_PUBLIC = '0x000000000000000000000000000000000000006b';
+const ARB_SYS = '0x0000000000000000000000000000000000000064';
+
+// Nitro ArbOS versions are offset by 55 to avoid collision with classic (pre-Nitro) versions
+const ARBOS_VERSION_OFFSET = 55;
+
 async function cmdDeploy(version: string, args: string[]): Promise<void> {
   const authArgs = parseAuthArgs(args);
 
@@ -29,7 +32,7 @@ async function cmdDeploy(version: string, args: string[]): Promise<void> {
     die(`Deploy script not found: ${DEPLOY_SCRIPT}`);
   }
 
-  // Export version for the script
+  // Forge script reads this from env
   process.env.ARBOS_VERSION = version;
 
   log(`Running: ${path.basename(DEPLOY_SCRIPT)} for ArbOS ${version}`);
@@ -83,14 +86,14 @@ async function cmdVerify(): Promise<void> {
   log('Checking ArbOS upgrade status...');
 
   const scheduled = await runCastCall({
-    to: '0x000000000000000000000000000000000000006b',
+    to: ARB_OWNER_PUBLIC,
     sig: 'getScheduledUpgrade()(uint64,uint64)',
     rpcUrl,
   });
   log(`Scheduled upgrade (version, timestamp): ${scheduled}`);
 
   const currentRaw = await runCastCall({
-    to: '0x0000000000000000000000000000000000000064',
+    to: ARB_SYS,
     sig: 'arbOSVersion()(uint64)',
     rpcUrl,
   });
@@ -100,7 +103,7 @@ async function cmdVerify(): Promise<void> {
     currentVersion = 0;
   } else {
     const rawNum = parseInt(currentRaw, 10);
-    currentVersion = rawNum - 55;
+    currentVersion = rawNum - ARBOS_VERSION_OFFSET;
   }
 
   log(`Current ArbOS version: ${currentVersion}`);
@@ -138,15 +141,13 @@ async function cmdDeployExecuteVerify(
     log(`Using existing action from .env: ${upgradeActionAddress}`);
   }
 
-  // Validate required env vars
   const rpcUrl = requireEnv('CHILD_CHAIN_RPC');
   const upgradeExecutor = requireEnv('CHILD_UPGRADE_EXECUTOR_ADDRESS');
   requireEnv('SCHEDULE_TIMESTAMP');
 
-  // Export version for the script
+  // Forge script reads this from env
   process.env.ARBOS_VERSION = version;
 
-  // Validate auth
   const deployAuth = getDeployAuth(auth);
   const executeAuth = getExecuteAuth(auth);
 
@@ -159,7 +160,6 @@ async function cmdDeployExecuteVerify(
 
   log(`Scheduled timestamp: ${process.env.SCHEDULE_TIMESTAMP}`);
 
-  // Step 1: Deploy
   let chainId = '';
   if (!skipDeploy) {
     chainId = await getChainId(rpcUrl);
@@ -189,11 +189,10 @@ async function cmdDeployExecuteVerify(
     log('Step 1: Skipped deploy');
   }
 
-  // Step 2: Execute via cast send
   if (!auth.skipExecute) {
     log('Step 2: Executing ArbOS upgrade...');
 
-    const performCalldata = '0xb0a75d36';
+    const performCalldata = '0xb0a75d36'; // perform() selector
 
     if (auth.dryRun) {
       const executeCalldata = await castCalldata('execute(address,bytes)', upgradeActionAddress, performCalldata);
@@ -219,19 +218,18 @@ async function cmdDeployExecuteVerify(
     log('Step 2: Skipped execute');
   }
 
-  // Step 3: Verify
   if (!auth.dryRun && !auth.skipExecute) {
     log('Step 3: Verifying scheduled upgrade...');
 
     const scheduled = await runCastCall({
-      to: '0x000000000000000000000000000000000000006b',
+      to: ARB_OWNER_PUBLIC,
       sig: 'getScheduledUpgrade()(uint64,uint64)',
       rpcUrl,
     });
     log(`Scheduled upgrade (version, timestamp): ${scheduled}`);
 
     const currentRaw = await runCastCall({
-      to: '0x0000000000000000000000000000000000000064',
+      to: ARB_SYS,
       sig: 'arbOSVersion()(uint64)',
       rpcUrl,
     });
@@ -241,7 +239,7 @@ async function cmdDeployExecuteVerify(
       currentVersion = 0;
     } else {
       const rawNum = parseInt(currentRaw, 10);
-      currentVersion = rawNum - 55;
+      currentVersion = rawNum - ARBOS_VERSION_OFFSET;
     }
 
     log(`Current ArbOS version: ${currentVersion}`);
@@ -271,7 +269,6 @@ export function createArbosUpgradeCommand(): Command {
     .option('--skip-execute', 'Deploy only')
     .option('-v, --verify', 'Verify on block explorer')
     .action(async (version: string, command: string, options) => {
-      // Build args array from remaining options for simple commands
       const args: string[] = [];
       if (options.privateKey) args.push('--private-key', options.privateKey);
       if (options.account) args.push('--account', options.account);
@@ -299,5 +296,4 @@ export function createArbosUpgradeCommand(): Command {
   return cmd;
 }
 
-// Export individual functions for use by router
 export { cmdDeploy, cmdExecute, cmdVerify, cmdDeployExecuteVerify };

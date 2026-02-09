@@ -1,8 +1,3 @@
-/**
- * Path routing for CLI
- * Handles directory listing, file viewing, and command dispatch
- */
-
 import * as fs from 'fs';
 import * as path from 'path';
 import { die } from './utils/log';
@@ -67,16 +62,13 @@ function listDirectory(dir: string): void {
   let relPath = path.relative(scriptsDir, dir);
   if (relPath === '.') relPath = '';
 
-  // List actual contents
   const contents = fs.readdirSync(dir);
   for (const item of contents) {
-    // Skip hidden files
     if (!item.startsWith('.')) {
       console.log(item);
     }
   }
 
-  // Add virtual commands based on directory type
   if (/^contract-upgrades\/[0-9]/.test(relPath)) {
     console.log('---');
     console.log('deploy                 (run Deploy script)');
@@ -128,7 +120,6 @@ function parseOptions(args: string[]): Record<string, string | boolean> {
 export async function router(pathArg?: string, args: string[] = []): Promise<void> {
   const scriptsDir = getScriptsDir();
 
-  // No args - list top level
   if (!pathArg) {
     const contents = fs.readdirSync(scriptsDir);
     for (const item of contents) {
@@ -139,23 +130,18 @@ export async function router(pathArg?: string, args: string[] = []): Promise<voi
     return;
   }
 
-  // Help
   if (pathArg === 'help' || pathArg === '--help' || pathArg === '-h') {
     console.log(HELP_TEXT);
     return;
   }
 
   const fullPath = path.join(scriptsDir, pathArg);
-
-  // Parse path for virtual commands
   const parentPath = path.dirname(fullPath);
   const basename = path.basename(pathArg);
 
-  // Check for virtual commands (deploy, execute, deploy-execute-verify)
   if (!fs.existsSync(fullPath) && fs.existsSync(parentPath)) {
     const relParent = path.relative(scriptsDir, parentPath);
 
-    // Contract upgrades virtual commands
     if (/^contract-upgrades\/[0-9]/.test(relParent)) {
       const version = path.basename(relParent);
       const options = parseOptions(args);
@@ -176,12 +162,10 @@ export async function router(pathArg?: string, args: string[] = []): Promise<voi
       }
     }
 
-    // ArbOS upgrades virtual commands
     if (relParent === 'arbos-upgrades/at-timestamp') {
       switch (basename) {
         case 'deploy':
         case 'deploy-execute-verify': {
-          // These commands need a version argument
           const version = args[0];
           if (!version) {
             console.error(`Error: ArbOS version required`);
@@ -207,20 +191,17 @@ export async function router(pathArg?: string, args: string[] = []): Promise<voi
     }
   }
 
-  // Directory - list contents
   if (fs.existsSync(fullPath) && fs.statSync(fullPath).isDirectory()) {
     listDirectory(fullPath);
     return;
   }
 
-  // Regular file - cat it
   if (fs.existsSync(fullPath) && fs.statSync(fullPath).isFile()) {
     const content = fs.readFileSync(fullPath, 'utf-8');
     console.log(content);
     return;
   }
 
-  // Not found
   die(`Not found: ${pathArg}
 
 Use 'help' to see available commands.`);

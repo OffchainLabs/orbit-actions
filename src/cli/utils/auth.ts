@@ -1,11 +1,3 @@
-/**
- * Authentication argument parsing utilities
- */
-
-export interface AuthArgs {
-  authArgs: string;
-}
-
 export interface DeployExecuteAuth {
   deployKey: string;
   deployAccount: string;
@@ -20,10 +12,6 @@ export interface DeployExecuteAuth {
   verifyContracts: boolean;
 }
 
-/**
- * Parse simple auth args (--private-key, --account, --ledger, --interactive)
- * Returns forge/cast compatible auth string
- */
 export function parseAuthArgs(args: string[]): string {
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
@@ -40,9 +28,6 @@ export function parseAuthArgs(args: string[]): string {
   return '';
 }
 
-/**
- * Get deploy auth args from DeployExecuteAuth
- */
 export function getDeployAuth(auth: DeployExecuteAuth): string {
   if (auth.deployKey) {
     return `--private-key ${auth.deployKey}`;
@@ -59,9 +44,6 @@ export function getDeployAuth(auth: DeployExecuteAuth): string {
   return '';
 }
 
-/**
- * Get execute auth args from DeployExecuteAuth
- */
 export function getExecuteAuth(auth: DeployExecuteAuth): string {
   if (auth.executeKey) {
     return `--private-key ${auth.executeKey}`;
@@ -78,9 +60,6 @@ export function getExecuteAuth(auth: DeployExecuteAuth): string {
   return '';
 }
 
-/**
- * Create default DeployExecuteAuth from commander options
- */
 export function createDeployExecuteAuth(options: {
   deployKey?: string;
   deployAccount?: string;

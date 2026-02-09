@@ -1,7 +1,3 @@
-/**
- * Forge/Cast command execution utilities
- */
-
 import execa from 'execa';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -19,9 +15,6 @@ export interface ForgeScriptOptions {
   verbosity?: number;
 }
 
-/**
- * Run a forge script command
- */
 export async function runForgeScript(options: ForgeScriptOptions): Promise<void> {
   const args = ['script', options.script, '--rpc-url', options.rpcUrl];
 
@@ -65,9 +58,6 @@ export interface CastSendOptions {
   authArgs?: string;
 }
 
-/**
- * Run a cast send command
- */
 export async function runCastSend(options: CastSendOptions): Promise<void> {
   const args = ['send', options.to, options.sig, ...options.args, '--rpc-url', options.rpcUrl];
 
@@ -91,9 +81,6 @@ export interface CastCallOptions {
   rpcUrl: string;
 }
 
-/**
- * Run a cast call command and return the result
- */
 export async function runCastCall(options: CastCallOptions): Promise<string> {
   try {
     const result = await execa('cast', ['call', '--rpc-url', options.rpcUrl, options.to, options.sig]);
@@ -103,25 +90,16 @@ export async function runCastCall(options: CastCallOptions): Promise<string> {
   }
 }
 
-/**
- * Generate calldata using cast
- */
 export async function castCalldata(sig: string, ...args: string[]): Promise<string> {
   const result = await execa('cast', ['calldata', sig, ...args]);
   return result.stdout;
 }
 
-/**
- * Get chain ID from RPC URL
- */
 export async function getChainId(rpcUrl: string): Promise<string> {
   const result = await execa('cast', ['chain-id', '--rpc-url', rpcUrl]);
   return result.stdout.trim();
 }
 
-/**
- * Parse the deployed action address from forge broadcast file
- */
 export function parseActionAddress(scriptPath: string, chainId: string): string {
   const scriptName = path.basename(scriptPath);
   const repoRoot = getRepoRoot();
@@ -148,9 +126,6 @@ export function parseActionAddress(scriptPath: string, chainId: string): string 
   return address;
 }
 
-/**
- * Find a script file by pattern in a directory
- */
 export function findScript(dir: string, pattern: RegExp): string | null {
   if (!fs.existsSync(dir)) {
     return null;

@@ -1,12 +1,8 @@
-/**
- * Contract upgrade commands
- */
-
 import { Command } from 'commander';
 import * as path from 'path';
 import * as fs from 'fs';
 import { log, die } from '../utils/log';
-import { requireEnv, getEnv, getScriptsDir, getRepoRoot } from '../utils/env';
+import { requireEnv, getEnv, getScriptsDir } from '../utils/env';
 import { parseAuthArgs, createDeployExecuteAuth, getDeployAuth, getExecuteAuth } from '../utils/auth';
 import { runForgeScript, getChainId, parseActionAddress, findScript } from '../utils/forge';
 
@@ -127,13 +123,11 @@ async function cmdDeployExecuteVerify(
     log(`Using existing action from .env: ${upgradeActionAddress}`);
   }
 
-  // Validate required env vars
   const rpcUrl = requireEnv('PARENT_CHAIN_RPC');
   requireEnv('INBOX_ADDRESS');
   requireEnv('PROXY_ADMIN_ADDRESS');
   requireEnv('PARENT_UPGRADE_EXECUTOR_ADDRESS');
 
-  // Validate auth
   const deployAuth = getDeployAuth(auth);
   const executeAuth = getExecuteAuth(auth);
 
@@ -147,7 +141,6 @@ async function cmdDeployExecuteVerify(
   const chainId = await getChainId(rpcUrl);
   log(`Target chain ID: ${chainId}`);
 
-  // Step 1: Deploy
   if (!skipDeploy) {
     log('Step 1: Deploying upgrade action...');
 
@@ -175,10 +168,9 @@ async function cmdDeployExecuteVerify(
     log('Step 1: Skipped deploy');
   }
 
-  // Export for execute script
+  // Forge script reads this from env
   process.env.UPGRADE_ACTION_ADDRESS = upgradeActionAddress;
 
-  // Step 2: Execute
   if (!auth.skipExecute) {
     log('Step 2: Executing upgrade...');
 
@@ -198,7 +190,6 @@ async function cmdDeployExecuteVerify(
     log('Step 2: Skipped execute');
   }
 
-  // Step 3: Verify
   if (!auth.dryRun && !auth.skipExecute) {
     log('Step 3: Verifying upgrade...');
 
@@ -237,7 +228,6 @@ export function createContractUpgradeCommand(): Command {
     .option('--skip-execute', 'Deploy only')
     .option('-v, --verify', 'Verify on block explorer')
     .action(async (version: string, command: string, options) => {
-      // Build args array from remaining options for simple commands
       const args: string[] = [];
       if (options.privateKey) args.push('--private-key', options.privateKey);
       if (options.account) args.push('--account', options.account);
@@ -265,5 +255,4 @@ export function createContractUpgradeCommand(): Command {
   return cmd;
 }
 
-// Export individual functions for use by router
 export { cmdDeploy, cmdExecute, cmdVerify, cmdDeployExecuteVerify, getVersionDir };

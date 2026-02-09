@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-/**
- * orbit-actions CLI entry point
- */
 
 import { program } from 'commander';
 import { loadEnv } from './utils/env';
@@ -9,7 +6,6 @@ import { router } from './router';
 import { createContractUpgradeCommand } from './commands/contract-upgrade';
 import { createArbosUpgradeCommand } from './commands/arbos-upgrade';
 
-// Load .env from repo root (or /app in Docker)
 loadEnv();
 
 program
@@ -22,8 +18,8 @@ program
     await router(pathArg, args);
   });
 
-// Register subcommands for direct invocation
 program.addCommand(createContractUpgradeCommand());
 program.addCommand(createArbosUpgradeCommand());
 
 program.parse();
+
