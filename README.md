@@ -25,73 +25,6 @@ For token bridge related operations, these are the additional requirements:
 yarn install
 ```
 
-## Using Docker
-
-The Orbit actions are also available via Docker.
-
-### Build the image
-
-First, ensure Foundry dependencies are installed:
-
-```bash
-forge install
-```
-
-Then build the image:
-
-```bash
-docker build -t orbit-actions .
-```
-
-### Run commands
-
-Pass the command you want to run directly to Docker:
-
-```bash
-# Check contract versions
-docker run --rm \
-  -e INBOX_ADDRESS=0xYourInboxAddress \
-  -e INFURA_KEY=your_infura_key \
-  orbit-actions \
-  yarn orbit:contracts:version --network arb1
-
-# Run forge script
-docker run --rm \
-  --env-file orbit.env \
-  -v $(pwd)/broadcast:/app/broadcast \
-  orbit-actions \
-  forge script --sender 0xYourAddress --rpc-url $PARENT_CHAIN_RPC --broadcast \
-  scripts/foundry/contract-upgrades/2.1.3/DeployNitroContracts2Point1Point3UpgradeAction.s.sol -vvv
-
-# Run cast commands
-docker run --rm \
-  orbit-actions \
-  cast call --rpc-url https://arb1.arbitrum.io/rpc 0xYourRollup "wasmModuleRoot()"
-```
-
-### Environment variables
-
-Create an `orbit.env` file with your configuration and pass it using `--env-file`:
-
-```bash
-PARENT_CHAIN_RPC=https://arb1.arbitrum.io/rpc
-INBOX_ADDRESS=0x...
-PROXY_ADMIN_ADDRESS=0x...
-PARENT_UPGRADE_EXECUTOR_ADDRESS=0x...
-```
-
-### Getting output artifacts
-
-Mount a volume to retrieve broadcast artifacts:
-
-```bash
-docker run --rm \
-  --env-file orbit.env \
-  -v $(pwd)/broadcast:/app/broadcast \
-  orbit-actions \
-  forge script ...
-```
-
 ## Check Version and Upgrade Path
 
 Run the follow command to check the version of Nitro contracts deployed on the parent chain of your Orbit chain.
@@ -193,4 +126,50 @@ See [setCacheManager](scripts/foundry/stylus/setCacheManager).
 
 Currently limited to L2s; L3 support is expected in a future update.
 
-See [Nitro contracts 3.1.0 upgrade](https://github.com/OffchainLabs/orbit-actions/tree/main/scripts/foundry/contract-upgrades/3.1.0). 
+See [Nitro contracts 3.1.0 upgrade](https://github.com/OffchainLabs/orbit-actions/tree/main/scripts/foundry/contract-upgrades/3.1.0).
+
+# CLI
+
+The `orbit-actions` CLI provides a guided interface for running upgrade scripts. It wraps Foundry commands and handles the deploy/execute/verify workflow.
+
+```bash
+# Browse available scripts
+yarn orbit-actions                              # List top-level directories
+yarn orbit-actions contract-upgrades            # List versions
+yarn orbit-actions contract-upgrades/1.2.1      # List contents + commands
+
+# View files
+yarn orbit-actions contract-upgrades/1.2.1/README.md
+
+# Run contract upgrades
+yarn orbit-actions contract-upgrades/1.2.1/deploy-execute-verify --dry-run
+yarn orbit-actions contract-upgrades/1.2.1/deploy --private-key $KEY
+
+# Run ArbOS upgrades
+yarn orbit-actions arbos-upgrades/at-timestamp/deploy-execute-verify 32 --dry-run
+```
+
+Run `yarn orbit-actions help` for full usage details. The CLI reads configuration from a `.env` file in the working directory.
+
+## Docker
+
+The CLI is available as a Docker image at `offchainlabs/orbit-actions`:
+
+```bash
+# Check contract versions
+docker run --rm \
+  -e INBOX_ADDRESS=0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9 \
+  -e INFURA_KEY=$INFURA_KEY \
+  offchainlabs/orbit-actions:versioner \
+  --network arb1
+
+# Browse upgrade scripts
+docker run --rm offchainlabs/orbit-actions contract-upgrades
+
+# Run upgrade with env file and capture broadcast output
+docker run --rm \
+  -v $(pwd)/.env:/app/.env \
+  -v $(pwd)/broadcast:/app/broadcast \
+  offchainlabs/orbit-actions \
+  contract-upgrades/1.2.1/deploy-execute-verify --dry-run
+```
