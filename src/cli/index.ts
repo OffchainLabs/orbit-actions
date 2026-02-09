@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+/**
+ * orbit-actions CLI entry point
+ */
+
+import { program } from 'commander';
+import { loadEnv } from './utils/env';
+import { router } from './router';
+import { createContractUpgradeCommand } from './commands/contract-upgrade';
+import { createArbosUpgradeCommand } from './commands/arbos-upgrade';
+
+// Load .env from repo root (or /app in Docker)
+loadEnv();
+
+program
+  .name('orbit-actions')
+  .description('CLI for Orbit chain upgrade actions')
+  .argument('[path]', 'Path to browse or command to run')
+  .argument('[args...]', 'Additional arguments')
+  .allowUnknownOption(true)
+  .action(async (pathArg?: string, args?: string[]) => {
+    await router(pathArg, args);
+  });
+
+// Register subcommands for direct invocation
+program.addCommand(createContractUpgradeCommand());
+program.addCommand(createArbosUpgradeCommand());
+
+program.parse();

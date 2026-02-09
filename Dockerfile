@@ -30,8 +30,8 @@ COPY . .
 # Build contracts
 RUN forge build
 
-# Make scripts executable
-RUN chmod +x /app/entrypoint.sh /app/bin/* /app/lib/*
+# Build CLI
+RUN yarn build:cli
 
-# Set entrypoint for command routing
-ENTRYPOINT ["/app/entrypoint.sh"]
+# Direct node entrypoint (no shell wrapper)
+ENTRYPOINT ["node", "/app/dist/cli/index.js"]
