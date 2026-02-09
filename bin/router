@@ -36,6 +36,7 @@ list_directory() {
             echo "---"
             echo "deploy                 (run Deploy script)"
             echo "execute                (run Execute script)"
+            echo "verify                 (run Verify script)"
             echo "deploy-execute-verify  (full upgrade flow)"
             ;;
         arbos-upgrades/at-timestamp)
@@ -140,7 +141,7 @@ main() {
             contract-upgrades/[0-9]*)
                 local version=$(basename "$rel_parent")
                 case "$basename" in
-                    deploy|execute|deploy-execute-verify)
+                    deploy|execute|verify|deploy-execute-verify)
                         exec /app/bin/contract-upgrade "$version" "$basename" "$@"
                         ;;
                 esac

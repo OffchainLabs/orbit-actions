@@ -62,6 +62,22 @@ cmd_execute() {
     eval $cmd
 }
 
+cmd_verify() {
+    local version_dir="$1"
+    shift
+
+    require_env PARENT_CHAIN_RPC
+
+    local verify_script=$(find "$version_dir" -maxdepth 1 -name "Verify*.s.sol" -type f 2>/dev/null | head -1)
+    if [[ -z "$verify_script" ]]; then
+        die "No verify script found in $version_dir - check README for manual verification"
+    fi
+
+    log "Running: $(basename "$verify_script")"
+
+    forge script "$verify_script" --rpc-url "$PARENT_CHAIN_RPC" -vvv
+}
+
 cmd_deploy_execute_verify() {
     local version_dir="$1"
     local version=$(basename "$version_dir")
@@ -168,26 +184,12 @@ cmd_deploy_execute_verify() {
     if [[ "$DRY_RUN" != "true" && "$SKIP_EXECUTE" != "true" ]]; then
         log "Step 3: Verifying upgrade..."
 
-        case "$version" in
-            2.1.2|2.1.3)
-                local bridge
-                bridge=$(cast call --rpc-url "$PARENT_CHAIN_RPC" "$INBOX_ADDRESS" "bridge()(address)" 2>/dev/null || echo "")
-                if [[ -n "$bridge" && "$bridge" != "0x" ]]; then
-                    local decimals
-                    decimals=$(cast call --rpc-url "$PARENT_CHAIN_RPC" "$bridge" "nativeTokenDecimals()(uint8)" 2>/dev/null || echo "N/A")
-                    log "Verification: nativeTokenDecimals = $decimals"
-                fi
-                ;;
-            1.2.1|2.1.0)
-                if [[ -n "${ROLLUP:-}" ]]; then
-                    local wasm_root
-                    wasm_root=$(cast call --rpc-url "$PARENT_CHAIN_RPC" "$ROLLUP" "wasmModuleRoot()(bytes32)" 2>/dev/null || echo "N/A")
-                    log "Verification: wasmModuleRoot = $wasm_root"
-                else
-                    log "Verification: Set ROLLUP in .env to check wasmModuleRoot"
-                fi
-                ;;
-        esac
+        local verify_script=$(find "$version_dir" -maxdepth 1 -name "Verify*.s.sol" -type f 2>/dev/null | head -1)
+        if [[ -n "$verify_script" ]]; then
+            forge script "$verify_script" --rpc-url "$PARENT_CHAIN_RPC" -vvv
+        else
+            log "No Verify script found - check README for manual verification"
+        fi
     fi
 
     log "Done"
@@ -204,6 +206,7 @@ Usage: contract-upgrade <version> <command> [options]
 Commands:
   deploy                Run deploy script only
   execute               Run execute script only
+  verify                Run verify script only
   deploy-execute-verify Full upgrade flow (deploy, execute, verify)
 
 Options for deploy/execute:
@@ -264,6 +267,9 @@ Available versions: $(ls "$CONTRACTS_DIR" 2>/dev/null | tr '\n' ' ' || echo "non
         execute)
             cmd_execute "$version_dir" "$@"
             ;;
+        verify)
+            cmd_verify "$version_dir" "$@"
+            ;;
         deploy-execute-verify)
             cmd_deploy_execute_verify "$version_dir" "$@"
             ;;
@@ -273,7 +279,7 @@ Available versions: $(ls "$CONTRACTS_DIR" 2>/dev/null | tr '\n' ' ' || echo "non
         *)
             die "Unknown command: $command
 
-Commands: deploy, execute, deploy-execute-verify"
+Commands: deploy, execute, verify, deploy-execute-verify"
             ;;
     esac
 }
