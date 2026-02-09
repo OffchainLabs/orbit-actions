@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-import { program } from 'commander';
-import { loadEnv } from './utils/env';
-import { router } from './router';
-import { createContractUpgradeCommand } from './commands/contract-upgrade';
-import { createArbosUpgradeCommand } from './commands/arbos-upgrade';
+import { program } from 'commander'
+import { loadEnv } from './utils/env'
+import { router } from './router'
+import { createContractUpgradeCommand } from './commands/contract-upgrade'
+import { createArbosUpgradeCommand } from './commands/arbos-upgrade'
 
-loadEnv();
+loadEnv()
 
 program
   .name('orbit-actions')
@@ -15,11 +15,10 @@ program
   .argument('[args...]', 'Additional arguments')
   .allowUnknownOption(true)
   .action(async (pathArg?: string, args?: string[]) => {
-    await router(pathArg, args);
-  });
+    await router(pathArg, args)
+  })
 
-program.addCommand(createContractUpgradeCommand());
-program.addCommand(createArbosUpgradeCommand());
+program.addCommand(createContractUpgradeCommand())
+program.addCommand(createArbosUpgradeCommand())
 
-program.parse();
-
+program.parse()

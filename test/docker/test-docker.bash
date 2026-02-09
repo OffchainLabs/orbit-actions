@@ -25,23 +25,23 @@ run_test() {
     fi
 }
 
-# Test 1: Tools are installed (passthrough)
-echo "--- Tool Passthrough ---"
-run_test "forge" docker run --rm "$IMAGE_NAME" forge --version
-run_test "cast" docker run --rm "$IMAGE_NAME" cast --version
-run_test "yarn" docker run --rm "$IMAGE_NAME" yarn --version
-run_test "node" docker run --rm "$IMAGE_NAME" node --version
+# Test 1: Tools are installed (via --entrypoint)
+echo "--- Tools Installed ---"
+run_test "forge" docker run --rm --entrypoint forge "$IMAGE_NAME" --version
+run_test "cast" docker run --rm --entrypoint cast "$IMAGE_NAME" --version
+run_test "yarn" docker run --rm --entrypoint yarn "$IMAGE_NAME" --version
+run_test "node" docker run --rm --entrypoint node "$IMAGE_NAME" --version
 
 # Test 2: Dependencies are installed
 echo ""
 echo "--- Dependencies ---"
-run_test "node_modules exists" docker run --rm "$IMAGE_NAME" test -d node_modules
-run_test "forge dependencies" docker run --rm "$IMAGE_NAME" test -d node_modules/@arbitrum
+run_test "node_modules exists" docker run --rm --entrypoint test "$IMAGE_NAME" -d node_modules
+run_test "forge dependencies" docker run --rm --entrypoint test "$IMAGE_NAME" -d node_modules/@arbitrum
 
 # Test 3: Contracts compile
 echo ""
 echo "--- Contract Compilation ---"
-run_test "contracts built" docker run --rm "$IMAGE_NAME" test -d out
+run_test "contracts built" docker run --rm --entrypoint test "$IMAGE_NAME" -d out
 
 # Test 4: Browsing - list directories
 echo ""
@@ -119,13 +119,13 @@ run_test "help command" docker run --rm "$IMAGE_NAME" help
 # Test 7: Yarn scripts work
 echo ""
 echo "--- Yarn Scripts ---"
-run_test "yarn orbit:contracts:version --help" docker run --rm "$IMAGE_NAME" yarn orbit:contracts:version --help
+run_test "yarn orbit:contracts:version --help" docker run --rm --entrypoint yarn "$IMAGE_NAME" orbit:contracts:version --help
 
 # Test 8: Unit tests pass
 echo ""
 echo "--- Unit Tests ---"
 echo "Running unit tests inside container..."
-if docker run --rm "$IMAGE_NAME" yarn test:unit; then
+if docker run --rm --entrypoint yarn "$IMAGE_NAME" test:unit; then
     echo "Unit tests: OK"
 else
     echo "Unit tests: FAILED"

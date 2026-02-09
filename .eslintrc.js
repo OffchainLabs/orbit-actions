@@ -60,7 +60,7 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         'plugin:prettier/recommended',
       ],
-      plugins: ['@typescript-eslint', 'prettier', '@typescript-eslint/tslint'],
+      plugins: ['@typescript-eslint', 'prettier'],
       rules: {
         'no-empty-pattern': 'warn',
         'prettier/prettier': ['error', { singleQuote: true }],
@@ -75,12 +75,6 @@ module.exports = {
             argsIgnorePattern: '^_',
             varsIgnorePattern: '^_',
             caughtErrorsIgnorePattern: '^_',
-          },
-        ],
-        '@typescript-eslint/tslint/config': [
-          'error',
-          {
-            rules: { 'strict-comparisons': true },
           },
         ],
         'no-implicit-coercion': 'error',

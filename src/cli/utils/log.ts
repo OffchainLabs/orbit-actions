@@ -1,10 +1,10 @@
-const PREFIX = '[orbit-actions]';
+const PREFIX = '[orbit-actions]'
 
 export function log(message: string): void {
-  console.log(`${PREFIX} ${message}`);
+  console.log(`${PREFIX} ${message}`)
 }
 
 export function die(message: string): never {
-  console.error(`Error: ${message}`);
-  process.exit(1);
+  console.error(`Error: ${message}`)
+  process.exit(1)
 }
