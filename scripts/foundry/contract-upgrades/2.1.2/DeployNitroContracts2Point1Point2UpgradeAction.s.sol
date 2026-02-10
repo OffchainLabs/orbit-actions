@@ -2,8 +2,9 @@
 pragma solidity 0.8.16;
 
 import {DeploymentHelpersScript} from "../../helper/DeploymentHelpers.s.sol";
-import {NitroContracts2Point1Point2UpgradeAction} from
-    "../../../../contracts/parent-chain/contract-upgrades/NitroContracts2Point1Point2UpgradeAction.sol";
+import {
+    NitroContracts2Point1Point2UpgradeAction
+} from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts2Point1Point2UpgradeAction.sol";
 
 /**
  * @title DeployNitroContracts2Point1Point2UpgradeActionScript

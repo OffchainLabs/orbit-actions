@@ -18,8 +18,9 @@ import {
 } from "@arbitrum/nitro-contracts-1.3.0/src/bridge/ERC20Bridge.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
-import {NitroContracts2Point1Point2UpgradeAction} from
-    "../../contracts/parent-chain/contract-upgrades/NitroContracts2Point1Point2UpgradeAction.sol";
+import {
+    NitroContracts2Point1Point2UpgradeAction
+} from "../../contracts/parent-chain/contract-upgrades/NitroContracts2Point1Point2UpgradeAction.sol";
 import {IUpgradeExecutor} from "@offchainlabs/upgrade-executor/src/IUpgradeExecutor.sol";
 import {DeploymentHelpersScript} from "../../scripts/foundry/helper/DeploymentHelpers.s.sol";
 

@@ -41,21 +41,22 @@ contract EnableFastConfirmAction {
             require(fastConfirmCommittee[i] != address(0), "Invalid address");
             require(rollup.isValidator(fastConfirmCommittee[i]), "fastConfirmCommittee members must be validator");
         }
-        address fastConfirmer = IGnosisSafeProxyFactory(GNOSIS_SAFE_PROXY_FACTORY).createProxyWithNonce(
-            GNOSIS_SAFE_1_3_0,
-            abi.encodeWithSignature(
-                "setup(address[],uint256,address,bytes,address,address,uint256,address)",
-                fastConfirmCommittee,
-                threshold,
-                address(0),
-                "",
-                GNOSIS_COMPATIBILITY_FALLBACK_HANDLER,
-                address(0),
-                0,
-                address(0)
-            ),
-            salt
-        );
+        address fastConfirmer = IGnosisSafeProxyFactory(GNOSIS_SAFE_PROXY_FACTORY)
+            .createProxyWithNonce(
+                GNOSIS_SAFE_1_3_0,
+                abi.encodeWithSignature(
+                    "setup(address[],uint256,address,bytes,address,address,uint256,address)",
+                    fastConfirmCommittee,
+                    threshold,
+                    address(0),
+                    "",
+                    GNOSIS_COMPATIBILITY_FALLBACK_HANDLER,
+                    address(0),
+                    0,
+                    address(0)
+                ),
+                salt
+            );
         rollup.setAnyTrustFastConfirmer(fastConfirmer);
         address[] memory validators = new address[](1);
         validators[0] = fastConfirmer;

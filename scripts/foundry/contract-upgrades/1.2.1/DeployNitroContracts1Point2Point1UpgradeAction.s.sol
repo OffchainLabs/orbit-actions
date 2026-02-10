@@ -3,8 +3,9 @@ pragma solidity 0.8.16;
 
 import "forge-std/Script.sol";
 import {IReader4844} from "@arbitrum/nitro-contracts-1.2.1/src/libraries/IReader4844.sol";
-import {NitroContracts1Point2Point1UpgradeAction} from
-    "../../../../contracts/parent-chain/contract-upgrades/NitroContracts1Point2Point1UpgradeAction.sol";
+import {
+    NitroContracts1Point2Point1UpgradeAction
+} from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts1Point2Point1UpgradeAction.sol";
 
 import {ArbitrumChecker} from "@arbitrum/nitro-contracts-1.2.1/src/libraries/ArbitrumChecker.sol";
 import {MockArbSys} from "../../helper/MockArbSys.sol";

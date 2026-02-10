@@ -33,8 +33,7 @@ contract DeployAddWasmCacheManagerActionScript is DeploymentHelpersScript {
 
         // deploy action
         new AddWasmCacheManagerAction({
-            _wasmCachemanager: address(cacheManager),
-            _targetArbOSVersion: TARGET_ARBOS_VERSION
+            _wasmCachemanager: address(cacheManager), _targetArbOSVersion: TARGET_ARBOS_VERSION
         });
 
         vm.stopBroadcast();
