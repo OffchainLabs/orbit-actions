@@ -70,7 +70,11 @@ async function executeUpgrade(
       PERFORM_SELECTOR
     )
 
-    log(dryRun ? 'Dry run - calldata for UpgradeExecutor.execute():' : 'Calldata for UpgradeExecutor.execute():')
+    log(
+      dryRun
+        ? 'Dry run - calldata for UpgradeExecutor.execute():'
+        : 'Calldata for UpgradeExecutor.execute():'
+    )
     console.log('')
     console.log(`To: ${upgradeExecutor}`)
     console.log(`Calldata: ${executeCalldata}`)
@@ -120,7 +124,9 @@ async function cmdDeploy(version: string, args: string[]): Promise<void> {
   const authArgs = parseAuthArgs(args)
   const rpcUrl = requireEnv('CHILD_CHAIN_RPC')
   log(`Running: ${path.basename(DEPLOY_SCRIPT)} for ArbOS ${version}`)
-  await deployAction(version, rpcUrl, authArgs, { broadcast: Boolean(authArgs) })
+  await deployAction(version, rpcUrl, authArgs, {
+    broadcast: Boolean(authArgs),
+  })
 }
 
 async function cmdExecute(args: string[]): Promise<void> {
@@ -215,7 +221,13 @@ async function cmdDeployExecuteVerify(
 
   if (!auth.skipExecute) {
     log('Step 2: Executing ArbOS upgrade...')
-    await executeUpgrade(upgradeActionAddress, upgradeExecutor, rpcUrl, executeAuth, auth.dryRun)
+    await executeUpgrade(
+      upgradeActionAddress,
+      upgradeExecutor,
+      rpcUrl,
+      executeAuth,
+      auth.dryRun
+    )
   } else {
     log('Step 2: Skipped execute')
   }

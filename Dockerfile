@@ -7,10 +7,10 @@ RUN apt-get update && apt-get install -y \
     jq \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Foundry (pinned for reproducible builds)
+# Install Foundry (pinned to 2026-02-10 nightly for reproducible builds)
 RUN curl -L https://foundry.paradigm.xyz | bash
 ENV PATH="/root/.foundry/bin:${PATH}"
-RUN foundryup --version nightly-2026-02-09
+RUN foundryup --version nightly-e788798a511a32e896b127560e2269fb2c43eddd
 
 # Install Yarn Classic (v1) - matches the repo's yarn.lock format
 RUN npm install -g --force yarn@1.22.22
