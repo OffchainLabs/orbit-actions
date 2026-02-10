@@ -15,23 +15,16 @@ RUN foundryup --version nightly-2026-02-09
 # Install Yarn Classic (v1) - matches the repo's yarn.lock format
 RUN npm install -g --force yarn@1.22.22
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files first for better caching
+# Copy package files first for better layer caching
 COPY package.json yarn.lock ./
 
-# Install dependencies (using --ignore-scripts like CI does, then forge install separately)
+# --ignore-scripts: forge install runs separately after full copy
 RUN yarn install --frozen-lockfile --ignore-scripts
 
-# Copy the rest of the repository
 COPY . .
-
-# Build contracts
 RUN forge build
-
-# Build CLI
 RUN yarn build:cli
 
-# Direct node entrypoint (no shell wrapper)
 ENTRYPOINT ["node", "/app/dist/cli/index.js"]
