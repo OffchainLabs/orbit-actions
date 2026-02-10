@@ -3,8 +3,6 @@
 import { program } from 'commander'
 import { loadEnv } from './utils/env'
 import { router } from './router'
-import { createContractUpgradeCommand } from './commands/contract-upgrade'
-import { createArbosUpgradeCommand } from './commands/arbos-upgrade'
 
 loadEnv()
 
@@ -17,8 +15,5 @@ program
   .action(async (pathArg?: string, args?: string[]) => {
     await router(pathArg, args)
   })
-
-program.addCommand(createContractUpgradeCommand())
-program.addCommand(createArbosUpgradeCommand())
 
 program.parse()

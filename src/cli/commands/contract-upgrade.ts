@@ -1,4 +1,3 @@
-import { Command } from 'commander'
 import * as path from 'path'
 import * as fs from 'fs'
 import { log, die } from '../utils/log'
@@ -224,59 +223,6 @@ async function cmdDeployExecuteVerify(
   }
 
   log('Done')
-}
-
-export function createContractUpgradeCommand(): Command {
-  const cmd = new Command('contract-upgrade')
-    .description('Contract upgrade operations')
-    .argument('<version>', 'Contract version (e.g., 1.2.1)')
-    .argument(
-      '<command>',
-      'Command: deploy, execute, verify, deploy-execute-verify'
-    )
-    .option('--private-key <key>', 'Private key (for deploy/execute)')
-    .option('--account <name>', 'Keystore account (for deploy/execute)')
-    .option('--ledger', 'Use Ledger (for deploy/execute)')
-    .option('--interactive', 'Prompt for key (for deploy/execute)')
-    .option('--deploy-key <key>', 'Private key for deploy step')
-    .option('--deploy-account <name>', 'Keystore account for deploy')
-    .option('--deploy-ledger', 'Use Ledger for deploy')
-    .option('--deploy-interactive', 'Prompt for key for deploy')
-    .option('--execute-key <key>', 'Private key for execute step')
-    .option('--execute-account <name>', 'Keystore account for execute')
-    .option('--execute-ledger', 'Use Ledger for execute')
-    .option('--execute-interactive', 'Prompt for key for execute')
-    .option('-n, --dry-run', 'Simulate without broadcasting')
-    .option('--skip-execute', 'Deploy only')
-    .option('-v, --verify', 'Verify on block explorer')
-    .action(async (version: string, command: string, options) => {
-      const args: string[] = []
-      if (options.privateKey) args.push('--private-key', options.privateKey)
-      if (options.account) args.push('--account', options.account)
-      if (options.ledger) args.push('--ledger')
-      if (options.interactive) args.push('--interactive')
-
-      switch (command) {
-        case 'deploy':
-          await cmdDeploy(version, args)
-          break
-        case 'execute':
-          await cmdExecute(version, args)
-          break
-        case 'verify':
-          await cmdVerify(version)
-          break
-        case 'deploy-execute-verify':
-          await cmdDeployExecuteVerify(version, options)
-          break
-        default:
-          die(
-            `Unknown command: ${command}\n\nCommands: deploy, execute, verify, deploy-execute-verify`
-          )
-      }
-    })
-
-  return cmd
 }
 
 export {

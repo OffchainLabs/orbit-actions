@@ -1,4 +1,3 @@
-import { Command } from 'commander'
 import * as path from 'path'
 import * as fs from 'fs'
 import { log, die } from '../utils/log'
@@ -31,6 +30,31 @@ const ARB_SYS = '0x0000000000000000000000000000000000000064'
 // Nitro ArbOS versions are offset by 55 to avoid collision with classic (pre-Nitro) versions
 const ARBOS_VERSION_OFFSET = 55
 const PERFORM_SELECTOR = '0xb0a75d36'
+
+function checkDeployScript(): void {
+  if (!fs.existsSync(DEPLOY_SCRIPT)) {
+    die(`Deploy script not found: ${DEPLOY_SCRIPT}`)
+  }
+}
+
+async function deployAction(
+  version: string,
+  rpcUrl: string,
+  authArgs: string,
+  options: { broadcast: boolean; verify?: boolean }
+): Promise<void> {
+  checkDeployScript()
+  process.env.ARBOS_VERSION = version
+
+  await runForgeScript({
+    script: DEPLOY_SCRIPT,
+    rpcUrl,
+    authArgs,
+    broadcast: options.broadcast,
+    verify: options.verify,
+    slow: true,
+  })
+}
 
 async function executeUpgrade(
   actionAddress: string,
@@ -94,25 +118,9 @@ async function verifyUpgrade(rpcUrl: string): Promise<void> {
 
 async function cmdDeploy(version: string, args: string[]): Promise<void> {
   const authArgs = parseAuthArgs(args)
-
   const rpcUrl = requireEnv('CHILD_CHAIN_RPC')
-
-  if (!fs.existsSync(DEPLOY_SCRIPT)) {
-    die(`Deploy script not found: ${DEPLOY_SCRIPT}`)
-  }
-
-  // Forge script reads this from env
-  process.env.ARBOS_VERSION = version
-
   log(`Running: ${path.basename(DEPLOY_SCRIPT)} for ArbOS ${version}`)
-
-  await runForgeScript({
-    script: DEPLOY_SCRIPT,
-    rpcUrl,
-    authArgs,
-    broadcast: Boolean(authArgs),
-    slow: true,
-  })
+  await deployAction(version, rpcUrl, authArgs, { broadcast: Boolean(authArgs) })
 }
 
 async function cmdExecute(args: string[]): Promise<void> {
@@ -151,12 +159,8 @@ async function cmdDeployExecuteVerify(
   const auth = createDeployExecuteAuth(options)
 
   log(`ArbOS version: ${version}`)
+  checkDeployScript()
 
-  if (!fs.existsSync(DEPLOY_SCRIPT)) {
-    die(`Deploy script not found: ${DEPLOY_SCRIPT}`)
-  }
-
-  // Auto-detect skip_deploy if UPGRADE_ACTION_ADDRESS is set
   const skipDeploy = Boolean(getEnv('UPGRADE_ACTION_ADDRESS'))
   let upgradeActionAddress = getEnv('UPGRADE_ACTION_ADDRESS') || ''
 
@@ -167,9 +171,6 @@ async function cmdDeployExecuteVerify(
   const rpcUrl = requireEnv('CHILD_CHAIN_RPC')
   const upgradeExecutor = requireEnv('CHILD_UPGRADE_EXECUTOR_ADDRESS')
   requireEnv('SCHEDULE_TIMESTAMP')
-
-  // Forge script reads this from env
-  process.env.ARBOS_VERSION = version
 
   const deployAuth = getDeployAuth(auth)
   const executeAuth = getExecuteAuth(auth)
@@ -193,13 +194,9 @@ async function cmdDeployExecuteVerify(
     log(`Target chain ID: ${chainId}`)
     log('Step 1: Deploying ArbOS upgrade action...')
 
-    await runForgeScript({
-      script: DEPLOY_SCRIPT,
-      rpcUrl,
-      authArgs: deployAuth,
+    await deployAction(version, rpcUrl, deployAuth, {
       broadcast: !auth.dryRun,
       verify: auth.verifyContracts,
-      slow: true,
     })
 
     if (!auth.dryRun) {
@@ -229,60 +226,6 @@ async function cmdDeployExecuteVerify(
   }
 
   log('Done')
-}
-
-export function createArbosUpgradeCommand(): Command {
-  const cmd = new Command('arbos-upgrade')
-    .description('ArbOS upgrade operations')
-    .argument('<version>', 'ArbOS version number')
-    .argument(
-      '[command]',
-      'Command: deploy, execute, verify, deploy-execute-verify',
-      'deploy-execute-verify'
-    )
-    .option('--private-key <key>', 'Private key (for deploy/execute)')
-    .option('--account <name>', 'Keystore account (for deploy/execute)')
-    .option('--ledger', 'Use Ledger (for deploy/execute)')
-    .option('--interactive', 'Prompt for key (for deploy/execute)')
-    .option('--deploy-key <key>', 'Private key for deploy step')
-    .option('--deploy-account <name>', 'Keystore account for deploy')
-    .option('--deploy-ledger', 'Use Ledger for deploy')
-    .option('--deploy-interactive', 'Prompt for key for deploy')
-    .option('--execute-key <key>', 'Private key for execute step')
-    .option('--execute-account <name>', 'Keystore account for execute')
-    .option('--execute-ledger', 'Use Ledger for execute')
-    .option('--execute-interactive', 'Prompt for key for execute')
-    .option('-n, --dry-run', 'Simulate without broadcasting')
-    .option('--skip-execute', 'Deploy only')
-    .option('-v, --verify', 'Verify on block explorer')
-    .action(async (version: string, command: string, options) => {
-      const args: string[] = []
-      if (options.privateKey) args.push('--private-key', options.privateKey)
-      if (options.account) args.push('--account', options.account)
-      if (options.ledger) args.push('--ledger')
-      if (options.interactive) args.push('--interactive')
-
-      switch (command) {
-        case 'deploy':
-          await cmdDeploy(version, args)
-          break
-        case 'execute':
-          await cmdExecute(args)
-          break
-        case 'verify':
-          await cmdVerify()
-          break
-        case 'deploy-execute-verify':
-          await cmdDeployExecuteVerify(version, options)
-          break
-        default:
-          die(
-            `Unknown command: ${command}\n\nCommands: deploy, execute, verify, deploy-execute-verify`
-          )
-      }
-    })
-
-  return cmd
 }
 
 export { cmdDeploy, cmdExecute, cmdVerify, cmdDeployExecuteVerify }
