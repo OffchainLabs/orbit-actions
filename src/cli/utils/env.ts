@@ -17,18 +17,9 @@ function findRepoRoot(): string | null {
 }
 
 export function loadEnv(): void {
-  const repoRoot = findRepoRoot()
-  const candidates = [
-    path.join(process.cwd(), '.env'),
-    repoRoot ? path.join(repoRoot, '.env') : null,
-    '/app/.env',
-  ].filter((p): p is string => p !== null)
-
-  for (const envPath of candidates) {
-    if (fs.existsSync(envPath)) {
-      dotenv.config({ path: envPath })
-      return
-    }
+  const envPath = path.join(process.cwd(), '.env')
+  if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath })
   }
 }
 
