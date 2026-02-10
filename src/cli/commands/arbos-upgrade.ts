@@ -30,6 +30,67 @@ const ARB_SYS = '0x0000000000000000000000000000000000000064'
 
 // Nitro ArbOS versions are offset by 55 to avoid collision with classic (pre-Nitro) versions
 const ARBOS_VERSION_OFFSET = 55
+const PERFORM_SELECTOR = '0xb0a75d36'
+
+async function executeUpgrade(
+  actionAddress: string,
+  upgradeExecutor: string,
+  rpcUrl: string,
+  authArgs: string,
+  dryRun: boolean
+): Promise<void> {
+  if (dryRun || !authArgs) {
+    const executeCalldata = await castCalldata(
+      'execute(address,bytes)',
+      actionAddress,
+      PERFORM_SELECTOR
+    )
+
+    log(dryRun ? 'Dry run - calldata for UpgradeExecutor.execute():' : 'Calldata for UpgradeExecutor.execute():')
+    console.log('')
+    console.log(`To: ${upgradeExecutor}`)
+    console.log(`Calldata: ${executeCalldata}`)
+    console.log('')
+    log('Submit this to your multisig/Safe to execute the upgrade')
+  } else {
+    await runCastSend({
+      to: upgradeExecutor,
+      sig: 'execute(address,bytes)',
+      args: [actionAddress, PERFORM_SELECTOR],
+      rpcUrl,
+      authArgs,
+    })
+
+    log('ArbOS upgrade scheduled successfully')
+  }
+}
+
+async function verifyUpgrade(rpcUrl: string): Promise<void> {
+  log('Checking ArbOS upgrade status...')
+
+  const scheduled = await runCastCall({
+    to: ARB_OWNER_PUBLIC,
+    sig: 'getScheduledUpgrade()(uint64,uint64)',
+    rpcUrl,
+  })
+  log(`Scheduled upgrade (version, timestamp): ${scheduled}`)
+
+  const currentRaw = await runCastCall({
+    to: ARB_SYS,
+    sig: 'arbOSVersion()(uint64)',
+    rpcUrl,
+  })
+
+  let currentVersion: number
+  if (currentRaw === 'N/A') {
+    currentVersion = 0
+  } else {
+    const rawNum = parseInt(currentRaw, 10)
+    currentVersion = rawNum - ARBOS_VERSION_OFFSET
+  }
+
+  log(`Current ArbOS version: ${currentVersion}`)
+}
 
 async function cmdDeploy(version: string, args: string[]): Promise<void> {
   const authArgs = parseAuthArgs(args)
@@ -63,62 +124,12 @@ async function cmdExecute(args: string[]): Promise<void> {
 
   log(`Executing ArbOS upgrade action: ${actionAddress}`)
 
-  const performCalldata = '0xb0a75d36' // perform() selector
-
-  if (!authArgs) {
-    // No auth - output calldata for multisig
-    const executeCalldata = await castCalldata(
-      'execute(address,bytes)',
-      actionAddress,
-      performCalldata
-    )
-
-    log('Calldata for UpgradeExecutor.execute():')
-    console.log('')
-    console.log(`To: ${upgradeExecutor}`)
-    console.log(`Calldata: ${executeCalldata}`)
-    console.log('')
-    log('Submit this to your multisig/Safe to execute the upgrade')
-  } else {
-    await runCastSend({
-      to: upgradeExecutor,
-      sig: 'execute(address,bytes)',
-      args: [actionAddress, performCalldata],
-      rpcUrl,
-      authArgs,
-    })
-
-    log('ArbOS upgrade scheduled successfully')
-  }
+  await executeUpgrade(actionAddress, upgradeExecutor, rpcUrl, authArgs, false)
 }
 
 async function cmdVerify(): Promise<void> {
   const rpcUrl = requireEnv('CHILD_CHAIN_RPC')
-
-  log('Checking ArbOS upgrade status...')
-
-  const scheduled = await runCastCall({
-    to: ARB_OWNER_PUBLIC,
-    sig: 'getScheduledUpgrade()(uint64,uint64)',
-    rpcUrl,
-  })
-  log(`Scheduled upgrade (version, timestamp): ${scheduled}`)
-
-  const currentRaw = await runCastCall({
-    to: ARB_SYS,
-    sig: 'arbOSVersion()(uint64)',
-    rpcUrl,
-  })
-
-  let currentVersion: number
-  if (currentRaw === 'N/A') {
-    currentVersion = 0
-  } else {
-    const rawNum = parseInt(currentRaw, 10)
-    currentVersion = rawNum - ARBOS_VERSION_OFFSET
-  }
-
-  log(`Current ArbOS version: ${currentVersion}`)
+  await verifyUpgrade(rpcUrl)
 }
 
 async function cmdDeployExecuteVerify(
@@ -207,62 +218,14 @@ async function cmdDeployExecuteVerify(
 
   if (!auth.skipExecute) {
     log('Step 2: Executing ArbOS upgrade...')
-
-    const performCalldata = '0xb0a75d36' // perform() selector
-
-    if (auth.dryRun) {
-      const executeCalldata = await castCalldata(
-        'execute(address,bytes)',
-        upgradeActionAddress,
-        performCalldata
-      )
-
-      log('Dry run - calldata for UpgradeExecutor.execute():')
-      console.log('')
-      console.log(`To: ${upgradeExecutor}`)
-      console.log(`Calldata: ${executeCalldata}`)
-      console.log('')
-      log('Submit this to your multisig/Safe to execute the upgrade')
-    } else {
-      await runCastSend({
-        to: upgradeExecutor,
-        sig: 'execute(address,bytes)',
-        args: [upgradeActionAddress, performCalldata],
-        rpcUrl,
-        authArgs: executeAuth,
-      })
-
-      log('ArbOS upgrade scheduled successfully')
-    }
+    await executeUpgrade(upgradeActionAddress, upgradeExecutor, rpcUrl, executeAuth, auth.dryRun)
   } else {
     log('Step 2: Skipped execute')
   }
 
   if (!auth.dryRun && !auth.skipExecute) {
     log('Step 3: Verifying scheduled upgrade...')
-
-    const scheduled = await runCastCall({
-      to: ARB_OWNER_PUBLIC,
-      sig: 'getScheduledUpgrade()(uint64,uint64)',
-      rpcUrl,
-    })
-    log(`Scheduled upgrade (version, timestamp): ${scheduled}`)
-
-    const currentRaw = await runCastCall({
-      to: ARB_SYS,
-      sig: 'arbOSVersion()(uint64)',
-      rpcUrl,
-    })
-
-    let currentVersion: number
-    if (currentRaw === 'N/A') {
-      currentVersion = 0
-    } else {
-      const rawNum = parseInt(currentRaw, 10)
-      currentVersion = rawNum - ARBOS_VERSION_OFFSET
-    }
-
-    log(`Current ArbOS version: ${currentVersion}`)
+    await verifyUpgrade(rpcUrl)
   }
 
   log('Done')
