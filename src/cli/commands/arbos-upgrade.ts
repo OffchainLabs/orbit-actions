@@ -1,5 +1,6 @@
 import * as path from 'path'
 import * as fs from 'fs'
+import { Interface } from 'ethers'
 import { log, die } from '../utils/log'
 import { requireEnv, getEnv, getScriptsDir } from '../utils/env'
 import {
