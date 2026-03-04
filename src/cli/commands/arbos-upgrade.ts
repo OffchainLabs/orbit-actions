@@ -29,7 +29,7 @@ const ARB_SYS = '0x0000000000000000000000000000000000000064'
 
 // Nitro ArbOS versions are offset by 55 to avoid collision with classic (pre-Nitro) versions
 const ARBOS_VERSION_OFFSET = 55
-const PERFORM_SELECTOR = '0xb0a75d36'
+const PERFORM_SELECTOR = new Interface(['function perform()']).getFunction('perform')!.selector
 
 function checkDeployScript(): void {
   if (!fs.existsSync(DEPLOY_SCRIPT)) {
