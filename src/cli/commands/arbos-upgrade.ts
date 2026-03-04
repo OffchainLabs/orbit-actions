@@ -45,7 +45,6 @@ async function deployAction(
   options: { broadcast: boolean; verify?: boolean }
 ): Promise<void> {
   checkDeployScript()
-  process.env.ARBOS_VERSION = version
 
   await runForgeScript({
     script: DEPLOY_SCRIPT,
@@ -54,6 +53,7 @@ async function deployAction(
     broadcast: options.broadcast,
     verify: options.verify,
     slow: true,
+    env: { ARBOS_VERSION: version },
   })
 }
 

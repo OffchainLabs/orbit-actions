@@ -186,8 +186,7 @@ async function cmdDeployExecuteVerify(
     log('Step 1: Skipped deploy')
   }
 
-  // Forge script reads this from env
-  process.env.UPGRADE_ACTION_ADDRESS = upgradeActionAddress
+  const forgeEnv = { UPGRADE_ACTION_ADDRESS: upgradeActionAddress }
 
   if (!auth.skipExecute) {
     log('Step 2: Executing upgrade...')
@@ -197,6 +196,7 @@ async function cmdDeployExecuteVerify(
       rpcUrl,
       authArgs: executeAuth,
       broadcast: !auth.dryRun,
+      env: forgeEnv,
     })
 
     if (auth.dryRun) {
@@ -216,6 +216,7 @@ async function cmdDeployExecuteVerify(
       await runForgeScript({
         script: verifyScript,
         rpcUrl,
+        env: forgeEnv,
       })
     } else {
       log('No Verify script found - check README for manual verification')

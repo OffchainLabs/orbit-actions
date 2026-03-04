@@ -13,6 +13,7 @@ export interface ForgeScriptOptions {
   slow?: boolean
   skipSimulation?: boolean
   verbosity?: number
+  env?: Record<string, string>
 }
 
 export async function runForgeScript(
@@ -44,7 +45,7 @@ export async function runForgeScript(
 
   const result = await execa('forge', args, {
     stdio: 'inherit',
-    env: process.env,
+    env: { ...process.env, ...options.env },
   })
 
   if (result.exitCode !== 0) {
