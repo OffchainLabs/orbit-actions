@@ -43,13 +43,13 @@ export async function runForgeScript(
 
   log(`Running: forge ${args.slice(0, 2).join(' ')}...`)
 
-  const result = await execa('forge', args, {
-    stdio: 'inherit',
-    env: { ...process.env, ...options.env },
-  })
-
-  if (result.exitCode !== 0) {
-    die(`Forge script failed with exit code ${result.exitCode}`)
+  try {
+    await execa('forge', args, {
+      stdio: 'inherit',
+      env: { ...process.env, ...options.env },
+    })
+  } catch {
+    die('Forge script failed')
   }
 }
 
@@ -75,13 +75,12 @@ export async function runCastSend(options: CastSendOptions): Promise<void> {
     args.push(...options.authArgs.split(' ').filter(Boolean))
   }
 
-  const result = await execa('cast', args, {
-    stdio: 'inherit',
-    env: process.env,
-  })
-
-  if (result.exitCode !== 0) {
-    die(`Cast send failed with exit code ${result.exitCode}`)
+  try {
+    await execa('cast', args, {
+      stdio: 'inherit',
+    })
+  } catch {
+    die('Cast send failed')
   }
 }
 
