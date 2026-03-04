@@ -12,7 +12,7 @@ export interface ForgeScriptOptions {
   verify?: boolean
   slow?: boolean
   skipSimulation?: boolean
-  verbosity?: number
+  verbosity?: 1 | 2 | 3 | 4 | 5
   env?: Record<string, string>
 }
 
