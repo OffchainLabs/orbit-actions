@@ -23,6 +23,8 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile --ignore-scripts
 
 COPY . .
+# forge install can't run here: it clones git submodules, but .dockerignore
+# excludes .git/. CI runs forge install on the host so lib/ is copied in above.
 RUN forge build
 RUN yarn build:cli
 

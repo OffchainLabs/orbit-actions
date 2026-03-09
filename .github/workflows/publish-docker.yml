@@ -35,6 +35,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
+          # "orbit" is a deprecated term; the published image uses "chain-actions"
           images: offchainlabs/chain-actions
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}

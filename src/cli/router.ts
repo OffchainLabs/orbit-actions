@@ -178,11 +178,9 @@ export async function router(
         case 'deploy-execute-verify': {
           const version = args[0]
           if (!version) {
-            console.error(`Error: ArbOS version required`)
-            console.error(
-              `Usage: arbos-upgrades/at-timestamp/${basename} <version> [options]`
+            die(
+              `ArbOS version required\nUsage: arbos-upgrades/at-timestamp/${basename} <version> [options]`
             )
-            process.exit(1)
           }
           const restArgs = args.slice(1)
           const restOptions = parseOptions(restArgs)
