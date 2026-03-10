@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "repository": "https://github.com/OffchainLabs/blockchain-eng-template.git",
   "license": "Apache 2.0",
-  "bin": {
-    "orbit-actions": "./dist/cli/index.js"
-  },
   "scripts": {
     "build:cli": "tsc -p tsconfig.cli.json",
     "cli": "ts-node src/cli/index.ts",
