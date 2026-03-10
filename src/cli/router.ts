@@ -13,12 +13,11 @@ import {
   cmdVerify as arbosVerify,
 } from './commands/arbos-upgrade'
 
-const HELP_TEXT = `Usage: orbit-actions [path] [args...]
+const HELP_TEXT = `Usage: [path] [args...]
 
 Browse and execute scripts from the foundry scripts directory.
 
 Browsing:
-  .                                      List top-level directories
   contract-upgrades                      List available versions
   contract-upgrades/1.2.1                List version contents + commands
   contract-upgrades/1.2.1/env-templates  List env templates
@@ -38,13 +37,7 @@ Running upgrade scripts:
   arbos-upgrades/at-timestamp/verify
 
 Forge behavior (broadcast, auth, verbosity, etc.) is configured via
-FOUNDRY_* / ETH_* env vars in your .env file. See env templates for examples.
-
-Examples:
-  docker run orbit-actions contract-upgrades/1.2.1
-  docker run orbit-actions contract-upgrades/1.2.1/README.md
-  docker run -v $(pwd)/.env:/app/.env orbit-actions contract-upgrades/1.2.1/deploy
-  docker run -v $(pwd)/.env:/app/.env orbit-actions contract-upgrades/1.2.1/execute`
+FOUNDRY_* / ETH_* env vars in your .env file. See env templates for examples.`
 
 function listDirectory(dir: string): void {
   const scriptsDir = getScriptsDir()
@@ -76,19 +69,19 @@ function listDirectory(dir: string): void {
 
   if (isCategoryDir) {
     console.log('')
-    console.log(`Example: orbit-actions ${relPath}/${contents.find(c => !c.startsWith('.')) ?? '<version>'}`)
+    console.log(`Example: ${relPath}/${contents.find(c => !c.startsWith('.')) ?? '<version>'}`)
   } else if (isVersionDir) {
     console.log('')
     console.log('Commands:')
-    console.log(`  orbit-actions ${relPath}/deploy`)
-    console.log(`  orbit-actions ${relPath}/execute`)
-    console.log(`  orbit-actions ${relPath}/verify`)
+    console.log(`  ${relPath}/deploy`)
+    console.log(`  ${relPath}/execute`)
+    console.log(`  ${relPath}/verify`)
   } else if (isArbosDir) {
     console.log('')
     console.log('Commands:')
-    console.log(`  orbit-actions ${relPath}/deploy <version>`)
-    console.log(`  orbit-actions ${relPath}/execute`)
-    console.log(`  orbit-actions ${relPath}/verify`)
+    console.log(`  ${relPath}/deploy <version>`)
+    console.log(`  ${relPath}/execute`)
+    console.log(`  ${relPath}/verify`)
   }
 }
 
@@ -114,9 +107,9 @@ export async function router(
     }
     console.log('')
     console.log('Usage:')
-    console.log('  orbit-actions <path>           Browse scripts')
-    console.log('  orbit-actions <path>/deploy     Run a script')
-    console.log('  orbit-actions help              Full usage details')
+    console.log('  <path>           Browse scripts')
+    console.log('  <path>/deploy    Run a script')
+    console.log('  help             Full usage details')
     return
   }
 

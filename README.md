@@ -166,15 +166,14 @@ The CLI reads chain-specific configuration (RPC URLs, contract addresses) from a
 
 Forge behavior -- broadcasting, authentication, verbosity, verification -- is controlled via standard `FOUNDRY_*` / `ETH_*` env vars in the same `.env` file. The CLI passes `process.env` through to forge, so any env var forge recognizes will work.
 
-Common forge env vars:
+Key forge env vars:
 
 | Variable | Effect |
 |----------|--------|
 | `FOUNDRY_BROADCAST=true` | Broadcast transactions (without this, scripts run in simulation) |
-| `FOUNDRY_SLOW=true` | Wait for each tx to be confirmed before sending the next |
-| `FOUNDRY_VERBOSITY=3` | Equivalent to `-vvv` |
-| `FOUNDRY_VERIFY=true` | Verify contracts on block explorer after deploy |
 | `ETH_PRIVATE_KEY=0x...` | Private key for signing transactions |
+
+All `FOUNDRY_*` env vars are supported -- see [Foundry configuration](https://book.getfoundry.sh/reference/config/) for the full list.
 
 ### Full upgrade flow
 
