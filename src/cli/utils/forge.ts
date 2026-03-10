@@ -7,12 +7,6 @@ import { getRepoRoot } from './env'
 export interface ForgeScriptOptions {
   script: string
   rpcUrl: string
-  authArgs?: string
-  broadcast?: boolean
-  verify?: boolean
-  slow?: boolean
-  skipSimulation?: boolean
-  verbosity?: 1 | 2 | 3 | 4 | 5
   env?: Record<string, string>
 }
 
@@ -20,26 +14,6 @@ export async function runForgeScript(
   options: ForgeScriptOptions
 ): Promise<void> {
   const args = ['script', options.script, '--rpc-url', options.rpcUrl]
-
-  if (options.slow) {
-    args.push('--slow')
-  }
-
-  if (options.skipSimulation) {
-    args.push('--skip-simulation')
-  }
-
-  const verbosity = options.verbosity ?? 3
-  args.push('-' + 'v'.repeat(verbosity))
-
-  if (options.broadcast && options.authArgs) {
-    args.push('--broadcast')
-    args.push(...options.authArgs.split(' ').filter(Boolean))
-  }
-
-  if (options.verify) {
-    args.push('--verify')
-  }
 
   log(`Running: forge ${args.slice(0, 2).join(' ')}...`)
 
@@ -58,7 +32,6 @@ export interface CastSendOptions {
   sig: string
   args: string[]
   rpcUrl: string
-  authArgs?: string
 }
 
 export async function runCastSend(options: CastSendOptions): Promise<void> {
@@ -70,10 +43,6 @@ export async function runCastSend(options: CastSendOptions): Promise<void> {
     '--rpc-url',
     options.rpcUrl,
   ]
-
-  if (options.authArgs) {
-    args.push(...options.authArgs.split(' ').filter(Boolean))
-  }
 
   try {
     await execa('cast', args, {
@@ -121,7 +90,7 @@ export async function getChainId(rpcUrl: string): Promise<string> {
 export function parseActionAddress(
   scriptPath: string,
   chainId: string
-): string {
+): string | null {
   const scriptName = path.basename(scriptPath)
   const repoRoot = getRepoRoot()
   const broadcastFile = path.join(
@@ -133,7 +102,7 @@ export function parseActionAddress(
   )
 
   if (!fs.existsSync(broadcastFile)) {
-    die(`Broadcast file not found: ${broadcastFile}`)
+    return null
   }
 
   const content = JSON.parse(fs.readFileSync(broadcastFile, 'utf-8'))
@@ -142,15 +111,10 @@ export function parseActionAddress(
   )
 
   if (!createTxs || createTxs.length === 0) {
-    die('Could not parse action address from broadcast file')
+    return null
   }
 
-  const address = createTxs[createTxs.length - 1]?.contractAddress
-  if (!address) {
-    die('Could not parse action address from broadcast file')
-  }
-
-  return address
+  return createTxs[createTxs.length - 1]?.contractAddress ?? null
 }
 
 export function findScript(dir: string, pattern: RegExp): string | null {

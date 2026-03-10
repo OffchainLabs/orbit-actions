@@ -140,22 +140,57 @@ The `orbit-actions` CLI provides a guided interface for running upgrade scripts.
 
 ```bash
 # Browse available scripts
-yarn orbit-actions                              # List top-level directories
-yarn orbit-actions contract-upgrades            # List versions
-yarn orbit-actions contract-upgrades/1.2.1      # List contents + commands
+yarn cli                              # List top-level directories
+yarn cli -- contract-upgrades            # List versions
+yarn cli -- contract-upgrades/1.2.1      # List contents + commands
 
 # View files
-yarn orbit-actions contract-upgrades/1.2.1/README.md
+yarn cli -- contract-upgrades/1.2.1/README.md
 
-# Run contract upgrades
-yarn orbit-actions contract-upgrades/1.2.1/deploy-execute-verify --dry-run
-yarn orbit-actions contract-upgrades/1.2.1/deploy --private-key $KEY
+# Run contract upgrade steps individually
+yarn cli -- contract-upgrades/1.2.1/deploy
+yarn cli -- contract-upgrades/1.2.1/execute
+yarn cli -- contract-upgrades/1.2.1/verify
 
-# Run ArbOS upgrades
-yarn orbit-actions arbos-upgrades/at-timestamp/deploy-execute-verify 32 --dry-run
+# Run ArbOS upgrade steps individually
+yarn cli -- arbos-upgrades/at-timestamp/deploy 32
+yarn cli -- arbos-upgrades/at-timestamp/execute
+yarn cli -- arbos-upgrades/at-timestamp/verify
 ```
 
-Run `yarn orbit-actions help` for full usage details. The CLI reads configuration from a `.env` file in the working directory.
+Run `yarn cli -- help` for full usage details.
+
+### Configuration
+
+The CLI reads chain-specific configuration (RPC URLs, contract addresses) from a `.env` file in the project root. See env templates in each version directory for examples.
+
+Forge behavior -- broadcasting, authentication, verbosity, verification -- is controlled via standard `FOUNDRY_*` / `ETH_*` env vars in the same `.env` file. The CLI passes `process.env` through to forge, so any env var forge recognizes will work.
+
+Common forge env vars:
+
+| Variable | Effect |
+|----------|--------|
+| `FOUNDRY_BROADCAST=true` | Broadcast transactions (without this, scripts run in simulation) |
+| `FOUNDRY_SLOW=true` | Wait for each tx to be confirmed before sending the next |
+| `FOUNDRY_VERBOSITY=3` | Equivalent to `-vvv` |
+| `FOUNDRY_VERIFY=true` | Verify contracts on block explorer after deploy |
+| `ETH_PRIVATE_KEY=0x...` | Private key for signing transactions |
+
+### Full upgrade flow
+
+The deploy, execute, and verify steps are run separately. This allows multisig users to submit Safe approvals between steps, and EOA users can chain the commands:
+
+```bash
+# 1. Deploy the upgrade action contract
+yarn cli -- contract-upgrades/2.1.3/deploy
+# Note the deployed action address printed at the end
+
+# 2. Set UPGRADE_ACTION_ADDRESS in .env, then execute
+yarn cli -- contract-upgrades/2.1.3/execute
+
+# 3. Verify the upgrade
+yarn cli -- contract-upgrades/2.1.3/verify
+```
 
 ## Docker
 
@@ -172,10 +207,16 @@ docker run --rm \
 # Browse upgrade scripts
 docker run --rm offchainlabs/orbit-actions contract-upgrades
 
-# Run upgrade with env file and capture broadcast output
+# Deploy with env file (simulation mode -- no FOUNDRY_BROADCAST)
 docker run --rm \
   -v $(pwd)/.env:/app/.env \
   -v $(pwd)/broadcast:/app/broadcast \
   offchainlabs/orbit-actions \
-  contract-upgrades/1.2.1/deploy-execute-verify --dry-run
+  contract-upgrades/2.1.3/deploy
+
+# Execute with broadcasting enabled
+docker run --rm \
+  -v $(pwd)/.env:/app/.env \
+  offchainlabs/orbit-actions \
+  contract-upgrades/2.1.3/execute
 ```

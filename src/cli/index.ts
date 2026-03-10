@@ -11,7 +11,6 @@ program
   .description('CLI for Orbit chain upgrade actions')
   .argument('[path]', 'Path to browse or command to run')
   .argument('[args...]', 'Additional arguments')
-  .allowUnknownOption(true)
   .action(async (pathArg?: string, args?: string[]) => {
     await router(pathArg, args)
   })

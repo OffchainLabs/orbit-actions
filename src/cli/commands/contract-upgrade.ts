@@ -1,13 +1,7 @@
 import * as path from 'path'
 import * as fs from 'fs'
 import { log, die } from '../utils/log'
-import { requireEnv, getEnv, getScriptsDir } from '../utils/env'
-import {
-  parseAuthArgs,
-  createDeployExecuteAuth,
-  getDeployAuth,
-  getExecuteAuth,
-} from '../utils/auth'
+import { requireEnv, getScriptsDir } from '../utils/env'
 import {
   runForgeScript,
   getChainId,
@@ -31,9 +25,8 @@ function getVersionDir(version: string): string {
   return versionDir
 }
 
-async function cmdDeploy(version: string, args: string[]): Promise<void> {
+async function cmdDeploy(version: string): Promise<void> {
   const versionDir = getVersionDir(version)
-  const authArgs = parseAuthArgs(args)
 
   const rpcUrl = requireEnv('PARENT_CHAIN_RPC')
 
@@ -47,16 +40,18 @@ async function cmdDeploy(version: string, args: string[]): Promise<void> {
   await runForgeScript({
     script: deployScript,
     rpcUrl,
-    authArgs,
-    broadcast: Boolean(authArgs),
-    slow: true,
-    skipSimulation: true,
   })
+
+  const chainId = await getChainId(rpcUrl)
+  const address = parseActionAddress(deployScript, chainId)
+  if (address) {
+    log(`Deployed action address: ${address}`)
+    log('Set UPGRADE_ACTION_ADDRESS in .env for the execute step')
+  }
 }
 
-async function cmdExecute(version: string, args: string[]): Promise<void> {
+async function cmdExecute(version: string): Promise<void> {
   const versionDir = getVersionDir(version)
-  const authArgs = parseAuthArgs(args)
 
   const rpcUrl = requireEnv('PARENT_CHAIN_RPC')
   requireEnv('UPGRADE_ACTION_ADDRESS')
@@ -71,8 +66,6 @@ async function cmdExecute(version: string, args: string[]): Promise<void> {
   await runForgeScript({
     script: executeScript,
     rpcUrl,
-    authArgs,
-    broadcast: Boolean(authArgs),
   })
 }
 
@@ -96,140 +89,4 @@ async function cmdVerify(version: string): Promise<void> {
   })
 }
 
-async function cmdDeployExecuteVerify(
-  version: string,
-  options: {
-    deployKey?: string
-    deployAccount?: string
-    deployLedger?: boolean
-    deployInteractive?: boolean
-    executeKey?: string
-    executeAccount?: string
-    executeLedger?: boolean
-    executeInteractive?: boolean
-    dryRun?: boolean
-    skipExecute?: boolean
-    verify?: boolean
-  }
-): Promise<void> {
-  const versionDir = getVersionDir(version)
-  const auth = createDeployExecuteAuth(options)
-
-  const deployScript = findScript(versionDir, /^Deploy.*\.s\.sol$/)
-  const executeScript = findScript(versionDir, /^Execute.*\.s\.sol$/)
-
-  if (!deployScript) {
-    die(`No deploy script found in ${versionDir}`)
-  }
-  if (!executeScript) {
-    die(`No execute script found in ${versionDir}`)
-  }
-
-  log(`Version: ${version}`)
-  log(`Deploy script: ${path.basename(deployScript)}`)
-  log(`Execute script: ${path.basename(executeScript)}`)
-
-  // Auto-detect skip_deploy if UPGRADE_ACTION_ADDRESS is set
-  const skipDeploy = Boolean(getEnv('UPGRADE_ACTION_ADDRESS'))
-  let upgradeActionAddress = getEnv('UPGRADE_ACTION_ADDRESS') || ''
-
-  if (skipDeploy) {
-    log(`Using existing action from .env: ${upgradeActionAddress}`)
-  }
-
-  const rpcUrl = requireEnv('PARENT_CHAIN_RPC')
-  requireEnv('INBOX_ADDRESS')
-  requireEnv('PROXY_ADMIN_ADDRESS')
-  requireEnv('PARENT_UPGRADE_EXECUTOR_ADDRESS')
-
-  const deployAuth = getDeployAuth(auth)
-  const executeAuth = getExecuteAuth(auth)
-
-  if (!skipDeploy && !auth.dryRun && !deployAuth) {
-    die(
-      'Deploy auth required. Use --deploy-key, --deploy-account, --deploy-ledger, or --deploy-interactive'
-    )
-  }
-  if (!auth.skipExecute && !auth.dryRun && !executeAuth) {
-    die(
-      'Execute auth required. Use --execute-key, --execute-account, --execute-ledger, or --execute-interactive'
-    )
-  }
-
-  const chainId = await getChainId(rpcUrl)
-  log(`Target chain ID: ${chainId}`)
-
-  if (!skipDeploy) {
-    log('Step 1: Deploying upgrade action...')
-
-    await runForgeScript({
-      script: deployScript,
-      rpcUrl,
-      authArgs: deployAuth,
-      broadcast: !auth.dryRun,
-      verify: auth.verifyContracts,
-      slow: true,
-      skipSimulation: true,
-    })
-
-    if (!auth.dryRun) {
-      upgradeActionAddress = parseActionAddress(deployScript, chainId)
-      log(`Deployed action at: ${upgradeActionAddress}`)
-    } else {
-      log('Dry run - no action deployed')
-      if (!auth.skipExecute) {
-        log('Note: Set UPGRADE_ACTION_ADDRESS in .env to run execute step')
-        return
-      }
-    }
-  } else {
-    log('Step 1: Skipped deploy')
-  }
-
-  const forgeEnv = { UPGRADE_ACTION_ADDRESS: upgradeActionAddress }
-
-  if (!auth.skipExecute) {
-    log('Step 2: Executing upgrade...')
-
-    await runForgeScript({
-      script: executeScript,
-      rpcUrl,
-      authArgs: executeAuth,
-      broadcast: !auth.dryRun,
-      env: forgeEnv,
-    })
-
-    if (auth.dryRun) {
-      log('Dry run - upgrade not executed')
-    } else {
-      log('Upgrade executed successfully')
-    }
-  } else {
-    log('Step 2: Skipped execute')
-  }
-
-  if (!auth.dryRun && !auth.skipExecute) {
-    log('Step 3: Verifying upgrade...')
-
-    const verifyScript = findScript(versionDir, /^Verify.*\.s\.sol$/)
-    if (verifyScript) {
-      await runForgeScript({
-        script: verifyScript,
-        rpcUrl,
-        env: forgeEnv,
-      })
-    } else {
-      log('No Verify script found - check README for manual verification')
-    }
-  }
-
-  log('Done')
-}
-
-export {
-  cmdDeploy,
-  cmdExecute,
-  cmdVerify,
-  cmdDeployExecuteVerify,
-  getVersionDir,
-}
+export { cmdDeploy, cmdExecute, cmdVerify, getVersionDir }

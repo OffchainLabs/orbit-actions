@@ -2,13 +2,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { Interface } from 'ethers'
 import { log, die } from '../utils/log'
-import { requireEnv, getEnv, getScriptsDir } from '../utils/env'
-import {
-  parseAuthArgs,
-  createDeployExecuteAuth,
-  getDeployAuth,
-  getExecuteAuth,
-} from '../utils/auth'
+import { requireEnv, getScriptsDir } from '../utils/env'
 import {
   runForgeScript,
   runCastSend,
@@ -42,19 +36,13 @@ function checkDeployScript(): void {
 
 async function deployAction(
   version: string,
-  rpcUrl: string,
-  authArgs: string,
-  options: { broadcast: boolean; verify?: boolean }
+  rpcUrl: string
 ): Promise<void> {
   checkDeployScript()
 
   await runForgeScript({
     script: DEPLOY_SCRIPT,
     rpcUrl,
-    authArgs,
-    broadcast: options.broadcast,
-    verify: options.verify,
-    slow: true,
     env: { ARBOS_VERSION: version },
   })
 }
@@ -62,34 +50,28 @@ async function deployAction(
 async function executeUpgrade(
   actionAddress: string,
   upgradeExecutor: string,
-  rpcUrl: string,
-  authArgs: string,
-  dryRun: boolean
+  rpcUrl: string
 ): Promise<void> {
-  if (dryRun || !authArgs) {
-    const executeCalldata = await castCalldata(
-      'execute(address,bytes)',
-      actionAddress,
-      PERFORM_SELECTOR
-    )
+  const executeCalldata = await castCalldata(
+    'execute(address,bytes)',
+    actionAddress,
+    PERFORM_SELECTOR
+  )
 
-    log(
-      dryRun
-        ? 'Dry run - calldata for UpgradeExecutor.execute():'
-        : 'Calldata for UpgradeExecutor.execute():'
-    )
-    console.log('')
-    console.log(`To: ${upgradeExecutor}`)
-    console.log(`Calldata: ${executeCalldata}`)
-    console.log('')
-    log('Submit this to your multisig/Safe to execute the upgrade')
-  } else {
+  log('Calldata for UpgradeExecutor.execute():')
+  console.log('')
+  console.log(`To: ${upgradeExecutor}`)
+  console.log(`Calldata: ${executeCalldata}`)
+  console.log('')
+  log('Submit this to your multisig/Safe to execute the upgrade')
+
+  if (process.env.FOUNDRY_BROADCAST) {
+    log('Broadcasting transaction...')
     await runCastSend({
       to: upgradeExecutor,
       sig: 'execute(address,bytes)',
       args: [actionAddress, PERFORM_SELECTOR],
       rpcUrl,
-      authArgs,
     })
 
     log('ArbOS upgrade scheduled successfully')
@@ -123,25 +105,27 @@ async function verifyUpgrade(rpcUrl: string): Promise<void> {
   log(`Current ArbOS version: ${currentVersion}`)
 }
 
-async function cmdDeploy(version: string, args: string[]): Promise<void> {
-  const authArgs = parseAuthArgs(args)
+async function cmdDeploy(version: string): Promise<void> {
   const rpcUrl = requireEnv('CHILD_CHAIN_RPC')
   log(`Running: ${path.basename(DEPLOY_SCRIPT)} for ArbOS ${version}`)
-  await deployAction(version, rpcUrl, authArgs, {
-    broadcast: Boolean(authArgs),
-  })
+  await deployAction(version, rpcUrl)
+
+  const chainId = await getChainId(rpcUrl)
+  const address = parseActionAddress(DEPLOY_SCRIPT, chainId)
+  if (address) {
+    log(`Deployed action address: ${address}`)
+    log('Set UPGRADE_ACTION_ADDRESS in .env for the execute step')
+  }
 }
 
-async function cmdExecute(args: string[]): Promise<void> {
-  const authArgs = parseAuthArgs(args)
-
+async function cmdExecute(): Promise<void> {
   const rpcUrl = requireEnv('CHILD_CHAIN_RPC')
   const upgradeExecutor = requireEnv('CHILD_UPGRADE_EXECUTOR_ADDRESS')
   const actionAddress = requireEnv('UPGRADE_ACTION_ADDRESS')
 
   log(`Executing ArbOS upgrade action: ${actionAddress}`)
 
-  await executeUpgrade(actionAddress, upgradeExecutor, rpcUrl, authArgs, false)
+  await executeUpgrade(actionAddress, upgradeExecutor, rpcUrl)
 }
 
 async function cmdVerify(): Promise<void> {
@@ -149,98 +133,4 @@ async function cmdVerify(): Promise<void> {
   await verifyUpgrade(rpcUrl)
 }
 
-async function cmdDeployExecuteVerify(
-  version: string,
-  options: {
-    deployKey?: string
-    deployAccount?: string
-    deployLedger?: boolean
-    deployInteractive?: boolean
-    executeKey?: string
-    executeAccount?: string
-    executeLedger?: boolean
-    executeInteractive?: boolean
-    dryRun?: boolean
-    skipExecute?: boolean
-    verify?: boolean
-  }
-): Promise<void> {
-  const auth = createDeployExecuteAuth(options)
-
-  log(`ArbOS version: ${version}`)
-  checkDeployScript()
-
-  const skipDeploy = Boolean(getEnv('UPGRADE_ACTION_ADDRESS'))
-  let upgradeActionAddress = getEnv('UPGRADE_ACTION_ADDRESS') || ''
-
-  if (skipDeploy) {
-    log(`Using existing action from .env: ${upgradeActionAddress}`)
-  }
-
-  const rpcUrl = requireEnv('CHILD_CHAIN_RPC')
-  const upgradeExecutor = requireEnv('CHILD_UPGRADE_EXECUTOR_ADDRESS')
-  requireEnv('SCHEDULE_TIMESTAMP')
-
-  const deployAuth = getDeployAuth(auth)
-  const executeAuth = getExecuteAuth(auth)
-
-  if (!skipDeploy && !auth.dryRun && !deployAuth) {
-    die(
-      'Deploy auth required. Use --deploy-key, --deploy-account, --deploy-ledger, or --deploy-interactive'
-    )
-  }
-  if (!auth.skipExecute && !auth.dryRun && !executeAuth) {
-    die(
-      'Execute auth required. Use --execute-key, --execute-account, --execute-ledger, or --execute-interactive'
-    )
-  }
-
-  log(`Scheduled timestamp: ${process.env.SCHEDULE_TIMESTAMP}`)
-
-  let chainId = ''
-  if (!skipDeploy) {
-    chainId = await getChainId(rpcUrl)
-    log(`Target chain ID: ${chainId}`)
-    log('Step 1: Deploying ArbOS upgrade action...')
-
-    await deployAction(version, rpcUrl, deployAuth, {
-      broadcast: !auth.dryRun,
-      verify: auth.verifyContracts,
-    })
-
-    if (!auth.dryRun) {
-      upgradeActionAddress = parseActionAddress(DEPLOY_SCRIPT, chainId)
-      log(`Deployed action at: ${upgradeActionAddress}`)
-    } else {
-      log('Dry run - no action deployed')
-      if (!auth.skipExecute) {
-        log('Note: Set UPGRADE_ACTION_ADDRESS in .env to run execute step')
-        return
-      }
-    }
-  } else {
-    log('Step 1: Skipped deploy')
-  }
-
-  if (!auth.skipExecute) {
-    log('Step 2: Executing ArbOS upgrade...')
-    await executeUpgrade(
-      upgradeActionAddress,
-      upgradeExecutor,
-      rpcUrl,
-      executeAuth,
-      auth.dryRun
-    )
-  } else {
-    log('Step 2: Skipped execute')
-  }
-
-  if (!auth.dryRun && !auth.skipExecute) {
-    log('Step 3: Verifying scheduled upgrade...')
-    await verifyUpgrade(rpcUrl)
-  }
-
-  log('Done')
-}
-
-export { cmdDeploy, cmdExecute, cmdVerify, cmdDeployExecuteVerify }
+export { cmdDeploy, cmdExecute, cmdVerify }
