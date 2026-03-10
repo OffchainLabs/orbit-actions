@@ -15,7 +15,7 @@ export async function runForgeScript(
 ): Promise<void> {
   const args = ['script', options.script, '--rpc-url', options.rpcUrl]
 
-  log(`Running: forge ${args.slice(0, 2).join(' ')}...`)
+  log(`Running: forge ${args.join(' ')}`)
 
   try {
     await execa('forge', args, {
@@ -70,7 +70,7 @@ export async function runCastCall(options: CastCallOptions): Promise<string> {
     ])
     return result.stdout
   } catch {
-    return 'N/A'
+    die(`cast call failed: ${options.sig} on ${options.to}`)
   }
 }
 

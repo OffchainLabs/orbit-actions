@@ -51,23 +51,44 @@ function listDirectory(dir: string): void {
   let relPath = path.relative(scriptsDir, dir)
   if (relPath === '.') relPath = ''
 
+  const isVersionDir = /^contract-upgrades\/[0-9]/.test(relPath)
+  const isArbosDir = relPath === 'arbos-upgrades/at-timestamp'
+  const isCategoryDir = /^[^/]+$/.test(relPath) && relPath !== ''
+
+  if (isCategoryDir) {
+    console.log('Browse deeper to see available scripts and commands.')
+  } else if (isVersionDir || isArbosDir) {
+    const hasEnvTemplates = fs.existsSync(path.join(dir, 'env-templates'))
+    if (hasEnvTemplates) {
+      console.log('Configure .env before running. See env-templates/ for examples.')
+    } else {
+      console.log('Configure .env before running. See the README for details.')
+    }
+  }
+  console.log('')
+
   const contents = fs.readdirSync(dir)
   for (const item of contents) {
     if (!item.startsWith('.')) {
-      console.log(item)
+      console.log(`  ${item}`)
     }
   }
 
-  if (/^contract-upgrades\/[0-9]/.test(relPath)) {
-    console.log('---')
-    console.log('deploy   (run Deploy script)')
-    console.log('execute  (run Execute script)')
-    console.log('verify   (run Verify script)')
-  } else if (relPath === 'arbos-upgrades/at-timestamp') {
-    console.log('---')
-    console.log('deploy <version>  (run Deploy script)')
-    console.log('execute           (execute upgrade action)')
-    console.log('verify            (check upgrade status)')
+  if (isCategoryDir) {
+    console.log('')
+    console.log(`Example: orbit-actions ${relPath}/${contents.find(c => !c.startsWith('.')) ?? '<version>'}`)
+  } else if (isVersionDir) {
+    console.log('')
+    console.log('Commands:')
+    console.log(`  orbit-actions ${relPath}/deploy`)
+    console.log(`  orbit-actions ${relPath}/execute`)
+    console.log(`  orbit-actions ${relPath}/verify`)
+  } else if (isArbosDir) {
+    console.log('')
+    console.log('Commands:')
+    console.log(`  orbit-actions ${relPath}/deploy <version>`)
+    console.log(`  orbit-actions ${relPath}/execute`)
+    console.log(`  orbit-actions ${relPath}/verify`)
   }
 }
 
@@ -78,12 +99,24 @@ export async function router(
   const scriptsDir = getScriptsDir()
 
   if (!pathArg) {
+    console.log('orbit-actions - CLI for Orbit chain upgrade actions')
+    console.log('')
+    console.log('Browse and run upgrade scripts for Orbit chains. Configuration')
+    console.log('is read from .env in the project root. Forge behavior (broadcast,')
+    console.log('auth, verbosity) is controlled via FOUNDRY_* / ETH_* env vars.')
+    console.log('')
+    console.log('Available:')
     const contents = fs.readdirSync(scriptsDir)
     for (const item of contents) {
       if (!item.startsWith('.')) {
-        console.log(item)
+        console.log(`  ${item}/`)
       }
     }
+    console.log('')
+    console.log('Usage:')
+    console.log('  orbit-actions <path>           Browse scripts')
+    console.log('  orbit-actions <path>/deploy     Run a script')
+    console.log('  orbit-actions help              Full usage details')
     return
   }
 

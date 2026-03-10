@@ -86,7 +86,7 @@ async function verifyUpgrade(rpcUrl: string): Promise<void> {
     sig: 'getScheduledUpgrade()(uint64,uint64)',
     rpcUrl,
   })
-  log(`Scheduled upgrade (version, timestamp): ${scheduled}`)
+  log(`Scheduled upgrade (version, timestamp): (${scheduled.replace('\n', ', ')})`)
 
   const currentRaw = await runCastCall({
     to: ARB_SYS,
@@ -94,13 +94,7 @@ async function verifyUpgrade(rpcUrl: string): Promise<void> {
     rpcUrl,
   })
 
-  let currentVersion: number
-  if (currentRaw === 'N/A') {
-    currentVersion = 0
-  } else {
-    const rawNum = parseInt(currentRaw, 10)
-    currentVersion = rawNum - ARBOS_VERSION_OFFSET
-  }
+  const currentVersion = parseInt(currentRaw, 10) - ARBOS_VERSION_OFFSET
 
   log(`Current ArbOS version: ${currentVersion}`)
 }
