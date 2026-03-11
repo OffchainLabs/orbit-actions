@@ -57,7 +57,9 @@ function listDirectory(dir: string): void {
   } else if (isVersionDir || isArbosDir) {
     const hasEnvTemplates = fs.existsSync(path.join(dir, 'env-templates'))
     if (hasEnvTemplates) {
-      console.log('Configure .env before running. See env-templates/ for examples.')
+      console.log(
+        'Configure .env before running. See env-templates/ for examples.'
+      )
     } else {
       console.log('Configure .env before running. See the README for details.')
     }
@@ -73,7 +75,9 @@ function listDirectory(dir: string): void {
 
   if (isCategoryDir) {
     console.log('')
-    console.log(`Example: ${relPath}/${contents.find(c => !c.startsWith('.')) ?? '<version>'}`)
+    console.log(
+      `Example: ${relPath}/${contents.find(c => !c.startsWith('.')) ?? '<version>'}`
+    )
   } else if (isVersionDir) {
     console.log('')
     console.log('Commands:')
@@ -98,9 +102,15 @@ export async function router(
   if (!pathArg) {
     console.log('orbit-actions - CLI for Orbit chain upgrade actions')
     console.log('')
-    console.log('Browse and run upgrade scripts for Orbit chains. Configuration')
-    console.log('is read from .env in the project root. Forge behavior (broadcast,')
-    console.log('auth, verbosity) is controlled via FOUNDRY_* / ETH_* env vars.')
+    console.log(
+      'Browse and run upgrade scripts for Orbit chains. Configuration'
+    )
+    console.log(
+      'is read from .env in the project root. Forge behavior (broadcast,'
+    )
+    console.log(
+      'auth, verbosity) is controlled via FOUNDRY_* / ETH_* env vars.'
+    )
     console.log('')
     console.log('Available:')
     const contents = fs.readdirSync(scriptsDir)
