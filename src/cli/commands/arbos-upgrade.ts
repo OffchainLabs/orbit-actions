@@ -1,7 +1,7 @@
 import * as path from 'path'
 import * as fs from 'fs'
 import { Interface } from 'ethers'
-import { log, die } from '../utils/log'
+import { die } from '../utils/log'
 import { requireEnv, getScriptsDir } from '../utils/env'
 import {
   runForgeScript,
@@ -58,15 +58,15 @@ async function executeUpgrade(
     PERFORM_SELECTOR
   )
 
-  log('Calldata for UpgradeExecutor.execute():')
+  console.log('Calldata for UpgradeExecutor.execute():')
   console.log('')
   console.log(`To: ${upgradeExecutor}`)
   console.log(`Calldata: ${executeCalldata}`)
   console.log('')
-  log('Submit this to your multisig/Safe to execute the upgrade')
+  console.log('Submit this to your multisig/Safe to execute the upgrade')
 
   if (process.env.FOUNDRY_BROADCAST) {
-    log('Broadcasting transaction...')
+    console.log('Broadcasting transaction...')
     await runCastSend({
       to: upgradeExecutor,
       sig: 'execute(address,bytes)',
@@ -74,19 +74,19 @@ async function executeUpgrade(
       rpcUrl,
     })
 
-    log('ArbOS upgrade scheduled successfully')
+    console.log('ArbOS upgrade scheduled successfully')
   }
 }
 
 async function verifyUpgrade(rpcUrl: string): Promise<void> {
-  log('Checking ArbOS upgrade status...')
+  console.log('Checking ArbOS upgrade status...')
 
   const scheduled = await runCastCall({
     to: ARB_OWNER_PUBLIC,
     sig: 'getScheduledUpgrade()(uint64,uint64)',
     rpcUrl,
   })
-  log(`Scheduled upgrade (version, timestamp): (${scheduled.replace('\n', ', ')})`)
+  console.log(`Scheduled upgrade (version, timestamp): (${scheduled.replace('\n', ', ')})`)
 
   const currentRaw = await runCastCall({
     to: ARB_SYS,
@@ -96,19 +96,19 @@ async function verifyUpgrade(rpcUrl: string): Promise<void> {
 
   const currentVersion = parseInt(currentRaw, 10) - ARBOS_VERSION_OFFSET
 
-  log(`Current ArbOS version: ${currentVersion}`)
+  console.log(`Current ArbOS version: ${currentVersion}`)
 }
 
 async function cmdDeploy(version: string): Promise<void> {
   const rpcUrl = requireEnv('CHILD_CHAIN_RPC')
-  log(`Running: ${path.basename(DEPLOY_SCRIPT)} for ArbOS ${version}`)
+  console.log(`Running: ${path.basename(DEPLOY_SCRIPT)} for ArbOS ${version}`)
   await deployAction(version, rpcUrl)
 
   const chainId = await getChainId(rpcUrl)
   const address = parseActionAddress(DEPLOY_SCRIPT, chainId)
   if (address) {
-    log(`Deployed action address: ${address}`)
-    log('Set UPGRADE_ACTION_ADDRESS in .env for the execute step')
+    console.log(`Deployed action address: ${address}`)
+    console.log('Set UPGRADE_ACTION_ADDRESS in .env for the execute step')
   }
 }
 
@@ -117,7 +117,7 @@ async function cmdExecute(): Promise<void> {
   const upgradeExecutor = requireEnv('CHILD_UPGRADE_EXECUTOR_ADDRESS')
   const actionAddress = requireEnv('UPGRADE_ACTION_ADDRESS')
 
-  log(`Executing ArbOS upgrade action: ${actionAddress}`)
+  console.log(`Executing ArbOS upgrade action: ${actionAddress}`)
 
   await executeUpgrade(actionAddress, upgradeExecutor, rpcUrl)
 }

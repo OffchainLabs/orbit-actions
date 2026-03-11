@@ -1,7 +1,7 @@
 import execa from 'execa'
 import * as fs from 'fs'
 import * as path from 'path'
-import { die, log } from './log'
+import { die } from './log'
 import { getRepoRoot } from './env'
 
 export interface ForgeScriptOptions {
@@ -15,7 +15,7 @@ export async function runForgeScript(
 ): Promise<void> {
   const args = ['script', options.script, '--rpc-url', options.rpcUrl]
 
-  log(`Running: forge ${args.join(' ')}`)
+  console.log(`Running: forge ${args.join(' ')}`)
 
   try {
     await execa('forge', args, {

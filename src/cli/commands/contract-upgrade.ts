@@ -1,6 +1,6 @@
 import * as path from 'path'
 import * as fs from 'fs'
-import { log, die } from '../utils/log'
+import { die } from '../utils/log'
 import { requireEnv, getScriptsDir } from '../utils/env'
 import {
   runForgeScript,
@@ -35,7 +35,7 @@ async function cmdDeploy(version: string): Promise<void> {
     die(`No deploy script found in ${versionDir}`)
   }
 
-  log(`Running: ${path.basename(deployScript)}`)
+  console.log(`Running: ${path.basename(deployScript)}`)
 
   await runForgeScript({
     script: deployScript,
@@ -45,8 +45,8 @@ async function cmdDeploy(version: string): Promise<void> {
   const chainId = await getChainId(rpcUrl)
   const address = parseActionAddress(deployScript, chainId)
   if (address) {
-    log(`Deployed action address: ${address}`)
-    log('Set UPGRADE_ACTION_ADDRESS in .env for the execute step')
+    console.log(`Deployed action address: ${address}`)
+    console.log('Set UPGRADE_ACTION_ADDRESS in .env for the execute step')
   }
 }
 
@@ -61,7 +61,7 @@ async function cmdExecute(version: string): Promise<void> {
     die(`No execute script found in ${versionDir}`)
   }
 
-  log(`Running: ${path.basename(executeScript)}`)
+  console.log(`Running: ${path.basename(executeScript)}`)
 
   await runForgeScript({
     script: executeScript,
@@ -81,7 +81,7 @@ async function cmdVerify(version: string): Promise<void> {
     )
   }
 
-  log(`Running: ${path.basename(verifyScript)}`)
+  console.log(`Running: ${path.basename(verifyScript)}`)
 
   await runForgeScript({
     script: verifyScript,
