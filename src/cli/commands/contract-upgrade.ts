@@ -43,7 +43,9 @@ async function cmdDeploy(version: string): Promise<void> {
 
   const address = await resolveActionAddress(deployScript, rpcUrl)
   console.log(`Deployed action address: ${address}`)
-  console.log('Run execute next, or set UPGRADE_ACTION_ADDRESS in .env to override')
+  console.log(
+    'Run execute next, or set UPGRADE_ACTION_ADDRESS in .env to override'
+  )
 }
 
 async function cmdExecute(version: string): Promise<void> {

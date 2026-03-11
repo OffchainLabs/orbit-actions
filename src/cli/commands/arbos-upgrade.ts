@@ -33,10 +33,7 @@ function checkDeployScript(): void {
   }
 }
 
-async function deployAction(
-  version: string,
-  rpcUrl: string
-): Promise<void> {
+async function deployAction(version: string, rpcUrl: string): Promise<void> {
   checkDeployScript()
 
   await runForgeScript({
@@ -85,7 +82,9 @@ async function verifyUpgrade(rpcUrl: string): Promise<void> {
     sig: 'getScheduledUpgrade()(uint64,uint64)',
     rpcUrl,
   })
-  console.log(`Scheduled upgrade (version, timestamp): (${scheduled.replace('\n', ', ')})`)
+  console.log(
+    `Scheduled upgrade (version, timestamp): (${scheduled.replace('\n', ', ')})`
+  )
 
   const currentRaw = await runCastCall({
     to: ARB_SYS,
@@ -105,7 +104,9 @@ async function cmdDeploy(version: string): Promise<void> {
 
   const address = await resolveActionAddress(DEPLOY_SCRIPT, rpcUrl)
   console.log(`Deployed action address: ${address}`)
-  console.log('Run execute next, or set UPGRADE_ACTION_ADDRESS in .env to override')
+  console.log(
+    'Run execute next, or set UPGRADE_ACTION_ADDRESS in .env to override'
+  )
 }
 
 async function cmdExecute(): Promise<void> {

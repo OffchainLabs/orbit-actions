@@ -70,7 +70,7 @@ fi
 # List version contents (should show virtual commands)
 echo -n "Testing list contract-upgrades/1.2.1... "
 CONTENTS_OUTPUT=$(docker run --rm "$IMAGE_NAME" contract-upgrades/1.2.1 2>&1)
-if echo "$CONTENTS_OUTPUT" | grep "deploy-execute-verify" > /dev/null; then
+if echo "$CONTENTS_OUTPUT" | grep "deploy" > /dev/null; then
     echo "OK"
 else
     echo "FAILED"
@@ -142,11 +142,10 @@ cat > "$TEMP_ENV" <<EOF
 CHILD_CHAIN_RPC=http://localhost:8545
 CHILD_UPGRADE_EXECUTOR_ADDRESS=0x0000000000000000000000000000000000000001
 UPGRADE_ACTION_ADDRESS=0x0000000000000000000000000000000000000002
-SCHEDULE_TIMESTAMP=1709229600
 EOF
 
 echo -n "Testing arbos dry-run calldata... "
-DRYRUN_OUTPUT=$(docker run --rm -v "$TEMP_ENV:/app/.env" "$IMAGE_NAME" arbos-upgrades/at-timestamp/deploy-execute-verify 32 --dry-run 2>&1)
+DRYRUN_OUTPUT=$(docker run --rm -v "$TEMP_ENV:/app/.env" "$IMAGE_NAME" arbos-upgrades/at-timestamp/execute 2>&1)
 if echo "$DRYRUN_OUTPUT" | grep "Calldata:" > /dev/null; then
     echo "OK"
 else
