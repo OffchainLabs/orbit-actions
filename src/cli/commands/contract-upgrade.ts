@@ -46,26 +46,47 @@ async function cmdDeploy(version: string): Promise<void> {
   const address = parseActionAddress(deployScript, chainId)
   if (address) {
     console.log(`Deployed action address: ${address}`)
-    console.log('Set UPGRADE_ACTION_ADDRESS in .env for the execute step')
+    console.log('Run execute next, or set UPGRADE_ACTION_ADDRESS in .env to override')
   }
+}
+
+async function resolveActionAddress(
+  versionDir: string,
+  rpcUrl: string
+): Promise<string> {
+  const fromEnv = process.env.UPGRADE_ACTION_ADDRESS
+  if (fromEnv) return fromEnv
+
+  const deployScript = findScript(versionDir, /^Deploy.*\.s\.sol$/)
+  if (deployScript) {
+    const chainId = await getChainId(rpcUrl)
+    const fromBroadcast = parseActionAddress(deployScript, chainId)
+    if (fromBroadcast) return fromBroadcast
+  }
+
+  die(
+    'Could not resolve action address.\n' +
+      'Either set UPGRADE_ACTION_ADDRESS in .env, or run deploy first.'
+  )
 }
 
 async function cmdExecute(version: string): Promise<void> {
   const versionDir = getVersionDir(version)
-
   const rpcUrl = requireEnv('PARENT_CHAIN_RPC')
-  requireEnv('UPGRADE_ACTION_ADDRESS')
+  const actionAddress = await resolveActionAddress(versionDir, rpcUrl)
 
   const executeScript = findScript(versionDir, /^Execute.*\.s\.sol$/)
   if (!executeScript) {
     die(`No execute script found in ${versionDir}`)
   }
 
+  console.log(`Using action address: ${actionAddress}`)
   console.log(`Running: ${path.basename(executeScript)}`)
 
   await runForgeScript({
     script: executeScript,
     rpcUrl,
+    env: { UPGRADE_ACTION_ADDRESS: actionAddress },
   })
 }
 

@@ -36,6 +36,10 @@ Running upgrade scripts:
   arbos-upgrades/at-timestamp/execute
   arbos-upgrades/at-timestamp/verify
 
+Commands can be chained (e.g. deploy && execute). The execute step
+automatically reads the deployed address from the broadcast output.
+Set UPGRADE_ACTION_ADDRESS in .env to override (e.g. for multisig flows).
+
 Forge behavior (broadcast, auth, verbosity, etc.) is configured via
 FOUNDRY_* / ETH_* env vars in your .env file. See env templates for examples.`
 
