@@ -8,8 +8,7 @@ import {
   runCastSend,
   runCastCall,
   castCalldata,
-  getChainId,
-  parseActionAddress,
+  resolveActionAddress,
 } from '../utils/forge'
 
 const ARBOS_DIR = path.join(getScriptsDir(), 'arbos-upgrades', 'at-timestamp')
@@ -99,37 +98,20 @@ async function verifyUpgrade(rpcUrl: string): Promise<void> {
   console.log(`Current ArbOS version: ${currentVersion}`)
 }
 
-async function resolveActionAddress(rpcUrl: string): Promise<string> {
-  const fromEnv = process.env.UPGRADE_ACTION_ADDRESS
-  if (fromEnv) return fromEnv
-
-  const chainId = await getChainId(rpcUrl)
-  const fromBroadcast = parseActionAddress(DEPLOY_SCRIPT, chainId)
-  if (fromBroadcast) return fromBroadcast
-
-  die(
-    'Could not resolve action address.\n' +
-      'Either set UPGRADE_ACTION_ADDRESS in .env, or run deploy first.'
-  )
-}
-
 async function cmdDeploy(version: string): Promise<void> {
   const rpcUrl = requireEnv('CHILD_CHAIN_RPC')
   console.log(`Running: ${path.basename(DEPLOY_SCRIPT)} for ArbOS ${version}`)
   await deployAction(version, rpcUrl)
 
-  const chainId = await getChainId(rpcUrl)
-  const address = parseActionAddress(DEPLOY_SCRIPT, chainId)
-  if (address) {
-    console.log(`Deployed action address: ${address}`)
-    console.log('Run execute next, or set UPGRADE_ACTION_ADDRESS in .env to override')
-  }
+  const address = await resolveActionAddress(DEPLOY_SCRIPT, rpcUrl)
+  console.log(`Deployed action address: ${address}`)
+  console.log('Run execute next, or set UPGRADE_ACTION_ADDRESS in .env to override')
 }
 
 async function cmdExecute(): Promise<void> {
   const rpcUrl = requireEnv('CHILD_CHAIN_RPC')
   const upgradeExecutor = requireEnv('CHILD_UPGRADE_EXECUTOR_ADDRESS')
-  const actionAddress = await resolveActionAddress(rpcUrl)
+  const actionAddress = await resolveActionAddress(DEPLOY_SCRIPT, rpcUrl)
 
   console.log(`Executing ArbOS upgrade action: ${actionAddress}`)
 

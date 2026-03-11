@@ -87,7 +87,10 @@ export async function getChainId(rpcUrl: string): Promise<string> {
   return result.stdout.trim()
 }
 
-export function parseActionAddress(
+// Assumes the action contract is the last CREATE in the broadcast file.
+// This holds for all current deploy scripts, which deploy dependencies first
+// and the action contract last.
+function parseActionAddress(
   scriptPath: string,
   chainId: string
 ): string | null {
@@ -115,6 +118,25 @@ export function parseActionAddress(
   }
 
   return createTxs[createTxs.length - 1]?.contractAddress ?? null
+}
+
+export async function resolveActionAddress(
+  deployScript: string | null,
+  rpcUrl: string
+): Promise<string> {
+  const fromEnv = process.env.UPGRADE_ACTION_ADDRESS
+  if (fromEnv) return fromEnv
+
+  if (deployScript) {
+    const chainId = await getChainId(rpcUrl)
+    const fromBroadcast = parseActionAddress(deployScript, chainId)
+    if (fromBroadcast) return fromBroadcast
+  }
+
+  die(
+    'Could not resolve action address.\n' +
+      'Either set UPGRADE_ACTION_ADDRESS in .env, or run deploy first.'
+  )
 }
 
 export function findScript(dir: string, pattern: RegExp): string | null {
