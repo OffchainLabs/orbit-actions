@@ -124,7 +124,7 @@ export function findScript(dir: string, pattern: RegExp): string | null {
 
   const files = fs.readdirSync(dir)
   for (const file of files) {
-    if (pattern.test(file) && file.endsWith('.s.sol')) {
+    if (pattern.test(file)) {
       return path.join(dir, file)
     }
   }
