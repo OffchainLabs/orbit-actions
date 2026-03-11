@@ -2,14 +2,12 @@
 set -euo pipefail
 
 # Local (non-Docker) smoke tests for orbit-actions CLI
-# Tests the bin/router and related scripts directly
+# Tests the CLI via yarn cli
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-ROUTER="$REPO_ROOT/bin/router"
 
 echo "=== Local Smoke Tests ==="
-echo "Router: $ROUTER"
 echo ""
 
 PASSED=0
@@ -43,32 +41,29 @@ check_output() {
     fi
 }
 
+cli() {
+    yarn --silent --cwd "$REPO_ROOT" cli -- "$@"
+}
+
 echo "--- Prerequisites ---"
 check "forge installed" command -v forge
 check "cast installed" command -v cast
-check "jq installed" command -v jq
+check "yarn installed" command -v yarn
 
 echo ""
 echo "--- Directory Browsing ---"
-check "list top level" "$ROUTER"
-check_output "list contract-upgrades" "1.2.1" "$ROUTER" contract-upgrades
-check_output "list contract-upgrades/1.2.1" "deploy" "$ROUTER" contract-upgrades/1.2.1
-check_output "list arbos-upgrades" "at-timestamp" "$ROUTER" arbos-upgrades
+check "list top level" cli
+check_output "list contract-upgrades" "1.2.1" cli contract-upgrades
+check_output "list contract-upgrades/1.2.1" "deploy" cli contract-upgrades/1.2.1
+check_output "list arbos-upgrades" "at-timestamp" cli arbos-upgrades
 
 echo ""
 echo "--- File Viewing ---"
-check_output "view README" "Nitro contracts" "$ROUTER" contract-upgrades/1.2.1/README.md
+check_output "view README" "Nitro contracts" cli contract-upgrades/1.2.1/README.md
 
 echo ""
 echo "--- Help ---"
-check_output "help command" "Usage:" "$ROUTER" help
-check_output "contract-upgrade help" "deploy-execute-verify" "$REPO_ROOT/bin/contract-upgrade" --help
-check_output "arbos-upgrade help" "deploy-execute-verify" "$REPO_ROOT/bin/arbos-upgrade" --help
-
-echo ""
-echo "--- Passthrough ---"
-check_output "forge passthrough" "forge" "$ROUTER" forge --version
-check_output "cast passthrough" "cast" "$ROUTER" cast --version
+check_output "help command" "Usage:" cli help
 
 echo ""
 echo "=== Summary ==="
