@@ -53,14 +53,11 @@ export interface CastCallOptions {
 
 export async function runCastCall(options: CastCallOptions): Promise<string> {
   try {
-    const result = await execa('cast', [
-      'call',
-      options.to,
-      '--data',
-      options.data,
-      '--rpc-url',
-      options.rpcUrl,
-    ])
+    const result = await execa(
+      'cast',
+      ['call', options.to, '--data', options.data, '--rpc-url', options.rpcUrl],
+      { stderr: 'inherit' }
+    )
     return result.stdout
   } catch {
     die(`cast call failed on ${options.to}`)
@@ -68,7 +65,9 @@ export async function runCastCall(options: CastCallOptions): Promise<string> {
 }
 
 export async function getChainId(rpcUrl: string): Promise<string> {
-  const result = await execa('cast', ['chain-id', '--rpc-url', rpcUrl])
+  const result = await execa('cast', ['chain-id', '--rpc-url', rpcUrl], {
+    stderr: 'inherit',
+  })
   return result.stdout.trim()
 }
 
