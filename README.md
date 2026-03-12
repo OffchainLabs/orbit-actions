@@ -52,7 +52,7 @@ For ArbOS upgrades, a common pre-requisite is to deploy new Nitro contracts to t
 
 ### Nitro contracts 3.1.0 (for [BoLD](https://docs.arbitrum.io/how-arbitrum-works/bold/gentle-introduction))
 
-The [`nitro-contracts 3.1.0` upgrade guide](scripts/foundry/contract-upgrades/3.1.0) will use the [BOLDUpgradeAction](https://github.com/OffchainLabs/nitro-contracts/blob/main/src/rollup/BOLDUpgradeAction.sol) from the [nitro-contract](https://github.com/OffchainLabs/nitro-contracts) repo. There is no associated ArbOS upgrade for BoLD. 
+The [`nitro-contracts 3.1.0` upgrade guide](scripts/foundry/contract-upgrades/3.1.0) will use the [BOLDUpgradeAction](https://github.com/OffchainLabs/nitro-contracts/blob/main/src/rollup/BOLDUpgradeAction.sol) from the [nitro-contract](https://github.com/OffchainLabs/nitro-contracts) repo. There is no associated ArbOS upgrade for BoLD.
 
 ### Nitro contracts 2.1.3
 
@@ -168,10 +168,10 @@ Forge behavior -- broadcasting, authentication, verbosity, verification -- is co
 
 Key forge env vars:
 
-| Variable | Effect |
-|----------|--------|
+| Variable                 | Effect                                                           |
+| ------------------------ | ---------------------------------------------------------------- |
 | `FOUNDRY_BROADCAST=true` | Broadcast transactions (without this, scripts run in simulation) |
-| `ETH_PRIVATE_KEY=0x...` | Private key for signing transactions |
+| `ETH_PRIVATE_KEY=0x...`  | Private key for signing transactions                             |
 
 All `FOUNDRY_*` env vars are supported -- see [Foundry configuration](https://book.getfoundry.sh/reference/config/) for the full list.
 
@@ -190,6 +190,10 @@ yarn cli -- contract-upgrades/2.1.3/execute
 # 3. Verify the upgrade
 yarn cli -- contract-upgrades/2.1.3/verify
 ```
+
+### Writing new deploy scripts
+
+The CLI identifies the action contract address by reading the last `CREATE` transaction from Forge's broadcast file. Deploy scripts must deploy all dependencies first and the action contract last.
 
 ## Docker
 

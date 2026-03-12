@@ -16,7 +16,8 @@ contract DeployEnableFastConfirmAction is DeploymentHelpersScript {
     function run() public {
         vm.startBroadcast();
 
-        // deploy action
+        // Deploy the action contract last. The CLI identifies the deployed action
+        // by taking the last CREATE from the broadcast file.
         new EnableFastConfirmAction({
             gnosisSafeProxyFactory: GNOSIS_SAFE_PROXY_FACTORY,
             gnosisSafe1_3_0: GNOSIS_SAFE_1_3_0,

@@ -14,7 +14,8 @@ contract DeploySetSequencerInboxMaxTimeVariationActionScript is Script {
     function run() public {
         vm.startBroadcast();
 
-        // finally deploy upgrade action
+        // Deploy the action contract last. The CLI identifies the deployed action
+        // by taking the last CREATE from the broadcast file.
         new SetSequencerInboxMaxTimeVariationAction({
             _delayBlocks: vm.envUint("DELAY_BLOCKS"),
             _futureBlocks: vm.envUint("FUTURE_BLOCKS"),

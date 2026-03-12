@@ -31,7 +31,8 @@ contract DeployAddWasmCacheManagerActionScript is DeploymentHelpersScript {
         ICacheManager cacheManager = ICacheManager(cacheManagerProxy);
         cacheManager.initialize(uint64(vm.envUint("INIT_CACHE_SIZE")), uint64(vm.envUint("INIT_DECAY")));
 
-        // deploy action
+        // Deploy the action contract last. The CLI identifies the deployed action
+        // by taking the last CREATE from the broadcast file.
         new AddWasmCacheManagerAction({
             _wasmCachemanager: address(cacheManager), _targetArbOSVersion: TARGET_ARBOS_VERSION
         });
