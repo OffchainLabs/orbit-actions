@@ -58,8 +58,6 @@ async function executeUpgrade(
   console.log('')
   console.log(`To: ${upgradeExecutor}`)
   console.log(`Calldata: ${executeCalldata}`)
-  console.log('')
-  console.log('Submit this to your multisig/Safe to execute the upgrade')
 
   if (process.env.FOUNDRY_BROADCAST) {
     console.log('Broadcasting transaction...')
@@ -98,14 +96,30 @@ async function verifyUpgrade(rpcUrl: string): Promise<void> {
 }
 
 async function cmdDeploy(version: string): Promise<void> {
+  if (process.env.UPGRADE_ACTION_ADDRESS) {
+    console.log(
+      `Action already deployed at: ${process.env.UPGRADE_ACTION_ADDRESS}`
+    )
+    console.log(
+      'Run execute next, or remove UPGRADE_ACTION_ADDRESS from .env to redeploy.'
+    )
+    return
+  }
   const rpcUrl = requireEnv('CHILD_CHAIN_RPC')
   console.log(`Running: ${path.basename(DEPLOY_SCRIPT)} for ArbOS ${version}`)
   await deployAction(version, rpcUrl)
 
+  if (!process.env.FOUNDRY_BROADCAST) {
+    console.log(
+      'Rerun with FOUNDRY_BROADCAST=true to deploy, then run execute.'
+    )
+    return
+  }
+
   const address = await resolveActionAddress(DEPLOY_SCRIPT, rpcUrl)
   console.log(`Deployed action address: ${address}`)
   console.log(
-    'Run execute next, or set UPGRADE_ACTION_ADDRESS in .env to override'
+    'Run "execute" next, or set UPGRADE_ACTION_ADDRESS in .env to override'
   )
 }
 

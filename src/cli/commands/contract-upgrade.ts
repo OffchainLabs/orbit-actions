@@ -25,6 +25,16 @@ function getVersionDir(version: string): string {
 }
 
 async function cmdDeploy(version: string): Promise<void> {
+  if (process.env.UPGRADE_ACTION_ADDRESS) {
+    console.log(
+      `Action already deployed at: ${process.env.UPGRADE_ACTION_ADDRESS}`
+    )
+    console.log(
+      'Run execute next, or remove UPGRADE_ACTION_ADDRESS from .env to redeploy.'
+    )
+    return
+  }
+
   const versionDir = getVersionDir(version)
 
   const rpcUrl = requireEnv('PARENT_CHAIN_RPC')
@@ -40,6 +50,13 @@ async function cmdDeploy(version: string): Promise<void> {
     script: deployScript,
     rpcUrl,
   })
+
+  if (!process.env.FOUNDRY_BROADCAST) {
+    console.log(
+      'Rerun with FOUNDRY_BROADCAST=true to deploy, then run execute.'
+    )
+    return
+  }
 
   const address = await resolveActionAddress(deployScript, rpcUrl)
   console.log(`Deployed action address: ${address}`)

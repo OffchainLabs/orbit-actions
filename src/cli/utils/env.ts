@@ -31,10 +31,6 @@ export function requireEnv(name: string): string {
   return value
 }
 
-export function getEnv(name: string): string | undefined {
-  return process.env[name]
-}
-
 export function getScriptsDir(): string {
   const repoRoot = findRepoRoot()
   if (repoRoot) {
