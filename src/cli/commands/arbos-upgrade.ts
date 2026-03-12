@@ -7,7 +7,6 @@ import {
   runForgeScript,
   runCastSend,
   runCastCall,
-  castCalldata,
   resolveActionAddress,
 } from '../utils/forge'
 
@@ -48,25 +47,20 @@ async function executeUpgrade(
   upgradeExecutor: string,
   rpcUrl: string
 ): Promise<void> {
-  const executeCalldata = await castCalldata(
-    'execute(address,bytes)',
+  const iface = new Interface(['function execute(address,bytes)'])
+  const calldata = iface.encodeFunctionData('execute', [
     actionAddress,
-    PERFORM_SELECTOR
-  )
+    PERFORM_SELECTOR,
+  ])
 
   console.log('Calldata for UpgradeExecutor.execute():')
   console.log('')
   console.log(`To: ${upgradeExecutor}`)
-  console.log(`Calldata: ${executeCalldata}`)
+  console.log(`Calldata: ${calldata}`)
 
   if (process.env.FOUNDRY_BROADCAST) {
     console.log('Broadcasting transaction...')
-    await runCastSend({
-      to: upgradeExecutor,
-      sig: 'execute(address,bytes)',
-      args: [actionAddress, PERFORM_SELECTOR],
-      rpcUrl,
-    })
+    await runCastSend({ to: upgradeExecutor, data: calldata, rpcUrl })
 
     console.log('ArbOS upgrade scheduled successfully')
   }
@@ -75,22 +69,35 @@ async function executeUpgrade(
 async function verifyUpgrade(rpcUrl: string): Promise<void> {
   console.log('Checking ArbOS upgrade status...')
 
-  const scheduled = await runCastCall({
+  const scheduledIface = new Interface([
+    'function getScheduledUpgrade() view returns (uint64, uint64)',
+  ])
+  const scheduledRaw = await runCastCall({
     to: ARB_OWNER_PUBLIC,
-    sig: 'getScheduledUpgrade()(uint64,uint64)',
+    data: scheduledIface.encodeFunctionData('getScheduledUpgrade'),
     rpcUrl,
   })
+  const [version, timestamp] = scheduledIface.decodeFunctionResult(
+    'getScheduledUpgrade',
+    scheduledRaw
+  )
   console.log(
-    `Scheduled upgrade (version, timestamp): (${scheduled.replace('\n', ', ')})`
+    `Scheduled upgrade (version, timestamp): (${version}, ${timestamp})`
   )
 
-  const currentRaw = await runCastCall({
+  const arbSysIface = new Interface([
+    'function arbOSVersion() view returns (uint64)',
+  ])
+  const versionRaw = await runCastCall({
     to: ARB_SYS,
-    sig: 'arbOSVersion()(uint64)',
+    data: arbSysIface.encodeFunctionData('arbOSVersion'),
     rpcUrl,
   })
-
-  const currentVersion = parseInt(currentRaw, 10) - ARBOS_VERSION_OFFSET
+  const [currentVersionRaw] = arbSysIface.decodeFunctionResult(
+    'arbOSVersion',
+    versionRaw
+  )
+  const currentVersion = Number(currentVersionRaw) - ARBOS_VERSION_OFFSET
 
   console.log(`Current ArbOS version: ${currentVersion}`)
 }

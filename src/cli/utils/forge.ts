@@ -29,25 +29,17 @@ export async function runForgeScript(
 
 export interface CastSendOptions {
   to: string
-  sig: string
-  args: string[]
+  data: string
   rpcUrl: string
 }
 
 export async function runCastSend(options: CastSendOptions): Promise<void> {
-  const args = [
-    'send',
-    options.to,
-    options.sig,
-    ...options.args,
-    '--rpc-url',
-    options.rpcUrl,
-  ]
-
   try {
-    await execa('cast', args, {
-      stdio: 'inherit',
-    })
+    await execa(
+      'cast',
+      ['send', options.to, '--data', options.data, '--rpc-url', options.rpcUrl],
+      { stdio: 'inherit' }
+    )
   } catch {
     die('Cast send failed')
   }
@@ -55,7 +47,7 @@ export async function runCastSend(options: CastSendOptions): Promise<void> {
 
 export interface CastCallOptions {
   to: string
-  sig: string
+  data: string
   rpcUrl: string
 }
 
@@ -63,23 +55,16 @@ export async function runCastCall(options: CastCallOptions): Promise<string> {
   try {
     const result = await execa('cast', [
       'call',
+      options.to,
+      '--data',
+      options.data,
       '--rpc-url',
       options.rpcUrl,
-      options.to,
-      options.sig,
     ])
     return result.stdout
   } catch {
-    die(`cast call failed: ${options.sig} on ${options.to}`)
+    die(`cast call failed on ${options.to}`)
   }
-}
-
-export async function castCalldata(
-  sig: string,
-  ...args: string[]
-): Promise<string> {
-  const result = await execa('cast', ['calldata', sig, ...args])
-  return result.stdout
 }
 
 export async function getChainId(rpcUrl: string): Promise<string> {
