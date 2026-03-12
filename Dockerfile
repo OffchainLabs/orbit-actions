@@ -1,4 +1,4 @@
-FROM node:18-slim
+FROM node:22-slim
 
 # Install dependencies for Foundry, git, and jq (for JSON parsing in upgrade scripts)
 RUN apt-get update && apt-get install -y \
@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install Foundry
 ENV PATH="/root/.foundry/bin:${PATH}"
-RUN curl -L https://foundry.paradigm.xyz | bash && foundryup
+RUN curl -L https://foundry.paradigm.xyz | bash && foundryup --version stable
 
 # Install Yarn Classic (v1) - matches the repo's yarn.lock format
 RUN npm install -g --force yarn@1.22.22

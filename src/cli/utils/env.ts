@@ -17,7 +17,8 @@ function findRepoRoot(): string | null {
 }
 
 export function loadEnv(): void {
-  const envPath = path.join(process.cwd(), '.env')
+  const repoRoot = findRepoRoot()
+  const envPath = path.join(repoRoot ?? process.cwd(), '.env')
   if (fs.existsSync(envPath)) {
     dotenv.config({ path: envPath })
   }
@@ -40,5 +41,8 @@ export function getScriptsDir(): string {
 }
 
 export function getRepoRoot(): string {
-  return findRepoRoot() || '/app'
+  const root = findRepoRoot()
+  if (root) return root
+  console.warn('Could not find repo root, assuming /app')
+  return '/app'
 }

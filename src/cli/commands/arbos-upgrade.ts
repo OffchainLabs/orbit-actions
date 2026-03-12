@@ -63,6 +63,10 @@ async function executeUpgrade(
     await runCastSend({ to: upgradeExecutor, data: calldata, rpcUrl })
 
     console.log('ArbOS upgrade scheduled successfully')
+  } else {
+    console.log(
+      'Set FOUNDRY_BROADCAST=true in .env to broadcast this transaction.'
+    )
   }
 }
 

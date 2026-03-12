@@ -65,10 +65,14 @@ export async function runCastCall(options: CastCallOptions): Promise<string> {
 }
 
 export async function getChainId(rpcUrl: string): Promise<string> {
-  const result = await execa('cast', ['chain-id', '--rpc-url', rpcUrl], {
-    stderr: 'inherit',
-  })
-  return result.stdout.trim()
+  try {
+    const result = await execa('cast', ['chain-id', '--rpc-url', rpcUrl], {
+      stderr: 'inherit',
+    })
+    return result.stdout.trim()
+  } catch {
+    die(`Failed to get chain ID from ${rpcUrl}`)
+  }
 }
 
 // Assumes the action contract is the last CREATE in the broadcast file.

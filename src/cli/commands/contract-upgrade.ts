@@ -69,6 +69,12 @@ async function cmdExecute(version: string): Promise<void> {
   const versionDir = getVersionDir(version)
   const rpcUrl = requireEnv('PARENT_CHAIN_RPC')
   const deployScript = findScript(versionDir, /^Deploy.*\.s\.sol$/)
+  if (!deployScript && !process.env.UPGRADE_ACTION_ADDRESS) {
+    die(
+      `No deploy script found in ${versionDir}.\n` +
+        'Set UPGRADE_ACTION_ADDRESS in .env to provide the action address manually.'
+    )
+  }
   const actionAddress = await resolveActionAddress(deployScript, rpcUrl)
 
   const executeScript = findScript(versionDir, /^Execute.*\.s\.sol$/)

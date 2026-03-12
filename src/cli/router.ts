@@ -48,13 +48,9 @@ function listDirectory(dir: string): void {
   let relPath = path.relative(scriptsDir, dir)
   if (relPath === '.') relPath = ''
 
-  const isVersionDir = /^contract-upgrades\/[0-9]/.test(relPath)
+  const isVersionDir = /^contract-upgrades\/[0-9][^/]*$/.test(relPath)
   const isArbosDir = relPath === 'arbos-upgrades/at-timestamp'
-  const isCategoryDir = /^[^/]+$/.test(relPath) && relPath !== ''
-
-  if (isCategoryDir) {
-    console.log('Browse deeper to see available scripts and commands.')
-  } else if (isVersionDir || isArbosDir) {
+  if (isVersionDir || isArbosDir) {
     const hasEnvTemplates = fs.existsSync(path.join(dir, 'env-templates'))
     if (hasEnvTemplates) {
       console.log(
@@ -73,12 +69,7 @@ function listDirectory(dir: string): void {
     }
   }
 
-  if (isCategoryDir) {
-    console.log('')
-    console.log(
-      `Example: ${relPath}/${contents.find(c => !c.startsWith('.')) ?? '<version>'}`
-    )
-  } else if (isVersionDir) {
+  if (isVersionDir) {
     console.log('')
     console.log('Commands:')
     console.log(`  ${relPath}/deploy`)
@@ -132,6 +123,11 @@ export async function router(
     return
   }
 
+  // Block path traversal outside the scripts directory
+  if (pathArg.includes('..')) {
+    die('Invalid path: ".." is not allowed')
+  }
+
   const fullPath = path.join(scriptsDir, pathArg)
   const parentPath = path.dirname(fullPath)
   const basename = path.basename(pathArg)
@@ -139,7 +135,7 @@ export async function router(
   if (!fs.existsSync(fullPath) && fs.existsSync(parentPath)) {
     const relParent = path.relative(scriptsDir, parentPath)
 
-    if (/^contract-upgrades\/[0-9]/.test(relParent)) {
+    if (/^contract-upgrades\/[0-9][^/]*$/.test(relParent)) {
       const version = path.basename(relParent)
 
       switch (basename) {

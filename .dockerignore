@@ -9,9 +9,7 @@ artifacts/
 typechain-types/
 
 # Environment files (contain secrets)
-.env
-.env.*
-!.env.example
+/.env
 
 # Git
 .git/

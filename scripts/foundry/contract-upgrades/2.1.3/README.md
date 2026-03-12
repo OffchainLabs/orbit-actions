@@ -72,11 +72,10 @@ forge script --sender $EXECUTOR --rpc-url $PARENT_CHAIN_RPC --broadcast ExecuteN
 
 If you have a multisig as executor, you can still run the above command without broadcasting to get the payload for the multisig transaction.
 
-4. That's it, upgrade has been performed. You can verify by running:
-
-```bash
-forge script --rpc-url $PARENT_CHAIN_RPC VerifyNitroContracts2Point1Point3Upgrade -vvv
-```
+4. That's it, upgrade has been performed. There is no automated verification script for
+   2.1.3 at this time. (The previous script incorrectly checked `nativeTokenDecimals`,
+   which is a 2.1.2 concern -- 2.1.3 upgrades Inbox and SequencerInbox, not the bridge,
+   and `nativeTokenDecimals()` reverts on ETH-native chains.)
 
 ## FAQ
 
