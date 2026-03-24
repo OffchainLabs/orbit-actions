@@ -86,7 +86,8 @@ contract DeployNitroContracts2Point1Point0UpgradeActionScript is DeploymentHelpe
             "/node_modules/@arbitrum/nitro-contracts-2.1.0/build/contracts/src/rollup/RollupUserLogic.sol/RollupUserLogic.json"
         );
 
-        // finally deploy upgrade action
+        // Deploy the action contract last. The CLI identifies the deployed action
+        // by taking the last CREATE from the broadcast file.
         new NitroContracts2Point1Point0UpgradeAction({
             _newWasmModuleRoot: WASM_MODULE_ROOT,
             _newChallengeManagerImpl: challengeManager,

@@ -52,7 +52,7 @@ For ArbOS upgrades, a common pre-requisite is to deploy new Nitro contracts to t
 
 ### Nitro contracts 3.1.0 (for [BoLD](https://docs.arbitrum.io/how-arbitrum-works/bold/gentle-introduction))
 
-The [`nitro-contracts 3.1.0` upgrade guide](scripts/foundry/contract-upgrades/3.1.0) will use the [BOLDUpgradeAction](https://github.com/OffchainLabs/nitro-contracts/blob/main/src/rollup/BOLDUpgradeAction.sol) from the [nitro-contract](https://github.com/OffchainLabs/nitro-contracts) repo. There is no associated ArbOS upgrade for BoLD. 
+The [`nitro-contracts 3.1.0` upgrade guide](scripts/foundry/contract-upgrades/3.1.0) will use the [BOLDUpgradeAction](https://github.com/OffchainLabs/nitro-contracts/blob/main/src/rollup/BOLDUpgradeAction.sol) from the [nitro-contract](https://github.com/OffchainLabs/nitro-contracts) repo. There is no associated ArbOS upgrade for BoLD.
 
 ### Nitro contracts 2.1.3
 
@@ -132,4 +132,94 @@ See [setCacheManager](scripts/foundry/stylus/setCacheManager).
 
 Currently limited to L2s; L3 support is expected in a future update.
 
-See [Nitro contracts 3.1.0 upgrade](https://github.com/OffchainLabs/orbit-actions/tree/main/scripts/foundry/contract-upgrades/3.1.0). 
+See [Nitro contracts 3.1.0 upgrade](https://github.com/OffchainLabs/orbit-actions/tree/main/scripts/foundry/contract-upgrades/3.1.0).
+
+# CLI
+
+The `orbit-actions` CLI provides a guided interface for running upgrade scripts. It wraps Foundry commands and handles the deploy/execute/verify workflow.
+
+```bash
+# Browse available scripts
+yarn cli                              # List top-level directories
+yarn cli -- contract-upgrades            # List versions
+yarn cli -- contract-upgrades/1.2.1      # List contents + commands
+
+# View files
+yarn cli -- contract-upgrades/1.2.1/README.md
+
+# Run contract upgrade steps individually
+yarn cli -- contract-upgrades/1.2.1/deploy
+yarn cli -- contract-upgrades/1.2.1/execute
+yarn cli -- contract-upgrades/1.2.1/verify
+
+# Run ArbOS upgrade steps individually
+yarn cli -- arbos-upgrades/at-timestamp/deploy 32
+yarn cli -- arbos-upgrades/at-timestamp/execute
+yarn cli -- arbos-upgrades/at-timestamp/verify
+```
+
+Run `yarn cli -- help` for full usage details.
+
+### Configuration
+
+The CLI reads chain-specific configuration (RPC URLs, contract addresses) from a `.env` file in the project root. See env templates in each version directory for examples.
+
+Forge behavior -- broadcasting, authentication, verbosity, verification -- is controlled via standard `FOUNDRY_*` / `ETH_*` env vars in the same `.env` file. The CLI passes `process.env` through to forge, so any env var forge recognizes will work.
+
+Key forge env vars:
+
+| Variable                 | Effect                                                           |
+| ------------------------ | ---------------------------------------------------------------- |
+| `FOUNDRY_BROADCAST=true` | Broadcast transactions (without this, scripts run in simulation) |
+| `ETH_PRIVATE_KEY=0x...`  | Private key for signing transactions                             |
+
+All `FOUNDRY_*` env vars are supported -- see [Foundry configuration](https://book.getfoundry.sh/reference/config/) for the full list.
+
+### Full upgrade flow
+
+The deploy, execute, and verify steps are run separately. This allows multisig users to submit Safe approvals between steps, and EOA users can chain the commands:
+
+```bash
+# 1. Deploy the upgrade action contract
+yarn cli -- contract-upgrades/2.1.3/deploy
+# Note the deployed action address printed at the end
+
+# 2. Set UPGRADE_ACTION_ADDRESS in .env, then execute
+yarn cli -- contract-upgrades/2.1.3/execute
+
+# 3. Verify the upgrade
+yarn cli -- contract-upgrades/2.1.3/verify
+```
+
+### Writing new deploy scripts
+
+The CLI identifies the action contract address by reading the last `CREATE` transaction from Forge's broadcast file. Deploy scripts must deploy all dependencies first and the action contract last.
+
+## Docker
+
+The CLI is available as a Docker image at `offchainlabs/orbit-actions`:
+
+```bash
+# Check contract versions
+docker run --rm \
+  -e INBOX_ADDRESS=0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9 \
+  -e INFURA_KEY=$INFURA_KEY \
+  offchainlabs/orbit-actions:versioner \
+  --network arb1
+
+# Browse upgrade scripts
+docker run --rm offchainlabs/orbit-actions contract-upgrades
+
+# Deploy with env file (simulation mode -- no FOUNDRY_BROADCAST)
+docker run --rm \
+  -v $(pwd)/.env:/app/.env \
+  -v $(pwd)/broadcast:/app/broadcast \
+  offchainlabs/orbit-actions \
+  contract-upgrades/2.1.3/deploy
+
+# Execute with broadcasting enabled
+docker run --rm \
+  -v $(pwd)/.env:/app/.env \
+  offchainlabs/orbit-actions \
+  contract-upgrades/2.1.3/execute
+```

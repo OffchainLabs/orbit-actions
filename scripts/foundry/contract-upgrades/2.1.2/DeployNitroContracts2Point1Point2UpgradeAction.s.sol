@@ -19,7 +19,8 @@ contract DeployNitroContracts2Point1Point2UpgradeActionScript is DeploymentHelpe
             "/node_modules/@arbitrum/nitro-contracts-2.1.2/build/contracts/src/bridge/ERC20Bridge.sol/ERC20Bridge.json"
         );
 
-        // deploy upgrade action
+        // Deploy the action contract last. The CLI identifies the deployed action
+        // by taking the last CREATE from the broadcast file.
         new NitroContracts2Point1Point2UpgradeAction(newBridgeImpl);
 
         vm.stopBroadcast();
