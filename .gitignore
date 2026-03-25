@@ -1,5 +1,9 @@
 node_modules
 .env
+.DS_Store
+
+# TypeScript build output
+/dist
 
 # Hardhat files
 /cache

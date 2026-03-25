@@ -53,7 +53,8 @@ contract DeployNitroContracts2Point1Point3UpgradeActionScript is DeploymentHelpe
             abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, true)
         );
 
-        // deploy upgrade action
+        // Deploy the action contract last. The CLI identifies the deployed action
+        // by taking the last CREATE from the broadcast file.
         new NitroContracts2Point1Point3UpgradeAction(
             newEthInboxImpl, newERC20InboxImpl, newEthSeqInboxImpl, newErc20SeqInboxImpl
         );

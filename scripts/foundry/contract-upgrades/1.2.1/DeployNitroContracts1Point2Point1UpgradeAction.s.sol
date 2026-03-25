@@ -82,7 +82,8 @@ contract DeployNitroContracts1Point2Point1UpgradeActionScript is Script {
             abi.encode(vm.envUint("MAX_DATA_SIZE"), reader4844Address, vm.envBool("IS_FEE_TOKEN_CHAIN"))
         );
 
-        // finally deploy upgrade action
+        // Deploy the action contract last. The CLI identifies the deployed action
+        // by taking the last CREATE from the broadcast file.
         new NitroContracts1Point2Point1UpgradeAction({
             _newWasmModuleRoot: vm.envBytes32("WASM_MODULE_ROOT"),
             _newSequencerInboxImpl: seqInbox,

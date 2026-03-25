@@ -72,12 +72,8 @@ forge script --sender $EXECUTOR --rpc-url $PARENT_CHAIN_RPC --broadcast ExecuteN
 
 If you have a multisig as executor, you can still run the above command without broadcasting to get the payload for the multisig transaction.
 
-4. That's it, upgrade has been performed. You can make sure it has successfully executed by checking the native token decimals.
-
-```bash
-# should return 18
-cast call --rpc-url $PARENT_CHAIN_RPC $BRIDGE "nativeTokenDecimals()(uint8)"
-```
+4. That's it, upgrade has been performed. There is no automated verification script for
+   2.1.3 at this time.
 
 ## FAQ
 
