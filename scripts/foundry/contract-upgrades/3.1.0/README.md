@@ -116,6 +116,85 @@ Additionally, after performing the upgrade, the `--chain.info-json` object also 
 
 11. Once the upgrade executes, monitor assertions to ensure they are created and confirmed in the new Rollup contract. Note that the new events emitted are `AssertionCreated` (which should appear every time an assertion is posted, by default this is 1 hour) and `AssertionConfirmed` (which should only appear after a challenge period has elapsed, by default this is 7 days).
 
+## Alternative Execution Methods
+
+The steps above assume the chain owner is an EOA that executes the upgrade directly. Two alternative execution methods are supported:
+
+- **Safe Multisig** -- The executor is a Gnosis Safe. Calldata is generated and signed ahead of time so validators keep running during signature collection.
+- **KMS / External Signer** -- The executor key lives in a KMS (AWS, GCP) or hardware wallet (Ledger, Trezor). Calldata is generated with the Hardhat script and executed via `cast send`.
+
+Steps 1-6 and 10-11 apply to all methods. The sections below replace steps 7-9.
+
+Both methods end with a verification step using the transaction hash:
+
+```
+$ TX_HASH=0x<upgrade-tx-hash> yarn script:bold-verify --network {mainnet|arb1|base|arbSepolia}
+```
+
+### Safe Multisig
+
+Collecting Safe signatures can take days or weeks. However, the execute calldata is independent of assertion state -- it encodes the action address and validator list, while assertion data is read at execution time from the `StateHashPreImageLookup` contract. This means signatures can be collected before stopping validators, avoiding extended downtime.
+
+Complete steps 1-6 (clone, build, configure, deploy action) first, then:
+
+1. Generate the execute payload. `L1_PRIV_KEY` does not need the executor role; any key works.
+
+```
+$ L1_PRIV_KEY=<any-key> yarn script:bold-local-execute --network {mainnet|arb1|base|arbSepolia}
+upgrade executor: 0x5FEe78...
+execute(...) call to upgrade executor: 0x1cff79cd000...
+```
+
+2. Create the Safe transaction targeting the upgrade executor address with the calldata from step 1. Collect signatures from Safe owners. Validators continue running during this period.
+
+> [!NOTE]
+> Safe signatures commit to a specific nonce. If the Safe executes any other transaction between signing and execution, the nonce increments and the collected signatures are invalidated.
+
+3. Once all signatures are collected, execute in quick succession:
+
+   a. Stop validators
+
+   b. Run `populate-lookup`:
+   ```
+   $ L1_PRIV_KEY=<any-key> yarn script:bold-populate-lookup --network {mainnet|arb1|base|arbSepolia}
+   ```
+
+   c. Execute the pre-signed Safe transaction
+
+4. Verify with `bold-verify` (see above).
+
+### KMS / External Signer
+
+If your executor key lives in a KMS or hardware wallet, generate the calldata with the Hardhat script and execute with `cast send`.
+
+Complete steps 1-8 (clone, build, configure, deploy action, stop validators, populate lookup) first, then:
+
+1. Generate the execute payload. `L1_PRIV_KEY` does not need the executor role; any key works.
+
+```
+$ L1_PRIV_KEY=<any-key> yarn script:bold-local-execute --network {mainnet|arb1|base|arbSepolia}
+upgrade executor: 0x5FEe78...
+execute(...) call to upgrade executor: 0x1cff79cd000...
+```
+
+2. Execute with `cast send`, substituting `$UPGRADE_EXECUTOR` and `$CALLDATA` from step 1:
+
+```bash
+# AWS KMS (requires AWS_KMS_KEY_ID or AWS_KMS_KEY_IDS env var)
+cast send $UPGRADE_EXECUTOR $CALLDATA --rpc-url $PARENT_CHAIN_RPC --aws
+
+# GCP KMS (requires GCP_PROJECT_ID, GCP_LOCATION, GCP_KEY_RING, GCP_KEY_NAME, GCP_KEY_VERSION)
+cast send $UPGRADE_EXECUTOR $CALLDATA --rpc-url $PARENT_CHAIN_RPC --gcp
+
+# Ledger
+cast send $UPGRADE_EXECUTOR $CALLDATA --rpc-url $PARENT_CHAIN_RPC --ledger
+
+# Trezor
+cast send $UPGRADE_EXECUTOR $CALLDATA --rpc-url $PARENT_CHAIN_RPC --trezor
+```
+
+3. Verify with `bold-verify` (see above).
+
 ## FAQ
 
 ### Node shuts down when enabling BoLD right after the upgrade
