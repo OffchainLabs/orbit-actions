@@ -6,13 +6,22 @@ on:
 
 jobs:
   test-docker:
-    name: Test Docker Image
+    name: Test Docker Image (${{ matrix.platform }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -21,6 +30,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          platforms: ${{ matrix.platform }}
           load: true
           tags: orbit-actions:test
           cache-from: type=gha
@@ -29,4 +39,5 @@ jobs:
       - name: Run Docker smoke tests
         run: ./test/docker/test-docker.bash
         env:
+          DOCKER_DEFAULT_PLATFORM: ${{ matrix.platform }}
           DOCKER_IMAGE: orbit-actions:test
