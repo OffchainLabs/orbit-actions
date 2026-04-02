@@ -7,7 +7,7 @@ import {
   IRollupCore__factory,
 } from '../../typechain-types'
 
-const jsonOutput = process.argv.includes('--json')
+const jsonOutput = process.env.JSON_OUTPUT?.toLowerCase() === 'true'
 
 main()
   .then(() => process.exit(0))
