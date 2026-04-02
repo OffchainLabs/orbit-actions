@@ -7,10 +7,17 @@ import {
   IRollupCore__factory,
 } from '../../typechain-types'
 
+const jsonOutput = process.env.JSON_OUTPUT?.toLowerCase() === 'true'
+
 main()
   .then(() => process.exit(0))
   .catch((error: Error) => {
-    console.error(error)
+    if (jsonOutput) {
+      console.error(JSON.stringify({ error: error.message }))
+    } else {
+      console.error(error)
+    }
+    process.exit(1)
   })
 
 /**
@@ -36,6 +43,13 @@ interface RollupHashes {
 interface MetadataHashesByVersion {
   [version: string]: MetadataHashesByNativeToken & RollupHashes
 }
+interface UpgradeRecommendation {
+  message: string
+  targetVersion?: string
+  actionName?: string
+  targetVersions?: string[]
+  recommendedVersion?: string
+}
 
 /**
  * Load the referent metadata hashes
@@ -56,9 +70,11 @@ async function main() {
   const chainId = (await provider.getNetwork()).chainId
   const inboxAddress = process.env.INBOX_ADDRESS!
 
-  console.log(
-    `Get the version of Orbit chain's nitro contracts (inbox ${inboxAddress}), hosted on chain ${chainId}`
-  )
+  if (!jsonOutput) {
+    console.log(
+      `Get the version of Orbit chain's nitro contracts (inbox ${inboxAddress}), hosted on chain ${chainId}`
+    )
+  }
 
   // get all core addresses from inbox address
   const inbox = IInbox__factory.connect(inboxAddress, provider)
@@ -112,7 +128,7 @@ async function main() {
     ),
   }
 
-  if (process.env.DEV === 'true') {
+  if (process.env.DEV === 'true' && !jsonOutput) {
     console.log('\nMetadataHashes of deployed contracts:', metadataHashes, '\n')
   }
 
@@ -125,14 +141,32 @@ async function main() {
     )
     versions[key] = version
     if (key === 'Bridge' && isErc20) isFeeTokenChain = true
-    console.log(
-      `Version of deployed ${key}: ${versions[key] ? versions[key] : 'unknown'}`
-    )
+    if (!jsonOutput) {
+      console.log(
+        `Version of deployed ${key}: ${versions[key] ? versions[key] : 'unknown'}`
+      )
+    }
   })
 
   // TODO: make this more generic to support other other upgrade paths in the future
   // TODO: also check  osp
-  _checkForPossibleUpgrades(versions, isFeeTokenChain, chainId)
+  const upgradeRecommendation = _checkForPossibleUpgrades(
+    versions,
+    isFeeTokenChain,
+    chainId
+  )
+
+  if (jsonOutput) {
+    console.log(
+      JSON.stringify({
+        versions,
+        upgradeRecommendation,
+      })
+    )
+    return
+  }
+
+  console.log(upgradeRecommendation.message)
 }
 
 function _checkForPossibleUpgrades(
@@ -141,7 +175,7 @@ function _checkForPossibleUpgrades(
   },
   isFeeTokenChain: boolean,
   parentChainId: bigint
-) {
+): UpgradeRecommendation {
   // version need to be in descending order
   const targetVersionsDescending = [
     {
@@ -181,10 +215,12 @@ function _checkForPossibleUpgrades(
       parentChainId
     )
   ) {
-    console.log(
-      'This deployment can be upgraded to both v2.1.3 and v3.1.0. v3.1.0 is recommended'
-    )
-    return
+    return {
+      message:
+        'This deployment can be upgraded to both v2.1.3 and v3.1.0. v3.1.0 is recommended',
+      targetVersions: ['v2.1.3', 'v3.1.0'],
+      recommendedVersion: 'v3.1.0',
+    }
   }
 
   let canUpgradeTo = ''
@@ -207,13 +243,16 @@ function _checkForPossibleUpgrades(
     }
   }
   if (canUpgradeTo !== '') {
-    console.log(
-      `This deployment can be upgraded to ${canUpgradeTo} using ${canUpgradeToActionName}`
-    )
-    return
+    return {
+      message: `This deployment can be upgraded to ${canUpgradeTo} using ${canUpgradeToActionName}`,
+      targetVersion: canUpgradeTo,
+      actionName: canUpgradeToActionName,
+    }
   }
 
-  console.log('No upgrade path found')
+  return {
+    message: 'No upgrade path found',
+  }
 }
 
 function _canBeUpgradedToTargetVersion(
