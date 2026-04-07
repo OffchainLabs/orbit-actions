@@ -7,18 +7,9 @@ import {
   IRollupCore__factory,
 } from '../../typechain-types'
 
-const jsonOutput = process.env.JSON_OUTPUT?.toLowerCase() === 'true'
-
-main()
-  .then(() => process.exit(0))
-  .catch((error: Error) => {
-    if (jsonOutput) {
-      console.error(JSON.stringify({ error: error.message }))
-    } else {
-      console.error(error)
-    }
-    process.exit(1)
-  })
+export function isJsonMode(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env.JSON_OUTPUT?.toLowerCase() === 'true'
+}
 
 /**
  * Interfaces
@@ -44,14 +35,19 @@ interface MetadataHashesByVersion {
   [version: string]: MetadataHashesByNativeToken & RollupHashes
 }
 
-interface UpgradePath {
+export interface UpgradePath {
   actionName: string
   targetVersion: string
   isRecommendedVersion: boolean
 }
-interface UpgradeRecommendation {
+export interface UpgradeRecommendation {
   message: string
   upgradePaths?: UpgradePath[]
+}
+
+export interface OrbitVersionerReport {
+  versions: { [key: string]: string | null }
+  upgradeRecommendation: UpgradeRecommendation
 }
 
 /**
@@ -63,7 +59,7 @@ const referentMetadataHashes: MetadataHashesByVersion = metadataHashes
 /**
  * Script will
  */
-async function main() {
+async function main(): Promise<OrbitVersionerReport> {
   if (!process.env.INBOX_ADDRESS) {
     throw new Error('INBOX_ADDRESS env variable shall be set')
   }
@@ -73,11 +69,9 @@ async function main() {
   const chainId = (await provider.getNetwork()).chainId
   const inboxAddress = process.env.INBOX_ADDRESS!
 
-  if (!jsonOutput) {
-    console.log(
-      `Get the version of Orbit chain's nitro contracts (inbox ${inboxAddress}), hosted on chain ${chainId}`
-    )
-  }
+  console.log(
+    `Get the version of Orbit chain's nitro contracts (inbox ${inboxAddress}), hosted on chain ${chainId}`
+  )
 
   // get all core addresses from inbox address
   const inbox = IInbox__factory.connect(inboxAddress, provider)
@@ -131,7 +125,7 @@ async function main() {
     ),
   }
 
-  if (process.env.DEV === 'true' && !jsonOutput) {
+  if (process.env.DEV === 'true') {
     console.log('\nMetadataHashes of deployed contracts:', metadataHashes, '\n')
   }
 
@@ -144,11 +138,9 @@ async function main() {
     )
     versions[key] = version
     if (key === 'Bridge' && isErc20) isFeeTokenChain = true
-    if (!jsonOutput) {
-      console.log(
-        `Version of deployed ${key}: ${versions[key] ? versions[key] : 'unknown'}`
-      )
-    }
+    console.log(
+      `Version of deployed ${key}: ${versions[key] ? versions[key] : 'unknown'}`
+    )
   })
 
   // TODO: make this more generic to support other other upgrade paths in the future
@@ -159,17 +151,12 @@ async function main() {
     chainId
   )
 
-  if (jsonOutput) {
-    console.log(
-      JSON.stringify({
-        versions,
-        upgradeRecommendation,
-      })
-    )
-    return
-  }
-
   console.log(upgradeRecommendation.message)
+
+  return {
+    versions,
+    upgradeRecommendation,
+  }
 }
 
 function _checkForPossibleUpgrades(
@@ -282,8 +269,7 @@ function _canBeUpgradedToTargetVersion(
   parentChainId: bigint,
   verbose: boolean = false
 ): boolean {
-  const printLogs = verbose && !jsonOutput
-  if (printLogs)
+  if (verbose)
     console.log('\nChecking if deployment can be upgraded to', targetVersion)
 
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
@@ -471,7 +457,7 @@ function _canBeUpgradedToTargetVersion(
       SequencerInbox: ['v1.1.0', 'v1.1.1'],
     }
   } else {
-    if (printLogs) console.log('Unsupported target version')
+    if (verbose) console.log('Unsupported target version')
     return false
   }
 
@@ -484,8 +470,7 @@ function _canBeUpgradedToTargetVersion(
     }
     if (!supportedSourceVersions.includes(currentVersions[contract]!)) {
       // found contract that can't be upgraded to target version
-      if (printLogs)
-        console.log('Cannot upgrade', contract, 'to', targetVersion)
+      if (verbose) console.log('Cannot upgrade', contract, 'to', targetVersion)
       return false
     }
   }
@@ -580,4 +565,26 @@ async function _getAddressAtStorageSlot(
 
   // return address as checksum address
   return ethers.getAddress(formatAddress)
+}
+
+if (require.main === module) {
+  if (isJsonMode()) {
+    console.log = (...args) => console.error(...args)
+  }
+
+  main()
+    .then(result => {
+      if (isJsonMode()) {
+        process.stdout.write(`${JSON.stringify(result)}\n`)
+      }
+      process.exit(0)
+    })
+    .catch((error: Error) => {
+      if (isJsonMode()) {
+        process.stderr.write(`${JSON.stringify({ error: error.message })}\n`)
+      } else {
+        console.error(error)
+      }
+      process.exit(1)
+    })
 }
