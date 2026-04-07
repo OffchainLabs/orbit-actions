@@ -43,12 +43,15 @@ interface RollupHashes {
 interface MetadataHashesByVersion {
   [version: string]: MetadataHashesByNativeToken & RollupHashes
 }
+
+interface UpgradePath {
+  actionName: string
+  targetVersion: string
+  isRecommendedVersion: boolean
+}
 interface UpgradeRecommendation {
   message: string
-  targetVersion?: string
-  actionName?: string
-  targetVersions?: string[]
-  recommendedVersion?: string
+  upgradePaths?: UpgradePath[]
 }
 
 /**
@@ -218,8 +221,18 @@ function _checkForPossibleUpgrades(
     return {
       message:
         'This deployment can be upgraded to both v2.1.3 and v3.1.0. v3.1.0 is recommended',
-      targetVersions: ['v2.1.3', 'v3.1.0'],
-      recommendedVersion: 'v3.1.0',
+      upgradePaths: [
+        {
+          actionName: 'NitroContracts2Point1Point3UpgradeAction',
+          targetVersion: 'v2.1.3',
+          isRecommendedVersion: false,
+        },
+        {
+          actionName: 'BOLDUpgradeAction',
+          targetVersion: 'v3.1.0',
+          isRecommendedVersion: true,
+        },
+      ],
     }
   }
 
@@ -245,8 +258,13 @@ function _checkForPossibleUpgrades(
   if (canUpgradeTo !== '') {
     return {
       message: `This deployment can be upgraded to ${canUpgradeTo} using ${canUpgradeToActionName}`,
-      targetVersion: canUpgradeTo,
-      actionName: canUpgradeToActionName,
+      upgradePaths: [
+        {
+          actionName: canUpgradeToActionName,
+          targetVersion: canUpgradeTo,
+          isRecommendedVersion: true,
+        },
+      ],
     }
   }
 
