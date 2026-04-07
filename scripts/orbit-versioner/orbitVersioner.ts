@@ -282,7 +282,8 @@ function _canBeUpgradedToTargetVersion(
   parentChainId: bigint,
   verbose: boolean = false
 ): boolean {
-  if (verbose)
+  const printLogs = verbose && !jsonOutput
+  if (printLogs)
     console.log('\nChecking if deployment can be upgraded to', targetVersion)
 
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
@@ -470,7 +471,7 @@ function _canBeUpgradedToTargetVersion(
       SequencerInbox: ['v1.1.0', 'v1.1.1'],
     }
   } else {
-    if (verbose) console.log('Unsupported target version')
+    if (printLogs) console.log('Unsupported target version')
     return false
   }
 
@@ -483,7 +484,8 @@ function _canBeUpgradedToTargetVersion(
     }
     if (!supportedSourceVersions.includes(currentVersions[contract]!)) {
       // found contract that can't be upgraded to target version
-      if (verbose) console.log('Cannot upgrade', contract, 'to', targetVersion)
+      if (printLogs)
+        console.log('Cannot upgrade', contract, 'to', targetVersion)
       return false
     }
   }
