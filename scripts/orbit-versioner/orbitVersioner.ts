@@ -7,6 +7,10 @@ import {
   IRollupCore__factory,
 } from '../../typechain-types'
 
+export function isJsonMode(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env.JSON_OUTPUT?.toLowerCase() === 'true'
+}
+
 /**
  * Interfaces
  */
@@ -561,4 +565,26 @@ async function _getAddressAtStorageSlot(
 
   // return address as checksum address
   return ethers.getAddress(formatAddress)
+}
+
+if (require.main === module) {
+  if (isJsonMode()) {
+    console.log = () => undefined
+  }
+
+  main()
+    .then(result => {
+      if (isJsonMode()) {
+        process.stdout.write(`${JSON.stringify(result)}\n`)
+      }
+      process.exit(0)
+    })
+    .catch((error: Error) => {
+      if (isJsonMode()) {
+        process.stderr.write(`${JSON.stringify({ error: error.message })}\n`)
+      } else {
+        console.error(error)
+      }
+      process.exit(1)
+    })
 }
