@@ -59,7 +59,7 @@ const referentMetadataHashes: MetadataHashesByVersion = metadataHashes
 /**
  * Script will
  */
-export async function main(): Promise<OrbitVersionerReport> {
+async function main(): Promise<OrbitVersionerReport> {
   if (!process.env.INBOX_ADDRESS) {
     throw new Error('INBOX_ADDRESS env variable shall be set')
   }
@@ -569,7 +569,7 @@ async function _getAddressAtStorageSlot(
 
 if (require.main === module) {
   if (isJsonMode()) {
-    console.log = () => undefined
+    console.log = (...args) => console.error(...args)
   }
 
   main()
