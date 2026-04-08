@@ -7,11 +7,9 @@ import {
   IRollupCore__factory,
 } from '../../typechain-types'
 
-main()
-  .then(() => process.exit(0))
-  .catch((error: Error) => {
-    console.error(error)
-  })
+export function isJsonMode(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env.JSON_OUTPUT?.toLowerCase() === 'true'
+}
 
 /**
  * Interfaces
@@ -37,6 +35,21 @@ interface MetadataHashesByVersion {
   [version: string]: MetadataHashesByNativeToken & RollupHashes
 }
 
+export interface UpgradePath {
+  actionName: string
+  targetVersion: string
+  isRecommendedVersion: boolean
+}
+export interface UpgradeRecommendation {
+  message: string
+  upgradePaths?: UpgradePath[]
+}
+
+export interface OrbitVersionerReport {
+  versions: { [key: string]: string | null }
+  upgradeRecommendation: UpgradeRecommendation
+}
+
 /**
  * Load the referent metadata hashes
  */
@@ -46,7 +59,7 @@ const referentMetadataHashes: MetadataHashesByVersion = metadataHashes
 /**
  * Script will
  */
-async function main() {
+async function main(): Promise<OrbitVersionerReport> {
   if (!process.env.INBOX_ADDRESS) {
     throw new Error('INBOX_ADDRESS env variable shall be set')
   }
@@ -132,7 +145,18 @@ async function main() {
 
   // TODO: make this more generic to support other other upgrade paths in the future
   // TODO: also check  osp
-  _checkForPossibleUpgrades(versions, isFeeTokenChain, chainId)
+  const upgradeRecommendation = _checkForPossibleUpgrades(
+    versions,
+    isFeeTokenChain,
+    chainId
+  )
+
+  console.log(upgradeRecommendation.message)
+
+  return {
+    versions,
+    upgradeRecommendation,
+  }
 }
 
 function _checkForPossibleUpgrades(
@@ -141,7 +165,7 @@ function _checkForPossibleUpgrades(
   },
   isFeeTokenChain: boolean,
   parentChainId: bigint
-) {
+): UpgradeRecommendation {
   // version need to be in descending order
   const targetVersionsDescending = [
     {
@@ -181,10 +205,22 @@ function _checkForPossibleUpgrades(
       parentChainId
     )
   ) {
-    console.log(
-      'This deployment can be upgraded to both v2.1.3 and v3.1.0. v3.1.0 is recommended'
-    )
-    return
+    return {
+      message:
+        'This deployment can be upgraded to both v2.1.3 and v3.1.0. v3.1.0 is recommended',
+      upgradePaths: [
+        {
+          actionName: 'NitroContracts2Point1Point3UpgradeAction',
+          targetVersion: 'v2.1.3',
+          isRecommendedVersion: false,
+        },
+        {
+          actionName: 'BOLDUpgradeAction',
+          targetVersion: 'v3.1.0',
+          isRecommendedVersion: true,
+        },
+      ],
+    }
   }
 
   let canUpgradeTo = ''
@@ -207,13 +243,21 @@ function _checkForPossibleUpgrades(
     }
   }
   if (canUpgradeTo !== '') {
-    console.log(
-      `This deployment can be upgraded to ${canUpgradeTo} using ${canUpgradeToActionName}`
-    )
-    return
+    return {
+      message: `This deployment can be upgraded to ${canUpgradeTo} using ${canUpgradeToActionName}`,
+      upgradePaths: [
+        {
+          actionName: canUpgradeToActionName,
+          targetVersion: canUpgradeTo,
+          isRecommendedVersion: true,
+        },
+      ],
+    }
   }
 
-  console.log('No upgrade path found')
+  return {
+    message: 'No upgrade path found',
+  }
 }
 
 function _canBeUpgradedToTargetVersion(
@@ -521,4 +565,26 @@ async function _getAddressAtStorageSlot(
 
   // return address as checksum address
   return ethers.getAddress(formatAddress)
+}
+
+if (require.main === module) {
+  if (isJsonMode()) {
+    console.log = (...args) => console.error(...args)
+  }
+
+  main()
+    .then(result => {
+      if (isJsonMode()) {
+        process.stdout.write(`${JSON.stringify(result)}\n`)
+      }
+      process.exit(0)
+    })
+    .catch((error: Error) => {
+      if (isJsonMode()) {
+        process.stderr.write(`${JSON.stringify({ error: error.message })}\n`)
+      } else {
+        console.error(error)
+      }
+      process.exit(1)
+    })
 }
