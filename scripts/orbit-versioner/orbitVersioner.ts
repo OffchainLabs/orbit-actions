@@ -169,6 +169,10 @@ function _checkForPossibleUpgrades(
   // version need to be in descending order
   const targetVersionsDescending = [
     {
+      version: 'v3.2.0',
+      actionName: 'NitroContracts3Point2Point0UpgradeAction',
+    },
+    {
       version: 'v3.1.0',
       actionName: 'BOLD UpgradeAction',
     },
@@ -274,7 +278,19 @@ function _canBeUpgradedToTargetVersion(
 
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
 
-  if (targetVersion === 'v3.1.0') {
+  if (targetVersion === 'v3.2.0') {
+    supportedSourceVersionsPerContract = {
+      Inbox: ['v3.1.0'],
+      Outbox: ['v3.1.0'],
+      Bridge: ['v3.1.0'],
+      RollupEventInbox: ['v3.1.0'],
+      RollupProxy: ['v3.1.0'],
+      RollupAdminLogic: ['v3.1.0'],
+      RollupUserLogic: ['v3.1.0'],
+      ChallengeManager: ['v3.1.0'],
+      SequencerInbox: ['v3.1.0'],
+    }
+  } else if (targetVersion === 'v3.1.0') {
     // todo: remove once nitro supports bold for L3's
     if (parentChainId !== 1n && parentChainId !== 11155111n) {
       supportedSourceVersionsPerContract = {
@@ -521,9 +537,9 @@ async function _getMetadataHash(
   if (matches && matches.length > 1) {
     // The actual metadata hash is in the first capturing group
     return matches[1]
-  } else {
-    throw new Error('No metadata hash found in bytecode')
   }
+
+  return `codehash:${ethers.keccak256(bytecode)}`
 }
 
 async function _getLogicAddress(
