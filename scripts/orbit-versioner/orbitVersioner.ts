@@ -6,6 +6,21 @@ import {
 } from '../../typechain-types'
 import { ethers, JsonRpcProvider } from 'ethers'
 
+const HELP_TEXT = `Usage: yarn orbit:contracts:version [--help]
+
+Reports the deployed Nitro contract versions for an Orbit chain and prints any
+supported upgrade path.
+
+Required environment variables:
+  INBOX_ADDRESS     Address of the Orbit chain inbox on the parent chain
+  PARENT_CHAIN_RPC  RPC URL for the Orbit chain's parent chain
+
+Optional environment variables:
+  JSON_OUTPUT       Set to "true" to print machine-readable JSON
+
+Example:
+  INBOX_ADDRESS=0x... PARENT_CHAIN_RPC=https://... yarn orbit:contracts:version`
+
 function createLogger(jsonOutput: boolean) {
   return (...args: unknown[]) => {
     if (!jsonOutput) {
@@ -588,6 +603,12 @@ async function _getAddressAtStorageSlot(
 
 // Docker / CLI entrypoint
 if (require.main === module) {
+  const args = process.argv.slice(2)
+  if (args.includes('--help')) {
+    process.stdout.write(`${HELP_TEXT}\n`)
+    process.exit(0)
+  }
+
   const inboxAddress = process.env.INBOX_ADDRESS
   const parentRpcUrl = process.env.PARENT_CHAIN_RPC
   const jsonOutput = process.env.JSON_OUTPUT?.toLowerCase() === 'true'
