@@ -589,7 +589,7 @@ async function _getAddressAtStorageSlot(
 // Docker / CLI entrypoint
 if (require.main === module) {
   const inboxAddress = process.env.INBOX_ADDRESS
-  const parentRpcUrl = process.env.PARENT_RPC_URL
+  const parentRpcUrl = process.env.PARENT_CHAIN_RPC
   const jsonOutput = process.env.JSON_OUTPUT?.toLowerCase() === 'true'
 
   if (!inboxAddress) {
@@ -604,7 +604,7 @@ if (require.main === module) {
 
   if (!parentRpcUrl) {
     const errorMessage =
-      'PARENT_RPC_URL env variable should be set or passed as an argument'
+      'PARENT_CHAIN_RPC env variable should be set or passed as an argument'
     if (jsonOutput) {
       process.stderr.write(`${JSON.stringify({ error: errorMessage })}\n`)
       process.exit(1)
