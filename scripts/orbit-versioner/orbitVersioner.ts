@@ -1,14 +1,32 @@
-import { ethers } from 'hardhat'
 import metadataHashes from './referentMetadataHashes.json'
-import { HardhatEthersProvider } from '@nomicfoundation/hardhat-ethers/internal/hardhat-ethers-provider'
 import {
   IBridge__factory,
   IInbox__factory,
   IRollupCore__factory,
 } from '../../typechain-types'
+import { ethers, JsonRpcProvider } from 'ethers'
 
-export function isJsonMode(env: NodeJS.ProcessEnv = process.env): boolean {
-  return env.JSON_OUTPUT?.toLowerCase() === 'true'
+const HELP_TEXT = `Usage: yarn orbit:contracts:version [--help]
+
+Reports the deployed Nitro contract versions for an Orbit chain and prints any
+supported upgrade path.
+
+Required environment variables:
+  INBOX_ADDRESS     Address of the Orbit chain inbox on the parent chain
+  PARENT_CHAIN_RPC  RPC URL for the Orbit chain's parent chain
+
+Optional environment variables:
+  JSON_OUTPUT       Set to "true" to print machine-readable JSON
+
+Example:
+  INBOX_ADDRESS=0x... PARENT_CHAIN_RPC=https://... yarn orbit:contracts:version`
+
+function createLogger(jsonOutput: boolean) {
+  return (...args: unknown[]) => {
+    if (!jsonOutput) {
+      console.log(...args)
+    }
+  }
 }
 
 /**
@@ -53,23 +71,23 @@ export interface OrbitVersionerReport {
 /**
  * Load the referent metadata hashes
  */
-
 const referentMetadataHashes: MetadataHashesByVersion = metadataHashes
 
 /**
  * Script will
  */
-async function main(): Promise<OrbitVersionerReport> {
-  if (!process.env.INBOX_ADDRESS) {
-    throw new Error('INBOX_ADDRESS env variable shall be set')
-  }
+export async function runOrbitVersioner(
+  inboxAddress: string,
+  parentRpcUrl: string,
+  jsonOutput: boolean
+): Promise<OrbitVersionerReport> {
+  const log = createLogger(jsonOutput)
 
   /// get provider
-  const provider = ethers.provider
+  const provider = new ethers.JsonRpcProvider(parentRpcUrl)
   const chainId = (await provider.getNetwork()).chainId
-  const inboxAddress = process.env.INBOX_ADDRESS!
 
-  console.log(
+  log(
     `Get the version of Orbit chain's nitro contracts (inbox ${inboxAddress}), hosted on chain ${chainId}`
   )
 
@@ -126,7 +144,7 @@ async function main(): Promise<OrbitVersionerReport> {
   }
 
   if (process.env.DEV === 'true') {
-    console.log('\nMetadataHashes of deployed contracts:', metadataHashes, '\n')
+    log('\nMetadataHashes of deployed contracts:', metadataHashes, '\n')
   }
 
   let isFeeTokenChain = false
@@ -138,7 +156,7 @@ async function main(): Promise<OrbitVersionerReport> {
     )
     versions[key] = version
     if (key === 'Bridge' && isErc20) isFeeTokenChain = true
-    console.log(
+    log(
       `Version of deployed ${key}: ${versions[key] ? versions[key] : 'unknown'}`
     )
   })
@@ -151,7 +169,7 @@ async function main(): Promise<OrbitVersionerReport> {
     chainId
   )
 
-  console.log(upgradeRecommendation.message)
+  log(upgradeRecommendation.message)
 
   return {
     versions,
@@ -510,7 +528,7 @@ function _getVersionOfDeployedContract(metadataHash: string): {
 
 async function _getMetadataHash(
   contractAddress: string,
-  provider: HardhatEthersProvider
+  provider: JsonRpcProvider
 ): Promise<string> {
   const bytecode = await provider.getCode(contractAddress)
 
@@ -528,7 +546,7 @@ async function _getMetadataHash(
 
 async function _getLogicAddress(
   contractAddress: string,
-  provider: HardhatEthersProvider
+  provider: JsonRpcProvider
 ): Promise<string> {
   const logic = (
     await _getAddressAtStorageSlot(
@@ -547,7 +565,7 @@ async function _getLogicAddress(
 
 async function _getAddressAtStorageSlot(
   contractAddress: string,
-  provider: HardhatEthersProvider,
+  provider: JsonRpcProvider,
   storageSlotBytes: string
 ): Promise<string> {
   const storageValue = await provider.getStorage(
@@ -567,20 +585,47 @@ async function _getAddressAtStorageSlot(
   return ethers.getAddress(formatAddress)
 }
 
+// Docker / CLI entrypoint
 if (require.main === module) {
-  if (isJsonMode()) {
-    console.log = (...args) => console.error(...args)
+  const args = process.argv.slice(2)
+  if (args.includes('--help')) {
+    process.stdout.write(`${HELP_TEXT}\n`)
+    process.exit(0)
   }
 
-  main()
+  const inboxAddress = process.env.INBOX_ADDRESS
+  const parentRpcUrl = process.env.PARENT_CHAIN_RPC
+  const jsonOutput = process.env.JSON_OUTPUT?.toLowerCase() === 'true'
+
+  if (!inboxAddress) {
+    const errorMessage =
+      'INBOX_ADDRESS env variable should be set or passed as an argument'
+    if (jsonOutput) {
+      process.stderr.write(`${JSON.stringify({ error: errorMessage })}\n`)
+      process.exit(1)
+    }
+    throw new Error(errorMessage)
+  }
+
+  if (!parentRpcUrl) {
+    const errorMessage =
+      'PARENT_CHAIN_RPC env variable should be set or passed as an argument'
+    if (jsonOutput) {
+      process.stderr.write(`${JSON.stringify({ error: errorMessage })}\n`)
+      process.exit(1)
+    }
+    throw new Error(errorMessage)
+  }
+
+  runOrbitVersioner(inboxAddress, parentRpcUrl, jsonOutput)
     .then(result => {
-      if (isJsonMode()) {
+      if (jsonOutput) {
         process.stdout.write(`${JSON.stringify(result)}\n`)
       }
       process.exit(0)
     })
     .catch((error: Error) => {
-      if (isJsonMode()) {
+      if (jsonOutput) {
         process.stderr.write(`${JSON.stringify({ error: error.message })}\n`)
       } else {
         console.error(error)
