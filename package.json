@@ -72,7 +72,6 @@
   "dependencies": {
     "ethers": "^6.4.0"
   },
-  "main": "./dist/scripts/orbit-versioner/orbitVersioner.js",
   "types": "./dist/scripts/orbit-versioner/orbitVersioner.d.ts",
   "exports": {
     ".": {
