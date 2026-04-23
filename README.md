@@ -2,7 +2,7 @@
 
 A set of contracts for upgrading and manipulating Arbitrum chains. These contracts are similar to the [gov-action-contracts](https://github.com/ArbitrumFoundation/governance/tree/main/src/gov-action-contracts) used by Arbitrum One.
 
-## Requirments
+## Requirements
 
 [yarn](https://classic.yarnpkg.com/lang/en/docs/install/) and [foundry](https://book.getfoundry.sh/getting-started/installation) are required to run the scripts
 
