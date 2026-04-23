@@ -1,6 +1,6 @@
 # Chain Action Contracts
 
-A set of contracts that are similar to Arbitrum [gov-action-contracts](https://github.com/ArbitrumFoundation/governance/tree/main/src/gov-action-contracts), but are designed to be used with the Arbitrum chains.
+A set of contracts for upgrading and manipulating Arbitrum chains. These contracts are similar to the [gov-action-contracts](https://github.com/ArbitrumFoundation/governance/tree/main/src/gov-action-contracts) used by Arbitrum One.
 
 ## Requirments
 
@@ -31,7 +31,7 @@ Run the follow command to check the version of Nitro contracts deployed on the p
 
 ```
 $ INBOX_ADDRESS=0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9 yarn orbit:contracts:version --network arb1
-Get the version of Arbitrum chain's nitro contracts (inbox 0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9), hosted on chain 42161
+Get the version of the chain's nitro contracts (inbox 0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9), hosted on chain 42161
 Version of deployed Inbox: v1.1.1
 Version of deployed Outbox: v1.1.1
 Version of deployed SequencerInbox: v1.1.1
@@ -90,7 +90,7 @@ This action schedule an upgrade of the ArbOS to a specific version at a specific
 
 ## Common upgrade paths
 
-Here is a list of common upgrade paths that can be used to upgrade the Arbitrum chains, beginning with the most recent upgrade. These instructions are duplicated from the docs on [How to upgrade ArbOS on your Arbitrum chain](https://docs.arbitrum.io/launch-arbitrum-chain/configure-your-chain/common/validation-and-security/arbos-upgrade), specifically Steps 1 through 3. Step 4 is mentioned below under "Other Actions".
+Here is a list of common upgrade paths that can be used to upgrade Arbitrum chains, beginning with the most recent upgrade. These instructions are duplicated from the docs on [How to upgrade ArbOS on your Arbitrum chain](https://docs.arbitrum.io/launch-arbitrum-chain/configure-your-chain/common/validation-and-security/arbos-upgrade), specifically Steps 1 through 3. Step 4 is mentioned below under "Other Actions".
 
 ### [ArbOS 51 Dia](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos51)
 
