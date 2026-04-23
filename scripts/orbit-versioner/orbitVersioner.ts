@@ -274,7 +274,20 @@ function _canBeUpgradedToTargetVersion(
 
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
 
-  if (targetVersion === 'v3.1.0') {
+  if (targetVersion === 'v3.2.0') {
+    supportedSourceVersionsPerContract = {
+        Inbox: ['v3.1.0'],
+        Outbox: ['v3.1.0'],
+        Bridge: ['v3.1.0'],
+        RollupEventInbox: ['any'],
+        RollupProxy: ['any'],
+        RollupAdminLogic: ['v3.1.0'],
+        RollupUserLogic: ['v3.1.0'],
+        ChallengeManager: ['v3.1.0'],
+        SequencerInbox: ['v3.1.0'],
+      }
+  }
+  else if (targetVersion === 'v3.1.0') {
     // todo: remove once nitro supports bold for L3's
     if (parentChainId !== 1n && parentChainId !== 11155111n) {
       supportedSourceVersionsPerContract = {
