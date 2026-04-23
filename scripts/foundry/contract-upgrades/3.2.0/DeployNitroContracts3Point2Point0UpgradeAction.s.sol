@@ -22,7 +22,7 @@ contract DeployNitroContracts3Point2Point0UpgradeActionScript is DeploymentHelpe
 
         // Deploy the action contract last. The CLI identifies the deployed action
         // by taking the last CREATE from the broadcast file.
-        new NitroContracts3Point2Point0UpgradeAction(newAdminLogic, newUserLogic);
+        new NitroContracts3Point2Point0UpgradeAction{salt: 0}(newAdminLogic, newUserLogic);
 
         vm.stopBroadcast();
     }
