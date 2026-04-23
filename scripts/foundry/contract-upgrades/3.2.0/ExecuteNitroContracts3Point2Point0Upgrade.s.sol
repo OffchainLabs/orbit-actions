@@ -3,8 +3,7 @@ pragma solidity 0.8.16;
 
 import "forge-std/Script.sol";
 import {
-    NitroContracts3Point2Point0UpgradeAction,
-    ProxyAdmin
+    NitroContracts3Point2Point0UpgradeAction
 } from "../../../../contracts/parent-chain/contract-upgrades/NitroContracts3Point2Point0UpgradeAction.sol";
 import {IUpgradeExecutor} from "@offchainlabs/upgrade-executor/src/IUpgradeExecutor.sol";
 
