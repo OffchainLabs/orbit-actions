@@ -1,23 +1,36 @@
 # Nitro contracts 3.2.0 upgrade
 
-These scripts deploy and execute the `NitroContracts3Point2Point0UpgradeAction` contract which allows Orbit chains to upgrade to [3.2.0 release](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v3.2.0).
+These scripts deploy and execute the `NitroContracts3Point2Point0UpgradeAction` contract which allows Orbit chains to upgrade to [3.2.0 release](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v3.2.0). Predeployed instances of the upgrade action exist on the chains listed in the following section.
 
 `NitroContracts3Point2Point0UpgradeAction` will perform the following action:
 
-1. TODO: describe upgrade steps
+1. Upgrade `RollupAdminLogic` (primary proxy implementation) to v3.2.0
+2. Upgrade `RollupUserLogic` (secondary proxy implementation) to v3.2.0
+
+Note that only the rollup logic contracts are upgraded. Other contracts (bridge, inbox, sequencer inbox, outbox, challenge manager) are unchanged as the diff between v3.2.0 and v3.1.0 for those contracts is not relevant for existing chains. There is no associated ArbOS upgrade for this version.
 
 ## Requirements
 
 This upgrade only supports upgrading from the following [nitro-contract release](https://github.com/OffchainLabs/nitro-contracts/releases):
 
-- TODO: list supported source versions per contract
+- Inbox: v3.1.0
+- Outbox: v3.1.0
+- SequencerInbox: v3.1.0
+- Bridge: v3.1.0
+- RollupEventInbox: any
+- RollupProxy: any
+- RollupAdminLogic: v3.1.0
+- RollupUserLogic: v3.1.0
+- ChallengeManager: v3.1.0
 
 Please refer to the top [README](/README.md#check-version-and-upgrade-path) `Check Version and Upgrade Path` on how to determine your current nitro contracts version.
 
 ## Deployed instances
 
 ### Mainnets
-- TODO
+- L1 Mainnet: TODO
+- L2 Arb1: TODO
+- L2 Base: TODO
 
 ### Testnets
 - TODO
@@ -48,7 +61,13 @@ forge script --sender $EXECUTOR --rpc-url $PARENT_CHAIN_RPC --broadcast ExecuteN
 
 If you have a multisig as executor, you can still run the above command without broadcasting to get the payload for the multisig transaction.
 
-4. That's it, upgrade has been performed. TODO: add verification instructions.
+4. Verify the upgrade was successful by running the verify script against the rollup:
+
+```bash
+forge script --rpc-url $PARENT_CHAIN_RPC VerifyNitroContracts3Point2Point0Upgrade -vvv
+```
+
+This pranks the rollup owner and calls `increaseBaseStake` (new in v3.2.0). If the call succeeds, the upgrade was applied correctly. If it reverts, the rollup is still on the old implementation.
 
 ## FAQ
 
