@@ -1,6 +1,6 @@
-# Orbit Action Contracts
+# Chain Action Contracts
 
-A set of contracts that are similar to Arbitrum [gov-action-contracts](https://github.com/ArbitrumFoundation/governance/tree/main/src/gov-action-contracts), but are designed to be used with the Orbit chains.
+A set of contracts for upgrading and manipulating Arbitrum chains. These contracts are similar to the [gov-action-contracts](https://github.com/ArbitrumFoundation/governance/tree/main/src/gov-action-contracts) used by Arbitrum One.
 
 ## Requirments
 
@@ -10,13 +10,13 @@ Most of the action contracts only support the following ownership setup:
 
 - Rollup Contract on Parent Chain owned by a `ParentUpgradeExecutor`
 - Rollup ProxyAdmin on Parent Chain owned by a `ParentUpgradeExecutor`
-- Arb Owner on the Child Orbit Chain is granted to alias of `ParentUpgradeExecutor`
-- Arb Owner on the Child Orbit Chain is granted to `ChildUpgradeExecutor`
+- Arb Owner on the Child Arbitrum Chain is granted to alias of `ParentUpgradeExecutor`
+- Arb Owner on the Child Arbitrum Chain is granted to `ChildUpgradeExecutor`
 
 For token bridge related operations, these are the additional requirements:
 
 - Token Bridge ProxyAdmin on Parent Chain owned by `ParentUpgradeExecutor`
-- Token Bridge ProxyAdmin on Child Orbit Chain owned by `ChildUpgradeExecutor`
+- Token Bridge ProxyAdmin on Child Arbitrum Chain owned by `ChildUpgradeExecutor`
 - Parent Chain Gateway Router and Custom Gateway owned by `ParentUpgradeExecutor`
 
 ## Setup
@@ -27,11 +27,11 @@ yarn install
 
 ## Check Version and Upgrade Path
 
-Run the follow command to check the version of Nitro contracts deployed on the parent chain of your Orbit chain.
+Run the follow command to check the version of Nitro contracts deployed on the parent chain of your Arbitrum chain.
 
 ```
 $ INBOX_ADDRESS=0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9 yarn orbit:contracts:version --network arb1
-Get the version of Orbit chain's nitro contracts (inbox 0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9), hosted on chain 42161
+Get the version of the chain's nitro contracts (inbox 0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9), hosted on chain 42161
 Version of deployed Inbox: v1.1.1
 Version of deployed Outbox: v1.1.1
 Version of deployed SequencerInbox: v1.1.1
@@ -46,9 +46,9 @@ For other networks, replace `arb1` with the network name and configure INFURA_KE
 
 ## Nitro Contracts Upgrades
 
-_This section is also referenced in the documentation on ["How to upgrade ArbOS on your Orbit chain"](https://docs.arbitrum.io/launch-orbit-chain/how-tos/arbos-upgrade)_ as Step 2 and Step 3.
+_This section is also referenced in the documentation on ["How to upgrade ArbOS on your Arbitrum chain"](https://docs.arbitrum.io/launch-arbitrum-chain/configure-your-chain/common/validation-and-security/arbos-upgrade)_ as Step 2 and Step 3.
 
-For ArbOS upgrades, a common pre-requisite is to deploy new Nitro contracts to the parent chain of your Orbit chain before scheduling the ArbOS upgrade. These contracts include the rollup logic, fraud proof contracts, and interfaces for interacting with Nitro precompiles. The scripts and instructions in this repository are meant for Orbit chain owners to upgrade the aforementioned contracts, set the new WASM module root, and then schedule the ArbOS upgrade.
+For ArbOS upgrades, a common pre-requisite is to deploy new Nitro contracts to the parent chain of your Arbitrum chain before scheduling the ArbOS upgrade. These contracts include the rollup logic, fraud proof contracts, and interfaces for interacting with Nitro precompiles. The scripts and instructions in this repository are meant for Arbitrum chain owners to upgrade the aforementioned contracts, set the new WASM module root, and then schedule the ArbOS upgrade.
 
 ### Nitro contracts 3.1.0 (for [BoLD](https://docs.arbitrum.io/how-arbitrum-works/bold/gentle-introduction))
 
@@ -72,17 +72,17 @@ Do not perform this upgrade if the above requirements aren't met.
 
 ### Nitro contracts 2.1.0 (for [ArbOS 32 Bianca](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos32))
 
-The [`nitro-contracts 2.1.0` upgrade action](scripts/foundry/contract-upgrades/2.1.0) will deploy `nitro-contracts v2.1.0` contracts to your Orbit's parent chain. Note that this action will only work for chains with `nitro-contracts v1.2.1` or `nitro-contracts v1.3.0`.
+The [`nitro-contracts 2.1.0` upgrade action](scripts/foundry/contract-upgrades/2.1.0) will deploy `nitro-contracts v2.1.0` contracts to your Arbitrum chain's parent chain. Note that this action will only work for chains with `nitro-contracts v1.2.1` or `nitro-contracts v1.3.0`.
 
-Note: nitro contracts upgrade brings support for AnyTrust fast confirmations and Stylus. However, Stylus will be enabled only when `ArbOS 32 Bianca` upgrade takes place, once it will be officially supported for Orbit chains.
+Note: nitro contracts upgrade brings support for AnyTrust fast confirmations and Stylus. However, Stylus will be enabled only when `ArbOS 32 Bianca` upgrade takes place, once it will be officially supported for Arbitrum chains.
 
 ### Nitro contracts 1.2.1 (for [ArbOS 20 Atlas](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos20))
 
-The [`nitro-contracts 1.2.1` upgrade action](scripts/foundry/contract-upgrades/1.2.1) will deploy `nitro-contracts v1.2.1` contracts to your Orbit's parent chain. Note that this action will only work for chains with `nitro-contracts v1.1.0` or `nitro-contracts v.1.1.1`. ArbOS 20 Atlas, shipped via [Nitro v2.3.0](https://github.com/OffchainLabs/nitro/releases/tag/v2.3.0), requires [**`nitro-contracts v1.2.1`**](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v1.2.1) or higher.
+The [`nitro-contracts 1.2.1` upgrade action](scripts/foundry/contract-upgrades/1.2.1) will deploy `nitro-contracts v1.2.1` contracts to your Arbitrum chain's parent chain. Note that this action will only work for chains with `nitro-contracts v1.1.0` or `nitro-contracts v.1.1.1`. ArbOS 20 Atlas, shipped via [Nitro v2.3.0](https://github.com/OffchainLabs/nitro/releases/tag/v2.3.0), requires [**`nitro-contracts v1.2.1`**](https://github.com/OffchainLabs/nitro-contracts/releases/tag/v1.2.1) or higher.
 
 ## Scheduling the ArbOS upgrade
 
-_This section is also referenced in the documentation on ["How to upgrade ArbOS on your Orbit chain"](https://docs.arbitrum.io/launch-orbit-chain/how-tos/arbos-upgrade)_
+_This section is also referenced in the documentation on ["How to upgrade ArbOS on your Arbitrum chain"](https://docs.arbitrum.io/launch-arbitrum-chain/configure-your-chain/common/validation-and-security/arbos-upgrade)_
 
 Next, you will need to schedule the actual upgrade using the [ArbOS upgrade at timestamp action](scripts/foundry/arbos-upgrades/at-timestamp).
 
@@ -90,7 +90,7 @@ This action schedule an upgrade of the ArbOS to a specific version at a specific
 
 ## Common upgrade paths
 
-Here is a list of common upgrade paths that can be used to upgrade the Orbit chains, beginning with the most recent upgrade. These instructions are duplicated from the docs on [How to upgrade ArbOS on your Orbit chain](https://docs.arbitrum.io/launch-orbit-chain/how-tos/arbos-upgrade), specifically Steps 1 through 3. Step 4 is mentioned below under "Other Actions".
+Here is a list of common upgrade paths that can be used to upgrade Arbitrum chains, beginning with the most recent upgrade. These instructions are duplicated from the docs on [How to upgrade ArbOS on your Arbitrum chain](https://docs.arbitrum.io/launch-arbitrum-chain/configure-your-chain/common/validation-and-security/arbos-upgrade), specifically Steps 1 through 3. Step 4 is mentioned below under "Other Actions".
 
 ### [ArbOS 51 Dia](https://docs.arbitrum.io/run-arbitrum-node/arbos-releases/arbos51)
 
@@ -118,7 +118,7 @@ Here is a list of common upgrade paths that can be used to upgrade the Orbit cha
 
 # Other Actions
 
-Below are additional on-chain actions that Orbit chain owners and maintainers can take as part of [Step 4: Enable ArbOS specific configurations or feature flags](https://docs.arbitrum.io/launch-orbit-chain/how-tos/arbos-upgrade#step-4-enable-arbos-specific-configurations-or-feature-flags-not-always-required).
+Below are additional on-chain actions that Arbitrum chain owners and maintainers can take as part of [Step 4: Enable ArbOS specific configurations or feature flags](https://docs.arbitrum.io/launch-arbitrum-chain/configure-your-chain/common/validation-and-security/arbos-upgrade#step-4-enable-arbos-specific-configurations-or-feature-flags-not-always-required).
 
 ## Enable Fast Confirmation
 
@@ -132,11 +132,11 @@ See [setCacheManager](scripts/foundry/stylus/setCacheManager).
 
 Currently limited to L2s; L3 support is expected in a future update.
 
-See [Nitro contracts 3.1.0 upgrade](https://github.com/OffchainLabs/orbit-actions/tree/main/scripts/foundry/contract-upgrades/3.1.0).
+See [Nitro contracts 3.1.0 upgrade](https://github.com/OffchainLabs/chain-actions/tree/main/scripts/foundry/contract-upgrades/3.1.0).
 
 # CLI
 
-The `orbit-actions` CLI provides a guided interface for running upgrade scripts. It wraps Foundry commands and handles the deploy/execute/verify workflow.
+The `chain-actions` CLI provides a guided interface for running upgrade scripts. It wraps Foundry commands and handles the deploy/execute/verify workflow.
 
 ```bash
 # Browse available scripts
@@ -197,29 +197,29 @@ The CLI identifies the action contract address by reading the last `CREATE` tran
 
 ## Docker
 
-The CLI is available as a Docker image at `offchainlabs/orbit-actions`:
+The CLI is available as a Docker image at `offchainlabs/chain-actions`:
 
 ```bash
 # Check contract versions
 docker run --rm \
   -e INBOX_ADDRESS=0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9 \
   -e INFURA_KEY=$INFURA_KEY \
-  offchainlabs/orbit-actions:versioner \
+  offchainlabs/chain-actions:versioner \
   --network arb1
 
 # Browse upgrade scripts
-docker run --rm offchainlabs/orbit-actions contract-upgrades
+docker run --rm offchainlabs/chain-actions contract-upgrades
 
 # Deploy with env file (simulation mode -- no FOUNDRY_BROADCAST)
 docker run --rm \
   -v $(pwd)/.env:/app/.env \
   -v $(pwd)/broadcast:/app/broadcast \
-  offchainlabs/orbit-actions \
+  offchainlabs/chain-actions \
   contract-upgrades/2.1.3/deploy
 
 # Execute with broadcasting enabled
 docker run --rm \
   -v $(pwd)/.env:/app/.env \
-  offchainlabs/orbit-actions \
+  offchainlabs/chain-actions \
   contract-upgrades/2.1.3/execute
 ```
