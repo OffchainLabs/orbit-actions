@@ -16,11 +16,9 @@ contract ExecuteNitroContracts3Point2Point0UpgradeScript is Script {
         NitroContracts3Point2Point0UpgradeAction upgradeAction =
             NitroContracts3Point2Point0UpgradeAction(vm.envAddress("UPGRADE_ACTION_ADDRESS"));
 
-        // TODO: load and validate env parameters
-
         // prepare upgrade calldata
         bytes memory upgradeCalldata =
-            abi.encodeCall(NitroContracts3Point2Point0UpgradeAction.perform, ());
+            abi.encodeCall(NitroContracts3Point2Point0UpgradeAction.perform, (vm.envAddress("ROLLUP_ADDRESS")));
 
         // execute the upgrade
         IUpgradeExecutor executor = IUpgradeExecutor(vm.envAddress("PARENT_UPGRADE_EXECUTOR_ADDRESS"));
