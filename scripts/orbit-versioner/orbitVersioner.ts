@@ -104,7 +104,11 @@ async function main(): Promise<OrbitVersionerReport> {
   }
 
   if (process.env.DEV === 'true') {
-    console.log('\nLogic addresses of deployed contracts:', logicAddresses, '\n')
+    console.log(
+      '\nLogic addresses of deployed contracts:',
+      logicAddresses,
+      '\n'
+    )
   }
 
   let isFeeTokenChain = false
@@ -117,7 +121,10 @@ async function main(): Promise<OrbitVersionerReport> {
     if (!result.version) {
       // fall back to metadata hash lookup
       try {
-        const metadataHash = await _getMetadataHash(logicAddresses[key], provider)
+        const metadataHash = await _getMetadataHash(
+          logicAddresses[key],
+          provider
+        )
         if (process.env.DEV === 'true') {
           console.log(`MetadataHash of deployed ${key}:`, metadataHash)
         }
@@ -271,18 +278,17 @@ function _canBeUpgradedToTargetVersion(
 
   if (targetVersion === 'v3.2.0') {
     supportedSourceVersionsPerContract = {
-        Inbox: ['v3.1.0'],
-        Outbox: ['v3.1.0'],
-        Bridge: ['v3.1.0'],
-        RollupEventInbox: ['any'],
-        RollupProxy: ['any'],
-        RollupAdminLogic: ['v3.1.0'],
-        RollupUserLogic: ['v3.1.0'],
-        ChallengeManager: ['v3.1.0'],
-        SequencerInbox: ['v3.1.0'],
-      }
-  }
-  else if (targetVersion === 'v3.1.0') {
+      Inbox: ['v3.1.0'],
+      Outbox: ['v3.1.0'],
+      Bridge: ['v3.1.0'],
+      RollupEventInbox: ['any'],
+      RollupProxy: ['any'],
+      RollupAdminLogic: ['v3.1.0'],
+      RollupUserLogic: ['v3.1.0'],
+      ChallengeManager: ['v3.1.0'],
+      SequencerInbox: ['v3.1.0'],
+    }
+  } else if (targetVersion === 'v3.1.0') {
     // todo: remove once nitro supports bold for L3's
     if (parentChainId !== 1n && parentChainId !== 11155111n) {
       supportedSourceVersionsPerContract = {

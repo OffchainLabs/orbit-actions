@@ -16,7 +16,10 @@ contract ExecuteNitroContracts3Point2Point0UpgradeScript is Script {
         NitroContracts3Point2Point0UpgradeAction upgradeAction =
             NitroContracts3Point2Point0UpgradeAction(vm.envAddress("UPGRADE_ACTION_ADDRESS"));
 
-        require(address(upgradeAction).code.length > 0, "Upgrade action contract not found at provided address, run deployment script first");
+        require(
+            address(upgradeAction).code.length > 0,
+            "Upgrade action contract not found at provided address, run deployment script first"
+        );
 
         // prepare upgrade calldata
         bytes memory upgradeCalldata =

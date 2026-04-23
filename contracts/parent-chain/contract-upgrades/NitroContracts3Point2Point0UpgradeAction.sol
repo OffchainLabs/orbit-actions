@@ -5,6 +5,7 @@ interface IRollupAdminLogic {
     function upgradeSecondaryTo(address newImplementation) external;
     function upgradeTo(address newImplementation) external;
 }
+
 /**
  * @title   NitroContracts3Point2Point0UpgradeAction
  * @notice  Upgrade action for nitro contracts v3.2.0
