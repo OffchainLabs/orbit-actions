@@ -6,7 +6,7 @@ import {
 } from '../../typechain-types'
 import { ethers, JsonRpcProvider } from 'ethers'
 
-const HELP_TEXT = `Usage: yarn orbit:contracts:version [--help]
+const HELP_TEXT = `Usage: yarn chain:contracts:version [--help]
 
 Reports the deployed Nitro contract versions for an Orbit chain and prints any
 supported upgrade path.
@@ -19,7 +19,7 @@ Optional environment variables:
   JSON_OUTPUT       Set to "true" to print machine-readable JSON
 
 Example:
-  INBOX_ADDRESS=0x... PARENT_CHAIN_RPC=https://... yarn orbit:contracts:version`
+  INBOX_ADDRESS=0x... PARENT_CHAIN_RPC=https://... yarn chain:contracts:version`
 
 function createLogger(jsonOutput: boolean) {
   return (...args: unknown[]) => {
@@ -68,6 +68,8 @@ export interface OrbitVersionerReport {
   upgradeRecommendation: UpgradeRecommendation
 }
 
+export type ChainVersionerReport = OrbitVersionerReport
+
 /**
  * Load the referent metadata hashes
  */
@@ -76,7 +78,7 @@ const referentMetadataHashes: MetadataHashesByVersion = metadataHashes
 /**
  * Script will
  */
-export async function runOrbitVersioner(
+export async function runChainVersioner(
   inboxAddress: string,
   parentRpcUrl: string,
   jsonOutput: boolean
@@ -617,7 +619,7 @@ if (require.main === module) {
     throw new Error(errorMessage)
   }
 
-  runOrbitVersioner(inboxAddress, parentRpcUrl, jsonOutput)
+  runChainVersioner(inboxAddress, parentRpcUrl, jsonOutput)
     .then(result => {
       if (jsonOutput) {
         process.stdout.write(`${JSON.stringify(result)}\n`)

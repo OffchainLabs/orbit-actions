@@ -1,11 +1,11 @@
 {
-  "name": "orbit-actions",
+  "name": "@arbitrum/chain-actions",
   "version": "1.0.0",
   "repository": "https://github.com/OffchainLabs/blockchain-eng-template.git",
   "license": "Apache 2.0",
   "scripts": {
     "build:cli": "tsc -p tsconfig.cli.json",
-    "build:package": "rm -rf dist && tsc -p tsconfig.cli.json && tsc -p tsconfig.package-runtime.json",
+    "build:package": "rm -rf dist && yarn build && tsc -p tsconfig.package-runtime.json",
     "cli": "ts-node src/cli/index.ts",
     "prepack": "yarn build:package",
     "prepare": "forge install && cd lib/arbitrum-sdk && yarn",
@@ -15,7 +15,7 @@
     "upload-all-selectors": "forge build && find ./out -name \"*.json\" -exec cast upload-signature {} +",
     "format": "cat .prettierignore .gitignore > .pignore && prettier --ignore-path .pignore \"**/*.{js,ts,json}\" --write && rm .pignore && forge fmt",
     "lint": "tsc --noEmit && eslint . && forge fmt --check",
-    "build": "hardhat compile && forge build",
+    "build": "hardhat compile && hardhat typechain && forge build",
     "clean": "hardhat clean && forge clean",
     "test:unit": "./test/unit/test-unit.bash",
     "test:fork": "./test/fork/test-fork.bash",
@@ -25,7 +25,7 @@
     "test:sigs": "./test/signatures/test-sigs.bash",
     "test:storage": "./test/storage/test-storage.bash",
     "test:docker": "./test/docker/test-docker.bash",
-    "orbit:contracts:version": "ts-node scripts/orbit-versioner/orbitVersioner.ts",
+    "chain:contracts:version": "ts-node scripts/chain-versioner/chainVersioner.ts",
     "gas-snapshot": "forge snapshot --match-path \"test/unit/**/*.t.sol\"",
     "fix": "yarn format; yarn test:sigs; yarn test:storage; yarn gas-snapshot"
   },
@@ -72,16 +72,16 @@
   "dependencies": {
     "ethers": "^6.4.0"
   },
-  "types": "./dist/scripts/orbit-versioner/orbitVersioner.d.ts",
+  "types": "./dist/scripts/chain-versioner/chainVersioner.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/scripts/orbit-versioner/orbitVersioner.d.ts",
-      "require": "./dist/scripts/orbit-versioner/orbitVersioner.js",
-      "default": "./dist/scripts/orbit-versioner/orbitVersioner.js"
+      "types": "./dist/scripts/chain-versioner/chainVersioner.d.ts",
+      "require": "./dist/scripts/chain-versioner/chainVersioner.js",
+      "default": "./dist/scripts/chain-versioner/chainVersioner.js"
     }
   },
   "files": [
-    "dist/scripts/orbit-versioner/**",
+    "dist/scripts/chain-versioner/**",
     "dist/typechain-types/**"
   ]
 }

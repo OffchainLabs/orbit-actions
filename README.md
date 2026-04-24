@@ -32,7 +32,7 @@ Run the following command to check the version of Nitro contracts deployed on th
 ```
 $ INBOX_ADDRESS=0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9 \
   PARENT_CHAIN_RPC=https://arb1.arbitrum.io/rpc \
-  yarn orbit:contracts:version
+  yarn chain:contracts:version
 Get the version of Orbit chain's nitro contracts (inbox 0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9), hosted on chain 42161
 Version of deployed Inbox: v1.1.1
 Version of deployed Outbox: v1.1.1
@@ -44,7 +44,7 @@ Version of deployed RollupUserLogic: v1.1.1
 This deployment can be upgraded to v1.2.1 using NitroContracts1Point2Point1UpgradeAction
 ```
 
-Run `yarn orbit:contracts:version --help` for usage details.
+Run `yarn chain:contracts:version --help` for usage details.
 
 ## Nitro Contracts Upgrades
 
@@ -204,9 +204,11 @@ The CLI is available as a Docker image at `offchainlabs/chain-actions`:
 ```bash
 # Check contract versions
 docker run --rm \
+  --entrypoint yarn \
   -e INBOX_ADDRESS=0xaE21fDA3de92dE2FDAF606233b2863782Ba046F9 \
   -e PARENT_CHAIN_RPC=https://arb1.arbitrum.io/rpc \
-  offchainlabs/orbit-actions:versioner
+  offchainlabs/chain-actions \
+  chain:contracts:version
 
 # Browse upgrade scripts
 docker run --rm offchainlabs/chain-actions contract-upgrades
