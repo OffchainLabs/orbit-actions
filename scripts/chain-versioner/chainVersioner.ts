@@ -600,8 +600,7 @@ if (require.main === module) {
   const jsonOutput = process.env.JSON_OUTPUT?.toLowerCase() === 'true'
 
   if (!inboxAddress) {
-    const errorMessage =
-      'INBOX_ADDRESS env variable should be set or passed as an argument'
+    const errorMessage = 'INBOX_ADDRESS env variable should be set'
     if (jsonOutput) {
       process.stderr.write(`${JSON.stringify({ error: errorMessage })}\n`)
       process.exit(1)
@@ -610,8 +609,7 @@ if (require.main === module) {
   }
 
   if (!parentRpcUrl) {
-    const errorMessage =
-      'PARENT_CHAIN_RPC env variable should be set or passed as an argument'
+    const errorMessage = 'PARENT_CHAIN_RPC env variable should be set'
     if (jsonOutput) {
       process.stderr.write(`${JSON.stringify({ error: errorMessage })}\n`)
       process.exit(1)
