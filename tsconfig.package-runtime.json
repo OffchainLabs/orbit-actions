@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": ".",
+    "declaration": true
+  },
+  "include": [
+    "scripts/chain-versioner/chainVersioner.ts",
+    "typechain-types/**/*.ts"
+  ],
+  "exclude": ["./lib/"]
+}

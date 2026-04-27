@@ -119,7 +119,7 @@ run_test "help command" docker run --rm "$IMAGE_NAME" help
 # Test 7: Yarn scripts work
 echo ""
 echo "--- Yarn Scripts ---"
-run_test "yarn orbit:contracts:version --help" docker run --rm --entrypoint yarn "$IMAGE_NAME" orbit:contracts:version --help
+run_test "yarn chain:contracts:version --help" docker run --rm --entrypoint yarn "$IMAGE_NAME" chain:contracts:version --help
 
 # Test 8: Unit tests pass
 echo ""
