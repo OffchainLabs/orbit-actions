@@ -8,8 +8,6 @@
     "build:package": "rm -rf dist && yarn build && tsc -p tsconfig.package-runtime.json",
     "cli": "ts-node src/cli/index.ts",
     "prepack": "yarn build:package",
-    "prepare": "forge install && cd lib/arbitrum-sdk && yarn",
-    "minimal-publish": "./scripts/publish.bash",
     "minimal-install": "yarn --ignore-scripts && forge install",
     "audit:ci": "audit-ci --config ./audit-ci.jsonc",
     "upload-all-selectors": "forge build && find ./out -name \"*.json\" -exec cast upload-signature {} +",

@@ -24,16 +24,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: yarn
           registry-url: https://registry.npmjs.org
+
+      - name: Set up Yarn
+        run: npm install --global yarn@1.22.22
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: stable
-
-      - name: Set up Yarn
-        run: npm install --global yarn@1.22.22
 
       - name: Install dependencies
         run: yarn --frozen-lockfile
@@ -47,9 +46,9 @@ jobs:
         run: yarn build:package
 
       - name: Pack package
-        run: npm pack --dry-run --ignore-scripts
+        run: npm publish --dry-run
 
       - name: Publish package
-        run: npm publish --access public --ignore-scripts
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
