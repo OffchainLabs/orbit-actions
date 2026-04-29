@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -22,5 +24,14 @@ jobs:
         with:
           version: stable
 
-      - run: yarn && yarn build
-      - run: yarn lint
+      - name: Install dependencies
+        run: yarn
+
+      - name: Prepare arbitrum-sdk submodule
+        run: cd lib/arbitrum-sdk && yarn
+
+      - name: Build
+        run: yarn build
+
+      - name: Lint
+        run: yarn lint
