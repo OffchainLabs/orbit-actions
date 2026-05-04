@@ -4,8 +4,23 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Version to publish to npm
+        description: Base version to publish to npm, for example 1.0.2
         required: true
+        type: string
+      tag:
+        description: Release channel
+        required: true
+        default: alpha
+        type: choice
+        options:
+          - alpha
+          - beta
+          - rc
+          - latest
+      prerelease:
+        description: Prerelease number for alpha, beta, or rc
+        required: false
+        default: '0'
         type: string
 
 jobs:
@@ -13,8 +28,15 @@ jobs:
     name: Publish to npm
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      id-token: write
+      contents: write
     steps:
+      - name: Ensure main branch
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "This workflow can only be run from main." >&2
+          exit 1
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -23,7 +45,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 24
           registry-url: https://registry.npmjs.org
 
       - name: Set up Yarn
@@ -37,18 +59,47 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile
 
-      - name: Set package version
+      - name: Resolve package version and npm dist-tag
         env:
-          VERSION: ${{ inputs.version }}
-        run: npm version "$VERSION" --no-git-tag-version --allow-same-version
+          BASE_VERSION: ${{ inputs.version }}
+          RELEASE_CHANNEL: ${{ inputs.tag }}
+          PRERELEASE_NUMBER: ${{ inputs.prerelease }}
+        run: |
+          if [[ ! "$BASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Version must be a numeric SemVer base version like 1.0.2." >&2
+            exit 1
+          fi
+
+          if [ "$RELEASE_CHANNEL" = "release" ]; then
+            echo "NPM_PACKAGE_VERSION=$BASE_VERSION" >> "$GITHUB_ENV"
+            echo "NPM_DIST_TAG=latest" >> "$GITHUB_ENV"
+          else
+            if [[ ! "$PRERELEASE_NUMBER" =~ ^[0-9]+$ ]]; then
+              echo "Prerelease number must be a non-negative integer like 0 or 1." >&2
+              exit 1
+            fi
+            echo "NPM_PACKAGE_VERSION=$BASE_VERSION-$RELEASE_CHANNEL.$PRERELEASE_NUMBER" >> "$GITHUB_ENV"
+            echo "NPM_DIST_TAG=$RELEASE_CHANNEL" >> "$GITHUB_ENV"
+          fi
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Set package version
+        run: npm version "$NPM_PACKAGE_VERSION"
 
       - name: Build package
         run: yarn build:package
 
       - name: Pack package
-        run: npm publish --dry-run
+        run: NODE_AUTH_TOKEN="" npm publish --dry-run --tag "$NPM_DIST_TAG"
 
       - name: Publish package
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: NODE_AUTH_TOKEN="" npm publish --tag "$NPM_DIST_TAG"
+
+      - name: Push version commit and tag
+        run: |
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git push origin "v$NPM_PACKAGE_VERSION"
