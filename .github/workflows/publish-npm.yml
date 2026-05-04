@@ -10,13 +10,13 @@ on:
       tag:
         description: Release channel
         required: true
-        default: release
+        default: alpha
         type: choice
         options:
           - alpha
           - beta
           - rc
-          - release
+          - latest
       prerelease:
         description: Prerelease number for alpha, beta, or rc
         required: false
