@@ -1,4 +1,5 @@
 import metadataHashes from './referentMetadataHashes.json'
+import contractAddresses from './referentContractAddresses.json'
 import {
   IBridge__factory,
   IInbox__factory,
@@ -74,6 +75,7 @@ export type ChainVersionerReport = OrbitVersionerReport
  * Load the referent metadata hashes
  */
 const referentMetadataHashes: MetadataHashesByVersion = metadataHashes
+const referentContractAddresses: MetadataHashesByVersion = contractAddresses
 
 /**
  * Script will
@@ -104,64 +106,56 @@ export async function runChainVersioner(
   const challengeManagerAddress = await rollup.challengeManager()
   const rollupEventInboxAddress = await rollup.rollupEventInbox()
 
-  // get metadata hashes
-  const metadataHashes: { [key: string]: string } = {
-    Inbox: await _getMetadataHash(
-      await _getLogicAddress(inboxAddress, provider),
-      provider
+  // get logic addresses for each contract
+  const logicAddresses: { [key: string]: string } = {
+    Inbox: await _getLogicAddress(inboxAddress, provider),
+    Outbox: await _getLogicAddress(outboxAddress, provider),
+    SequencerInbox: await _getLogicAddress(seqInboxAddress, provider),
+    Bridge: await _getLogicAddress(bridgeAddress, provider),
+    RollupEventInbox: await _getLogicAddress(rollupEventInboxAddress, provider),
+    RollupProxy: rollupAddress,
+    RollupAdminLogic: await _getLogicAddress(rollupAddress, provider),
+    RollupUserLogic: await _getAddressAtStorageSlot(
+      rollupAddress,
+      provider,
+      '0x2b1dbce74324248c222f0ec2d5ed7bd323cfc425b336f0253c5ccfda7265546d'
     ),
-    Outbox: await _getMetadataHash(
-      await _getLogicAddress(outboxAddress, provider),
-      provider
-    ),
-    SequencerInbox: await _getMetadataHash(
-      await _getLogicAddress(seqInboxAddress, provider),
-      provider
-    ),
-    Bridge: await _getMetadataHash(
-      await _getLogicAddress(bridgeAddress, provider),
-      provider
-    ),
-    RollupEventInbox: await _getMetadataHash(
-      await _getLogicAddress(rollupEventInboxAddress, provider),
-      provider
-    ),
-    RollupProxy: await _getMetadataHash(rollupAddress, provider),
-    RollupAdminLogic: await _getMetadataHash(
-      await _getLogicAddress(rollupAddress, provider),
-      provider
-    ),
-    RollupUserLogic: await _getMetadataHash(
-      await _getAddressAtStorageSlot(
-        rollupAddress,
-        provider,
-        '0x2b1dbce74324248c222f0ec2d5ed7bd323cfc425b336f0253c5ccfda7265546d'
-      ),
-      provider
-    ),
-    ChallengeManager: await _getMetadataHash(
-      await _getLogicAddress(challengeManagerAddress, provider),
-      provider
-    ),
+    ChallengeManager: await _getLogicAddress(challengeManagerAddress, provider),
   }
 
   if (process.env.DEV === 'true') {
-    log('\nMetadataHashes of deployed contracts:', metadataHashes, '\n')
+    log('\nLogic addresses of deployed contracts:', logicAddresses, '\n')
   }
 
   let isFeeTokenChain = false
   const versions: { [key: string]: string | null } = {}
-  // get and print version per bridge contract
-  Object.keys(metadataHashes).forEach(key => {
-    const { version, isErc20 } = _getVersionOfDeployedContract(
-      metadataHashes[key]
-    )
-    versions[key] = version
-    if (key === 'Bridge' && isErc20) isFeeTokenChain = true
+
+  for (const key of Object.keys(logicAddresses)) {
+    // try address-based lookup first (for create2 deployments like v3.2.0+)
+    let result = _getVersionOfDeployedContractByAddress(logicAddresses[key])
+
+    if (!result.version) {
+      // fall back to metadata hash lookup
+      try {
+        const metadataHash = await _getMetadataHash(
+          logicAddresses[key],
+          provider
+        )
+        if (process.env.DEV === 'true') {
+          log(`MetadataHash of deployed ${key}:`, metadataHash)
+        }
+        result = _getVersionOfDeployedContract(metadataHash)
+      } catch {
+        // metadata hash extraction can fail for contracts without standard metadata
+      }
+    }
+
+    versions[key] = result.version
+    if (key === 'Bridge' && result.isErc20) isFeeTokenChain = true
     log(
       `Version of deployed ${key}: ${versions[key] ? versions[key] : 'unknown'}`
     )
-  })
+  }
 
   // TODO: make this more generic to support other other upgrade paths in the future
   // TODO: also check  osp
@@ -188,6 +182,10 @@ function _checkForPossibleUpgrades(
 ): UpgradeRecommendation {
   // version need to be in descending order
   const targetVersionsDescending = [
+    {
+      version: 'v3.2.0',
+      actionName: 'NitroContracts3Point2Point0UpgradeAction',
+    },
     {
       version: 'v3.1.0',
       actionName: 'BOLD UpgradeAction',
@@ -294,7 +292,19 @@ function _canBeUpgradedToTargetVersion(
 
   let supportedSourceVersionsPerContract: { [key: string]: string[] } = {}
 
-  if (targetVersion === 'v3.1.0') {
+  if (targetVersion === 'v3.2.0') {
+    supportedSourceVersionsPerContract = {
+      Inbox: ['v3.1.0'],
+      Outbox: ['v3.1.0'],
+      Bridge: ['v3.1.0'],
+      RollupEventInbox: ['any'],
+      RollupProxy: ['any'],
+      RollupAdminLogic: ['v3.1.0'],
+      RollupUserLogic: ['v3.1.0'],
+      ChallengeManager: ['v3.1.0'],
+      SequencerInbox: ['v3.1.0'],
+    }
+  } else if (targetVersion === 'v3.1.0') {
     // todo: remove once nitro supports bold for L3's
     if (parentChainId !== 1n && parentChainId !== 11155111n) {
       supportedSourceVersionsPerContract = {
@@ -496,6 +506,35 @@ function _canBeUpgradedToTargetVersion(
   }
   // all contracts can be upgraded to target version
   return true
+}
+
+function _getVersionOfDeployedContractByAddress(logicAddress: string): {
+  version: string | null
+  isErc20: boolean
+} {
+  const normalized = logicAddress.toLowerCase()
+  for (const [version] of Object.entries(referentContractAddresses).reverse()) {
+    const versionAddresses = referentContractAddresses[version]
+    const allAddresses = [
+      ...Object.values(versionAddresses.eth).flat(),
+      ...Object.values(versionAddresses.erc20).flat(),
+      ...versionAddresses.RollupProxy,
+      ...versionAddresses.RollupAdminLogic,
+      ...versionAddresses.RollupUserLogic,
+      ...versionAddresses.ChallengeManager,
+    ].map(a => a.toLowerCase())
+
+    if (allAddresses.includes(normalized)) {
+      const erc20Addresses = [
+        ...Object.values(versionAddresses.erc20).flat(),
+      ].map(a => a.toLowerCase())
+      if (erc20Addresses.includes(normalized)) {
+        return { version, isErc20: true }
+      }
+      return { version, isErc20: false }
+    }
+  }
+  return { version: null, isErc20: false }
 }
 
 function _getVersionOfDeployedContract(metadataHash: string): {
