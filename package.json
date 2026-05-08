@@ -42,7 +42,6 @@
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@nomicfoundation/hardhat-verify": "^2.0.0",
-    "@offchainlabs/upgrade-executor": "1.1.0-beta.0",
     "@typechain/ethers-v6": "^0.5.0",
     "@typechain/hardhat": "^9.0.0",
     "@types/chai": "^4.2.0",
@@ -70,6 +69,7 @@
     "typescript": ">=4.5.0"
   },
   "dependencies": {
+    "@offchainlabs/upgrade-executor": "1.1.0-beta.0",
     "ethers": "^6.4.0"
   },
   "types": "./dist/scripts/chain-versioner/chainVersioner.d.ts",
@@ -78,10 +78,19 @@
       "types": "./dist/scripts/chain-versioner/chainVersioner.d.ts",
       "require": "./dist/scripts/chain-versioner/chainVersioner.js",
       "default": "./dist/scripts/chain-versioner/chainVersioner.js"
-    }
+    },
+    "./contracts/parent-chain/contract-upgrades/NitroContracts3Point2Point0UpgradeAction.sol": "./contracts/parent-chain/contract-upgrades/NitroContracts3Point2Point0UpgradeAction.sol",
+    "./scripts/foundry/contract-upgrades/3.2.0/*": "./scripts/foundry/contract-upgrades/3.2.0/*"
   },
   "files": [
+    "contracts/parent-chain/contract-upgrades/NitroContracts3Point2Point0UpgradeAction.sol",
+    "scripts/foundry/contract-upgrades/3.2.0/DeployNitroContracts3Point2Point0UpgradeAction.s.sol",
+    "scripts/foundry/contract-upgrades/3.2.0/ExecuteNitroContracts3Point2Point0Upgrade.s.sol",
+    "scripts/foundry/contract-upgrades/3.2.0/VerifyNitroContracts3Point2Point0Upgrade.s.sol",
+    "scripts/foundry/helper/DeploymentHelpers.s.sol",
+    "scripts/foundry/helper/MockArbSys.sol",
     "dist/scripts/chain-versioner/**",
-    "dist/typechain-types/**"
+    "dist/typechain-types/**",
+    "lib/forge-std/**"
   ]
 }
