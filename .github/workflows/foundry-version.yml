@@ -13,64 +13,7 @@ jobs:
     name: Foundry Version
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Compare pinned foundry against latest stable
-        env:
-          GH_TOKEN: ${{ github.token }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: |
-          set -uo pipefail
-
-          # Anchored on the toolchain action so `node-version` and the
-          # publish-npm `version` input can't be mistaken for a foundry pin.
-          pinned=$(grep -rhA3 'foundry-rs/foundry-toolchain' .github/workflows \
-            | grep -oE 'version: [0-9]+\.[0-9]+\.[0-9]+' \
-            | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
-          docker=$(grep -oE 'foundryup --install [0-9]+\.[0-9]+\.[0-9]+' Dockerfile \
-            | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
-          # /releases/latest excludes prereleases; foundry publishes nightlies as
-          # prereleases, so this is the only endpoint that reliably gives stable.
-          latest=$(gh api repos/foundry-rs/foundry/releases/latest --jq .tag_name | tr -d v)
-
-          {
-            echo "| | version |"
-            echo "|---|---|"
-            echo "| pinned (workflows) | \`$(echo "${pinned:-none}" | tr '\n' ' ')\` |"
-            echo "| pinned (Dockerfile) | \`${docker:-none}\` |"
-            echo "| latest stable | \`${latest}\` |"
-          } >> "$GITHUB_STEP_SUMMARY"
-
-          if [ -z "$pinned" ] || [ -z "$docker" ]; then
-            echo "::error::No pinned foundry version found - is it back on 'stable'?"
-            exit 1
-          fi
-
-          # Pins drifting apart is our own bug, and it silently breaks
-          # .gas-snapshot (one shared file, two forge versions). Fail loudly.
-          if [ "$(printf '%s\n' "$pinned" | wc -l)" -ne 1 ] || [ "$pinned" != "$docker" ]; then
-            echo "::error::Foundry pins disagree: workflows=[$(echo "$pinned" | tr '\n' ' ')] Dockerfile=[$docker]"
-            exit 1
-          fi
-
-          if [ "$pinned" = "$latest" ]; then
-            echo "Foundry is up to date at $pinned"
-            exit 0
-          fi
-
-          # Upstream moving on is not a failure of this PR, so this stays a
-          # non-blocking action_required check rather than a red job.
-          echo "::warning::Foundry $latest is available; CI is pinned to $pinned"
-          jq -n \
-            --arg sha "$HEAD_SHA" \
-            --arg title "Foundry $latest available (pinned $pinned)" \
-            --arg summary "CI and the Dockerfile pin foundry \`$pinned\`. The latest stable release is \`$latest\`." \
-            '{
-              name: "Foundry needs updating",
-              head_sha: $sha,
-              status: "completed",
-              conclusion: "action_required",
-              output: { title: $title, summary: $summary }
-            }' \
-          | gh api -X POST "repos/${GITHUB_REPOSITORY}/check-runs" --input - --silent
+      - uses: actions/checkout@v4
+      - uses: OffchainLabs/actions/foundry-version@main
+        with:
+          foundryup-files: Dockerfile
